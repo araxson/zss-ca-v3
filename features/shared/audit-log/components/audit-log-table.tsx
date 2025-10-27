@@ -17,6 +17,7 @@ import {
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -80,6 +81,7 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
       <CardContent className="p-0">
         <ScrollArea className="rounded-md">
           <Table>
+            <TableCaption>Chronological record of admin actions across the platform.</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Timestamp</TableHead>

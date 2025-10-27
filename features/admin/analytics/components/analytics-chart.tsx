@@ -1,6 +1,14 @@
 import { format } from 'date-fns'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Empty,
@@ -47,6 +55,7 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
       <CardContent>
         <ScrollArea className="h-96 rounded-md border">
           <Table className="min-w-[500px]">
+            <TableCaption>Daily engagement metrics for client sites.</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Date</TableHead>

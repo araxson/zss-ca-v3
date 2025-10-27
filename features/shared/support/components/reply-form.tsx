@@ -5,9 +5,13 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Kbd } from '@/components/ui/kbd'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -78,8 +82,17 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
                           placeholder="Type your reply here..."
                           className="min-h-32"
                           {...field}
+                          onKeyDown={(e) => {
+                            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                              e.preventDefault()
+                              form.handleSubmit(onSubmit)()
+                            }
+                          }}
                         />
                       </FormControl>
+                      <FormDescription className="flex items-center gap-1">
+                        Press <Kbd>Ctrl</Kbd> + <Kbd>Enter</Kbd> to send
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -87,12 +100,22 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
               </FieldGroup>
             </FieldSet>
 
-            <Button
-              type="submit"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? 'Sending...' : 'Send Reply'}
-            </Button>
+            <ButtonGroup>
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting ? <Spinner /> : 'Send Reply'}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={form.formState.isSubmitting}
+                onClick={() => form.reset({ ticketId, message: '' })}
+              >
+                Clear
+              </Button>
+            </ButtonGroup>
           </form>
         </Form>
       </CardContent>

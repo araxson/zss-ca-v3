@@ -18,6 +18,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Select,
   SelectContent,
@@ -34,6 +36,14 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
+import { User } from 'lucide-react'
 
 type CreateNotificationFormProps = {
   clients: Array<{
@@ -103,6 +113,15 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
               <FieldLegend>Recipient & Type</FieldLegend>
               <FieldDescription>Choose who receives this notification and how it is categorized.</FieldDescription>
               <FieldGroup className="space-y-4">
+                <Item variant="outline" size="sm">
+                  <ItemMedia>
+                    <User className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{clients.length} clients available</ItemTitle>
+                    <ItemDescription>Select a recipient or install a broadcast type.</ItemDescription>
+                  </ItemContent>
+                </Item>
                 <FormField
                   control={form.control}
                   name="profile_id"
@@ -239,9 +258,9 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
               </FieldGroup>
             </FieldSet>
 
-            <div className="flex gap-4">
+            <ButtonGroup>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Creating...' : 'Create Notification'}
+                {isSubmitting ? <Spinner /> : 'Create Notification'}
               </Button>
               <Button
                 type="button"
@@ -251,7 +270,7 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
               >
                 Cancel
               </Button>
-            </div>
+            </ButtonGroup>
           </form>
         </Form>
       </CardContent>

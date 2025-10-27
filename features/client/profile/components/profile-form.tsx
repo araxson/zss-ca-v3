@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation'
 import { Mail, Phone, Globe, User, Building2, MapPin } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -23,7 +25,7 @@ import {
   InputGroupInput,
   InputGroupText,
 } from '@/components/ui/input-group'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Switch } from '@/components/ui/switch'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   FieldDescription,
@@ -315,28 +317,38 @@ export function ProfileForm({ profile }: ProfileFormProps) {
               control={form.control}
               name="marketing_opt_in"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Marketing Communications</FormLabel>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Marketing Communications</FormLabel>
                     <FormDescription>
                       Receive emails about new features, updates, and promotions
                     </FormDescription>
                   </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
           </FieldGroup>
         </FieldSet>
 
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
-        </Button>
+        <ButtonGroup>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={form.formState.isSubmitting}
+            onClick={() => form.reset()}
+          >
+            Reset
+          </Button>
+        </ButtonGroup>
       </form>
     </Form>
   )

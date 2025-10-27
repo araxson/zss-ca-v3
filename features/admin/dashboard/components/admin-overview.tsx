@@ -142,93 +142,87 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
       <Separator />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle>Total Clients</CardTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge variant="secondary">{stats.totalClients}</Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Registered client accounts</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </CardHeader>
-          <CardContent>
+        <Item variant="outline" className="flex h-full flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Total Clients</ItemTitle>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="secondary">{stats.totalClients}</Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Registered client accounts</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             <div className="text-2xl font-bold">{stats.totalClients}</div>
-            <p className="text-xs text-muted-foreground">
+            <ItemDescription>
               {stats.activeSubscriptions} active subscriptions
-            </p>
-            <Progress value={subscriptionRate} className="mt-3" />
-            <p className="text-xs text-muted-foreground mt-2">
+            </ItemDescription>
+            <Progress value={subscriptionRate} />
+            <ItemDescription>
               {subscriptionRate.toFixed(1)}% subscription rate
-            </p>
-          </CardContent>
-        </Card>
+            </ItemDescription>
+          </ItemContent>
+        </Item>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle>Active Subscriptions</CardTitle>
-            <Badge variant="default">{stats.activeSubscriptions}</Badge>
-          </CardHeader>
-          <CardContent>
+        <Item variant="outline" className="flex h-full flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Active Subscriptions</ItemTitle>
+              <Badge variant="default">{stats.activeSubscriptions}</Badge>
+            </div>
             <div className="text-2xl font-bold">{stats.activeSubscriptions}</div>
-            <p className="text-xs text-muted-foreground">
-              Paying clients
-            </p>
-            <Button asChild variant="link" size="sm" className="mt-3 px-0">
-              <Link href={ROUTES.ADMIN_CLIENTS}>
-                View all clients →
-              </Link>
+            <ItemDescription>Paying clients</ItemDescription>
+          </ItemContent>
+          <ItemActions className="justify-end">
+            <Button asChild variant="link" size="sm" className="px-0">
+              <Link href={ROUTES.ADMIN_CLIENTS}>View all clients →</Link>
             </Button>
-          </CardContent>
-        </Card>
+          </ItemActions>
+        </Item>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle>Live Sites</CardTitle>
-            <Badge variant="default">{stats.liveSites}</Badge>
-          </CardHeader>
-          <CardContent>
+        <Item variant="outline" className="flex h-full flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Live Sites</ItemTitle>
+              <Badge variant="default">{stats.liveSites}</Badge>
+            </div>
             <div className="text-2xl font-bold">{stats.liveSites}</div>
-            <p className="text-xs text-muted-foreground">
-              Deployed websites
-            </p>
-            <Progress value={liveRate} className="mt-3" />
-            <p className="text-xs text-muted-foreground mt-2">
+            <ItemDescription>Deployed websites</ItemDescription>
+            <Progress value={liveRate} />
+            <ItemDescription>
               {liveRate.toFixed(1)}% deployment rate
-            </p>
-          </CardContent>
-        </Card>
+            </ItemDescription>
+          </ItemContent>
+        </Item>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle>Open Tickets</CardTitle>
-            {stats.openTickets > 0 ? (
-              <Badge variant="destructive">{stats.openTickets}</Badge>
-            ) : (
-              <Badge variant="secondary">0</Badge>
-            )}
-          </CardHeader>
-          <CardContent>
+        <Item variant="outline" className="flex h-full flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Open Tickets</ItemTitle>
+              <Badge variant={stats.openTickets > 0 ? 'destructive' : 'secondary'}>
+                {stats.openTickets > 0 ? stats.openTickets : 0}
+              </Badge>
+            </div>
             <div className="text-2xl font-bold">{stats.openTickets}</div>
-            <p className="text-xs text-muted-foreground">
-              Needs attention
-            </p>
+            <ItemDescription>Needs attention</ItemDescription>
+          </ItemContent>
+          <ItemActions>
             <Button
               asChild
-              variant={stats.openTickets > 0 ? "default" : "outline"}
+              variant={stats.openTickets > 0 ? 'default' : 'outline'}
               size="sm"
-              className="mt-3 w-full"
+              className="w-full"
             >
               <Link href={ROUTES.ADMIN_SUPPORT}>
                 {stats.openTickets > 0 ? 'View Tickets' : 'All Tickets'}
               </Link>
             </Button>
-          </CardContent>
-        </Card>
+          </ItemActions>
+        </Item>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">

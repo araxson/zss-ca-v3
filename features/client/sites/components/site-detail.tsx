@@ -1,12 +1,11 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import {
   Accordion,
   AccordionContent,
@@ -71,19 +70,17 @@ function formatDate(dateString: string | null) {
 export function SiteDetail({ site }: SiteDetailProps) {
   return (
     <div className="space-y-6">
-      <Card className="h-full">
-        <CardHeader>
+      <Item variant="outline" className="flex flex-col">
+        <ItemContent className="space-y-6">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>{site.site_name}</CardTitle>
-              <CardDescription>Your website details and status</CardDescription>
+            <div className="space-y-1">
+              <ItemTitle>{site.site_name}</ItemTitle>
+              <ItemDescription>Your website details and status</ItemDescription>
             </div>
             <Badge variant={getStatusVariant(site.status)}>
               {formatStatus(site.status)}
             </Badge>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
           <FieldSet className="space-y-4">
             <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Field>
@@ -151,15 +148,15 @@ export function SiteDetail({ site }: SiteDetailProps) {
               </Field>
             )}
           </FieldGroup>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
 
-      <Card className="h-full">
-        <CardHeader>
-          <CardTitle>Additional Information</CardTitle>
-          <CardDescription>More details about your website</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Item variant="outline" className="flex flex-col">
+        <ItemContent className="space-y-4">
+          <div className="space-y-1">
+            <ItemTitle>Additional Information</ItemTitle>
+            <ItemDescription>More details about your website</ItemDescription>
+          </div>
           <Accordion type="single" collapsible defaultValue="status">
             <AccordionItem value="status">
               <AccordionTrigger>Status Information</AccordionTrigger>
@@ -236,8 +233,8 @@ export function SiteDetail({ site }: SiteDetailProps) {
               </AccordionItem>
             )}
           </Accordion>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
     </div>
   )
 }

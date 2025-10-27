@@ -1,14 +1,23 @@
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { ManageSubscriptionButtons } from './manage-subscription-buttons'
 import type { SubscriptionWithPlan } from '../api/queries'
+import { Check } from 'lucide-react'
 
 interface SubscriptionCardProps {
   subscription: SubscriptionWithPlan
@@ -38,29 +47,50 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
       <CardContent className="space-y-4">
         <FieldGroup className="space-y-4">
           {currentPeriodEnd && (
-            <Field>
-              <FieldLabel>Current Period</FieldLabel>
-              <FieldDescription>
-                Renews on {currentPeriodEnd.toLocaleDateString()}
-              </FieldDescription>
-            </Field>
+            <>
+              <Field>
+                <FieldLabel>Current Period</FieldLabel>
+                <FieldDescription>
+                  Renews on {currentPeriodEnd.toLocaleDateString()}
+                </FieldDescription>
+              </Field>
+              <Separator />
+            </>
           )}
 
           <Field>
             <FieldLabel>Plan Features</FieldLabel>
-            <FieldDescription asChild>
-              <ul className="space-y-1 text-sm">
-                <li>
-                  {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
-                </li>
-                <li>
-                  {plan.revision_limit
-                    ? `${plan.revision_limit} revisions/month`
-                    : 'Unlimited revisions'}
-                </li>
-              </ul>
+            <FieldDescription>
+              <div className="space-y-2">
+                <Item variant="outline" size="sm">
+                  <ItemMedia>
+                    <Check className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>
+                      {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
+                    </ItemTitle>
+                    <ItemDescription>Page allotment included in this plan</ItemDescription>
+                  </ItemContent>
+                </Item>
+                <Item variant="outline" size="sm">
+                  <ItemMedia>
+                    <Check className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>
+                      {plan.revision_limit
+                        ? `${plan.revision_limit} revisions/month`
+                        : 'Unlimited revisions'}
+                    </ItemTitle>
+                    <ItemDescription>Revision capacity per billing cycle</ItemDescription>
+                  </ItemContent>
+                </Item>
+              </div>
             </FieldDescription>
           </Field>
+
+          <Separator />
 
           <Field>
             <FieldLabel>Pricing</FieldLabel>

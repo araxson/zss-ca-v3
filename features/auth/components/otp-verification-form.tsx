@@ -3,10 +3,13 @@
 import { useSearchParams, useRouter } from 'next/navigation'
 import {
   Empty,
+  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { OTPForm } from './otp-form'
 import { verifyOTPAction, resendOTPAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -87,6 +90,20 @@ export function OTPVerificationForm() {
             This verification link is incomplete. Request a new code to continue.
           </EmptyDescription>
         </EmptyHeader>
+        <EmptyContent>
+          <ButtonGroup className="justify-center">
+            <Button size="sm" onClick={() => router.push(ROUTES.RESET_PASSWORD)}>
+              Request new code
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => router.push(ROUTES.LOGIN)}
+            >
+              Back to login
+            </Button>
+          </ButtonGroup>
+        </EmptyContent>
       </Empty>
     )
   }

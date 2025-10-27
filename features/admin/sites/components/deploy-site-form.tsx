@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -40,6 +41,12 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { deploySiteSchema, type DeploySiteInput } from '../schema'
 import { deploySiteAction } from '../api/mutations'
 import { Rocket, Link2 } from 'lucide-react'
@@ -117,6 +124,14 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
               <FieldLegend>Deployment metadata</FieldLegend>
               <FieldDescription>Confirm the live URL and capture any launch notes.</FieldDescription>
               <FieldGroup className="space-y-4">
+                <Item variant="outline" size="sm">
+                  <ItemContent>
+                    <ItemTitle>{siteName}</ItemTitle>
+                    <ItemDescription>
+                      Provide the production URL and optional launch notes.
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
                 <FormField
                   control={form.control}
                   name="deployment_url"
@@ -189,7 +204,7 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction onClick={form.handleSubmit(onSubmit)}>
-                    {form.formState.isSubmitting ? 'Deploying...' : 'Deploy Now'}
+                    {form.formState.isSubmitting ? <Spinner /> : 'Deploy Now'}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

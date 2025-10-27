@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
+import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
+import { MessageSquare } from 'lucide-react'
 import type { TicketWithProfile } from '../api/queries'
 
 interface TicketListProps {
@@ -58,15 +59,18 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
 
   return (
     <div className="space-y-3">
-      {tickets.map((ticket) => {
-        const createdAt = new Date(ticket.created_at)
+          {tickets.map((ticket) => {
+            const createdAt = new Date(ticket.created_at)
 
-        return (
-          <Item asChild key={ticket.id}>
-            <Link href={`${basePath}/${ticket.id}`}>
-              <ItemContent className="min-w-0 gap-1">
-                <ItemTitle>{ticket.subject}</ItemTitle>
-                <ItemDescription>
+            return (
+              <Item asChild key={ticket.id}>
+                <Link href={`${basePath}/${ticket.id}`}>
+                  <ItemMedia>
+                    <MessageSquare className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  </ItemMedia>
+                  <ItemContent className="min-w-0 gap-1">
+                    <ItemTitle>{ticket.subject}</ItemTitle>
+                    <ItemDescription>
                   {ticket.category.replace('_', ' ')} • {createdAt.toLocaleDateString()}
                 </ItemDescription>
               </ItemContent>

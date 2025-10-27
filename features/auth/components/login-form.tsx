@@ -7,6 +7,8 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { Mail, Lock, Eye, EyeOff, X, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -23,6 +25,7 @@ import {
 } from '@/components/ui/input-group'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
+  Field,
   FieldDescription,
   FieldGroup,
   FieldLegend,
@@ -166,25 +169,26 @@ export function LoginForm() {
           </FieldGroup>
         </FieldSet>
 
-        <div className="flex items-center justify-between">
-          <Link
-            href={ROUTES.RESET_PASSWORD}
-            className="text-sm text-muted-foreground hover:text-foreground"
-          >
-            Forgot password?
-          </Link>
-        </div>
+        <ButtonGroup className="justify-end">
+          <Button asChild variant="link" size="sm">
+            <Link href={ROUTES.RESET_PASSWORD}>Forgot password?</Link>
+          </Button>
+        </ButtonGroup>
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Signing in...' : 'Sign in'}
+          {loading ? <Spinner /> : 'Sign in'}
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{' '}
-          <Link href={ROUTES.SIGNUP} className="text-primary hover:underline">
-            Sign up
-          </Link>
-        </p>
+        <FieldGroup className="items-center justify-center gap-2">
+          <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
+            <FieldDescription>Don&apos;t have an account?</FieldDescription>
+            <ButtonGroup>
+              <Button asChild variant="link" size="sm">
+                <Link href={ROUTES.SIGNUP}>Sign up</Link>
+              </Button>
+            </ButtonGroup>
+          </Field>
+        </FieldGroup>
       </form>
     </Form>
   )

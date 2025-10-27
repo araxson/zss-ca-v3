@@ -4,8 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Globe } from 'lucide-react'
+import { Globe, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -36,6 +38,13 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { createSiteSchema, type CreateSiteInput } from '../schema'
 import { createSiteAction } from '../api/mutations'
 import type { Database } from '@/lib/types/database.types'
@@ -105,6 +114,17 @@ export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
               <FieldLegend>Client assignment</FieldLegend>
               <FieldDescription>Select who this project belongs to and the service plan.</FieldDescription>
               <FieldGroup className="space-y-4">
+                <Item variant="outline" size="sm">
+                  <ItemMedia>
+                    <Users className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  </ItemMedia>
+                  <ItemContent>
+                    <ItemTitle>{clients.length} clients available</ItemTitle>
+                    <ItemDescription>
+                      Choose the account that owns this website project.
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
                 <FormField
                   control={form.control}
                   name="profile_id"
@@ -216,9 +236,9 @@ export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
               </FieldGroup>
             </FieldSet>
 
-            <div className="flex gap-2">
+            <ButtonGroup>
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Creating...' : 'Create Site'}
+                {form.formState.isSubmitting ? <Spinner /> : 'Create Site'}
               </Button>
               <Button
                 type="button"
@@ -227,7 +247,7 @@ export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
               >
                 Cancel
               </Button>
-            </div>
+            </ButtonGroup>
           </form>
         </Form>
       </CardContent>

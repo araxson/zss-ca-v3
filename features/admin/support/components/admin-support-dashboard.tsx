@@ -7,6 +7,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { TicketList } from '@/features/shared/support/components/ticket-list'
 import type { TicketWithProfile } from '@/features/shared/support/api/queries'
 
@@ -38,20 +44,18 @@ export function AdminSupportDashboard({ tickets }: AdminSupportDashboardProps) {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.label} className="h-full">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardDescription>{stat.label}</CardDescription>
-              <Badge variant={stat.value > 0 ? 'default' : 'secondary'}>
-                {stat.value}
-              </Badge>
-            </CardHeader>
-            <CardContent>
+          <Item key={stat.label} variant="outline" className="flex h-full flex-col">
+            <ItemContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <ItemTitle>{stat.label}</ItemTitle>
+                <Badge variant={stat.value > 0 ? 'default' : 'secondary'}>
+                  {stat.value}
+                </Badge>
+              </div>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">
-                Active in this queue
-              </p>
-            </CardContent>
-          </Card>
+              <ItemDescription>Active in this queue</ItemDescription>
+            </ItemContent>
+          </Item>
         ))}
       </div>
 

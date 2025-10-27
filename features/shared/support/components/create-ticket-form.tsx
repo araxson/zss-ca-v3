@@ -6,6 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { MessageSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Kbd } from '@/components/ui/kbd'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -21,13 +24,8 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
 import {
   Card,
   CardContent,
@@ -41,9 +39,57 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { createTicketSchema, type CreateTicketInput } from '../schema'
 import { createTicketAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
+
+const categoryOptions = [
+  {
+    value: 'technical',
+    label: 'Technical Issue',
+    description: 'Platform bug or outage affecting your site.',
+  },
+  {
+    value: 'content_change',
+    label: 'Content Change',
+    description: 'Updates to text, images, or layout requests.',
+  },
+  {
+    value: 'billing',
+    label: 'Billing Question',
+    description: 'Invoice questions or payment concerns.',
+  },
+  {
+    value: 'general_inquiry',
+    label: 'General Inquiry',
+    description: 'Anything else you want to discuss.',
+  },
+] as const
+
+const priorityOptions = [
+  {
+    value: 'low',
+    label: 'Low',
+    description: 'Minor requests or informational updates.',
+  },
+  {
+    value: 'medium',
+    label: 'Medium',
+    description: 'Important updates that impact timelines.',
+  },
+  {
+    value: 'high',
+    label: 'High',
+    description: 'Urgent issues blocking your site or launch.',
+  },
+] as const
 
 export function CreateTicketForm() {
   const router = useRouter()
@@ -112,26 +158,34 @@ export function CreateTicketForm() {
             <FieldSet className="space-y-4">
               <FieldLegend>Routing details</FieldLegend>
               <FieldDescription>Select the category and urgency so support can triage faster.</FieldDescription>
-              <FieldGroup className="grid gap-4 sm:grid-cols-2">
+              <FieldGroup className="grid gap-6 sm:grid-cols-2">
                 <FormField
                   control={form.control}
                   name="category"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="technical">Technical Issue</SelectItem>
-                          <SelectItem value="content_change">Content Change</SelectItem>
-                          <SelectItem value="billing">Billing Question</SelectItem>
-                          <SelectItem value="general_inquiry">General Inquiry</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="space-y-2"
+                        >
+                          {categoryOptions.map((option) => (
+                            <Label key={option.value} htmlFor={option.value} className="cursor-pointer">
+                              <Item variant="outline" size="sm" className="items-center gap-3">
+                                <ItemMedia>
+                                  <RadioGroupItem value={option.value} id={option.value} />
+                                </ItemMedia>
+                                <ItemContent>
+                                  <ItemTitle>{option.label}</ItemTitle>
+                                  <ItemDescription>{option.description}</ItemDescription>
+                                </ItemContent>
+                              </Item>
+                            </Label>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -143,18 +197,27 @@ export function CreateTicketForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Priority</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="low">Low</SelectItem>
-                          <SelectItem value="medium">Medium</SelectItem>
-                          <SelectItem value="high">High</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="space-y-2"
+                        >
+                          {priorityOptions.map((option) => (
+                            <Label key={option.value} htmlFor={option.value} className="cursor-pointer">
+                              <Item variant="outline" size="sm" className="items-center gap-3">
+                                <ItemMedia>
+                                  <RadioGroupItem value={option.value} id={option.value} />
+                                </ItemMedia>
+                                <ItemContent>
+                                  <ItemTitle>{option.label}</ItemTitle>
+                                  <ItemDescription>{option.description}</ItemDescription>
+                                </ItemContent>
+                              </Item>
+                            </Label>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -173,22 +236,31 @@ export function CreateTicketForm() {
                       placeholder="Please provide as much detail as possible"
                       className="min-h-40"
                       {...field}
+                      onKeyDown={(e) => {
+                        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                          e.preventDefault()
+                          form.handleSubmit(onSubmit)()
+                        }
+                      }}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Include any relevant details, error messages, or screenshots
+                  <FormDescription className="flex flex-col gap-1">
+                    <span>Include any relevant details, error messages, or screenshots</span>
+                    <span className="flex items-center gap-1 text-xs">
+                      Press <Kbd>Ctrl</Kbd> + <Kbd>Enter</Kbd> to submit
+                    </span>
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className="flex gap-2">
+            <ButtonGroup>
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
               >
-                {form.formState.isSubmitting ? 'Creating...' : 'Create Ticket'}
+                {form.formState.isSubmitting ? <Spinner /> : 'Create Ticket'}
               </Button>
               <Button
                 type="button"
@@ -197,7 +269,7 @@ export function CreateTicketForm() {
               >
                 Cancel
               </Button>
-            </div>
+            </ButtonGroup>
           </form>
         </Form>
       </CardContent>

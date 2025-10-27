@@ -2,12 +2,12 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { ExternalLink } from 'lucide-react'
 import type { Database } from '@/lib/types/database.types'
 
@@ -58,21 +58,19 @@ function formatDate(dateString: string | null) {
 
 export function SiteCard({ site }: SiteCardProps) {
   return (
-    <Card className="h-full">
-      <CardHeader>
+    <Item variant="outline" className="flex h-full flex-col">
+      <ItemContent className="space-y-4">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>{site.site_name}</CardTitle>
-            <CardDescription>
+          <div className="space-y-1">
+            <ItemTitle>{site.site_name}</ItemTitle>
+            <ItemDescription>
               {site.plan ? `${site.plan.name} Plan` : 'No plan assigned'}
-            </CardDescription>
+            </ItemDescription>
           </div>
           <Badge variant={getStatusVariant(site.status)}>
             {formatStatus(site.status)}
           </Badge>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <div className="text-sm font-medium text-muted-foreground">Status</div>
@@ -120,12 +118,12 @@ export function SiteCard({ site }: SiteCardProps) {
           </div>
         )}
 
-        <div className="flex justify-end">
-          <Button asChild variant="outline" size="sm">
-            <Link href={`/client/sites/${site.id}`}>View Details</Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+      </ItemContent>
+      <ItemActions className="justify-end">
+        <Button asChild variant="outline" size="sm">
+          <Link href={`/client/sites/${site.id}`}>View Details</Link>
+        </Button>
+      </ItemActions>
+    </Item>
   )
 }

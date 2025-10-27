@@ -1,6 +1,14 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
@@ -52,6 +60,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
   return (
     <ScrollArea className="rounded-md border">
       <Table className="min-w-[720px]">
+        <TableCaption>Client accounts with subscription status and quick actions.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>

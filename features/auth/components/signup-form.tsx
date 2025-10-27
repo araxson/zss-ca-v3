@@ -6,8 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { Mail, Building2, Lock, Eye, EyeOff, X, Loader2 } from 'lucide-react'
+import { Mail, Building2, Lock, Eye, EyeOff, X, Loader2, ClipboardList } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -27,11 +29,19 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import {
+  Field,
   FieldDescription,
   FieldGroup,
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { signupSchema, type SignupInput } from '../schema'
 import { signupAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -114,6 +124,19 @@ export function SignupForm() {
             Provide your contact details and choose a secure password to get started.
           </FieldDescription>
           <FieldGroup className="space-y-4">
+            {planId ? (
+              <Item variant="outline" size="sm">
+                <ItemMedia>
+                  <ClipboardList className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>Selected Plan</ItemTitle>
+                  <ItemDescription>
+                    We&apos;ll prepare checkout for plan {planId}.
+                  </ItemDescription>
+                </ItemContent>
+              </Item>
+            ) : null}
             <FormField
               control={form.control}
               name="email"
@@ -279,15 +302,19 @@ export function SignupForm() {
         </FieldSet>
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Creating account...' : 'Create account'}
+          {loading ? <Spinner /> : 'Create account'}
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
-          <Link href={ROUTES.LOGIN} className="text-primary hover:underline">
-            Sign in
-          </Link>
-        </p>
+        <FieldGroup className="items-center justify-center gap-2">
+          <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
+            <FieldDescription>Already have an account?</FieldDescription>
+            <ButtonGroup>
+              <Button asChild variant="link" size="sm">
+                <Link href={ROUTES.LOGIN}>Sign in</Link>
+              </Button>
+            </ButtonGroup>
+          </Field>
+        </FieldGroup>
       </form>
     </Form>
   )

@@ -13,6 +13,7 @@ import { Globe } from 'lucide-react'
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -95,6 +96,7 @@ export function SitesTable({ sites }: SitesTableProps) {
   return (
     <ScrollArea className="rounded-md border">
       <Table className="min-w-[900px]">
+        <TableCaption>Managed client sites with plan, status, and quick navigation.</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Site Name</TableHead>

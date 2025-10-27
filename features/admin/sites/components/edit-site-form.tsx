@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Globe, Link2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -37,6 +38,12 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { updateSiteSchema, type UpdateSiteInput } from '../schema'
 import { updateSiteAction } from '../api/mutations'
 import type { Database } from '@/lib/types/database.types'
@@ -107,12 +114,20 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FieldSet className="space-y-4">
-              <FieldLegend>Project status</FieldLegend>
-              <FieldDescription>Keep the deployment record current for your team.</FieldDescription>
-              <FieldGroup className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="site_name"
+          <FieldLegend>Project status</FieldLegend>
+          <FieldDescription>Keep the deployment record current for your team.</FieldDescription>
+          <FieldGroup className="space-y-4">
+            <Item variant="outline" size="sm">
+              <ItemContent>
+                <ItemTitle>{site.site_name}</ItemTitle>
+                <ItemDescription>
+                  Currently marked as {formatStatusLabel(site.status)}
+                </ItemDescription>
+              </ItemContent>
+            </Item>
+            <FormField
+              control={form.control}
+              name="site_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Site Name</FormLabel>
@@ -247,11 +262,9 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
               </FieldGroup>
             </FieldSet>
 
-            <div className="flex gap-2">
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </div>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
+            </Button>
           </form>
         </Form>
       </CardContent>

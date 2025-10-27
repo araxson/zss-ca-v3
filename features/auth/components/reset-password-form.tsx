@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Mail, X, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -24,6 +26,7 @@ import {
 } from '@/components/ui/input-group'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
+  Field,
   FieldDescription,
   FieldGroup,
   FieldLegend,
@@ -129,15 +132,19 @@ export function ResetPasswordForm() {
         </FieldSet>
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Sending...' : 'Send verification code'}
+          {loading ? <Spinner /> : 'Send verification code'}
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground">
-          Remember your password?{' '}
-          <Link href={ROUTES.LOGIN} className="text-primary hover:underline">
-            Sign in
-          </Link>
-        </p>
+        <FieldGroup className="items-center justify-center gap-2">
+          <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
+            <FieldDescription>Remember your password?</FieldDescription>
+            <ButtonGroup>
+              <Button asChild variant="link" size="sm">
+                <Link href={ROUTES.LOGIN}>Sign in</Link>
+              </Button>
+            </ButtonGroup>
+          </Field>
+        </FieldGroup>
       </form>
     </Form>
   )

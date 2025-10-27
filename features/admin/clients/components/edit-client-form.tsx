@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { User, Building2, Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -28,6 +29,13 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { updateClientProfileSchema, type UpdateClientProfileInput } from '../schema'
 import { updateClientProfileAction } from '../api/mutations'
 import type { Database } from '@/lib/types/database.types'
@@ -82,14 +90,23 @@ export function EditClientForm({ client }: EditClientFormProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FieldSet className="space-y-4">
-              <FieldLegend>Contact information</FieldLegend>
-              <FieldDescription>
-                Update the client details that appear in admin and client portals.
-              </FieldDescription>
-              <FieldGroup className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="fullName"
+          <FieldLegend>Contact information</FieldLegend>
+          <FieldDescription>
+            Update the client details that appear in admin and client portals.
+          </FieldDescription>
+          <FieldGroup className="space-y-4">
+            <Item variant="outline" size="sm">
+              <ItemMedia>
+                <User className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{client.contact_name || 'Client'}</ItemTitle>
+                <ItemDescription>{client.contact_email}</ItemDescription>
+              </ItemContent>
+            </Item>
+            <FormField
+              control={form.control}
+              name="fullName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Full Name</FormLabel>
@@ -155,11 +172,9 @@ export function EditClientForm({ client }: EditClientFormProps) {
               </FieldGroup>
             </FieldSet>
 
-            <div className="flex gap-2">
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </div>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
+            </Button>
           </form>
         </Form>
       </CardContent>

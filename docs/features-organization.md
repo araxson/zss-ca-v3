@@ -183,7 +183,7 @@ When importing features, always reference the full path including context:
 
 ```tsx
 // ✅ CORRECT - Full path with context
-import { PricingCards } from '@/features/marketing/pricing/components/pricing-cards'
+import { PricingPage } from '@/features/marketing/pricing'
 import { loginAction } from '@/features/auth/api/mutations'
 import { getCurrentSubscription } from '@/features/shared/subscription/api/queries'
 import { getTicketById } from '@/features/shared/support/api/queries'
@@ -194,7 +194,7 @@ import { getSiteAnalytics } from '@/features/admin/analytics/api/queries'
 import { getClientDashboard } from '@/features/client/dashboard/api/queries'
 
 // ❌ INCORRECT - Missing context
-import { PricingCards } from '@/features/pricing/components/pricing-cards'
+import { PricingPage } from '@/features/pricing'
 import { loginAction } from '@/auth/api/mutations'
 ```
 

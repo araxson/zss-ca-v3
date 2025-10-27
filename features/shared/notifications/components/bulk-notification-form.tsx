@@ -18,13 +18,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Users } from 'lucide-react'
@@ -35,6 +32,13 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 
 export function BulkNotificationForm() {
   const router = useRouter()
@@ -117,21 +121,27 @@ export function BulkNotificationForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Type</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="subscription">Subscription</SelectItem>
-                          <SelectItem value="billing">Billing</SelectItem>
-                          <SelectItem value="support">Support</SelectItem>
-                          <SelectItem value="site_status">Site Status</SelectItem>
-                          <SelectItem value="system">System</SelectItem>
-                          <SelectItem value="onboarding">Onboarding</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          className="grid grid-cols-2 gap-3"
+                        >
+                          {notificationTypeOptions.map((option) => (
+                            <Label key={option.value} htmlFor={`type-${option.value}`} className="cursor-pointer">
+                              <Item variant="outline" size="sm" className="items-start gap-3">
+                                <ItemMedia>
+                                  <RadioGroupItem value={option.value} id={`type-${option.value}`} />
+                                </ItemMedia>
+                                <ItemContent>
+                                  <ItemTitle>{option.label}</ItemTitle>
+                                  <ItemDescription>{option.description}</ItemDescription>
+                                </ItemContent>
+                              </Item>
+                            </Label>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -222,9 +232,9 @@ export function BulkNotificationForm() {
               </FieldGroup>
             </FieldSet>
 
-            <div className="flex gap-4">
+            <ButtonGroup>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Sending...' : 'Send to All Clients'}
+                {isSubmitting ? <Spinner /> : 'Send to All Clients'}
               </Button>
               <Button
                 type="button"
@@ -234,10 +244,18 @@ export function BulkNotificationForm() {
               >
                 Cancel
               </Button>
-            </div>
+            </ButtonGroup>
           </form>
         </Form>
       </CardContent>
     </Card>
   )
 }
+const notificationTypeOptions = [
+  { value: 'subscription', label: 'Subscription', description: 'Plan changes or subscription updates.' },
+  { value: 'billing', label: 'Billing', description: 'Payment reminders and invoice notices.' },
+  { value: 'support', label: 'Support', description: 'Ticket updates and support outreach.' },
+  { value: 'site_status', label: 'Site Status', description: 'Deployment and uptime alerts.' },
+  { value: 'system', label: 'System', description: 'Platform-wide announcements.' },
+  { value: 'onboarding', label: 'Onboarding', description: 'Guidance for new clients.' },
+] as const

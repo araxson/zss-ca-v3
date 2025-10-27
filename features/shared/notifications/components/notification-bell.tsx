@@ -22,7 +22,7 @@ export function NotificationBell({ unreadCount, href }: NotificationBellProps) {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button variant="ghost" size="icon" asChild className="relative">
-            <Link href={href}>
+            <Link href={href} aria-label={`View notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}>
               <Bell className="h-5 w-5" />
               {unreadCount > 0 && (
                 <Badge
@@ -36,7 +36,11 @@ export function NotificationBell({ unreadCount, href }: NotificationBellProps) {
             </Link>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>View notifications</TooltipContent>
+        <TooltipContent>
+          {unreadCount > 0
+            ? `You have ${unreadCount > 9 ? '9+' : unreadCount} unread notifications`
+            : 'You are all caught up'}
+        </TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )

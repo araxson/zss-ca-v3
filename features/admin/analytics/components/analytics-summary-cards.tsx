@@ -1,16 +1,16 @@
 import { Eye, Users, Target, TrendingUp } from 'lucide-react'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import type { AnalyticsSummary } from '../api/queries'
 
 interface AnalyticsSummaryCardsProps {
@@ -21,77 +21,85 @@ interface AnalyticsSummaryCardsProps {
 export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card className="h-full">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div>
-            <CardTitle>Total Page Views</CardTitle>
-            <CardDescription>Last {days} days</CardDescription>
+      <Item variant="outline" className="flex h-full flex-col">
+        <ItemContent className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <ItemTitle>Total Page Views</ItemTitle>
+              <ItemDescription>Last {days} days</ItemDescription>
+            </div>
+            <ItemMedia>
+              <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            </ItemMedia>
           </div>
-          <Eye className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
           <FieldGroup>
             <FieldLabel className="text-2xl font-bold">{summary.totalPageViews.toLocaleString()}</FieldLabel>
             <FieldDescription className="text-xs text-muted-foreground">
               Compared to prior period: +12%
             </FieldDescription>
           </FieldGroup>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
 
-      <Card className="h-full">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div>
-            <CardTitle>Unique Visitors</CardTitle>
-            <CardDescription>Last {days} days</CardDescription>
+      <Item variant="outline" className="flex h-full flex-col">
+        <ItemContent className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <ItemTitle>Unique Visitors</ItemTitle>
+              <ItemDescription>Last {days} days</ItemDescription>
+            </div>
+            <ItemMedia>
+              <Users className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            </ItemMedia>
           </div>
-          <Users className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
           <FieldGroup>
             <FieldLabel className="text-2xl font-bold">{summary.totalUniqueVisitors.toLocaleString()}</FieldLabel>
             <FieldDescription className="text-xs text-muted-foreground">
               Returning visitor rate: 38%
             </FieldDescription>
           </FieldGroup>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
 
-      <Card className="h-full">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div>
-            <CardTitle>Conversions</CardTitle>
-            <CardDescription>Last {days} days</CardDescription>
+      <Item variant="outline" className="flex h-full flex-col">
+        <ItemContent className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <ItemTitle>Conversions</ItemTitle>
+              <ItemDescription>Last {days} days</ItemDescription>
+            </div>
+            <ItemMedia>
+              <Target className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            </ItemMedia>
           </div>
-          <Target className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
           <FieldGroup>
             <FieldLabel className="text-2xl font-bold">{summary.totalConversions.toLocaleString()}</FieldLabel>
             <FieldDescription className="text-xs text-muted-foreground">
               Conversion rate: 4.6%
             </FieldDescription>
           </FieldGroup>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
 
-      <Card className="h-full">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <div>
-            <CardTitle>Avg. Daily Views</CardTitle>
-            <CardDescription>Per day average</CardDescription>
+      <Item variant="outline" className="flex h-full flex-col">
+        <ItemContent className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <ItemTitle>Avg. Daily Views</ItemTitle>
+              <ItemDescription>Per day average</ItemDescription>
+            </div>
+            <ItemMedia>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+            </ItemMedia>
           </div>
-          <TrendingUp className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
           <FieldGroup>
             <FieldLabel className="text-2xl font-bold">{summary.averagePageViews.toLocaleString()}</FieldLabel>
             <FieldDescription className="text-xs text-muted-foreground">
               Peak traffic on Wednesdays
             </FieldDescription>
           </FieldGroup>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
     </div>
   )
 }

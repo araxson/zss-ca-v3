@@ -31,6 +31,15 @@ import {
   FieldLabel,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { Loader2, Mail } from 'lucide-react'
 import { ROUTES } from '@/lib/constants/routes'
 
@@ -139,13 +148,20 @@ export function OTPForm({
           <FieldGroup>
             <Field>
               <FieldLabel>Verification email</FieldLabel>
-              <div className="flex items-center justify-between gap-3 rounded-md bg-muted/50 px-3 py-2 text-sm font-medium">
-                <span className="inline-flex items-center gap-2">
+              <Item variant="outline" size="sm">
+                <ItemMedia>
                   <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                  {email}
-                </span>
-                <Badge variant="secondary">{verificationType.replace('_', ' ')}</Badge>
-              </div>
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>{email}</ItemTitle>
+                  <ItemDescription>
+                    {verificationType.replace('_', ' ')}
+                  </ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                  <Badge variant="secondary">{verificationType.replace('_', ' ')}</Badge>
+                </ItemActions>
+              </Item>
               <FieldDescription>
                 Enter the code we sent to this address to continue.
               </FieldDescription>
@@ -210,34 +226,25 @@ export function OTPForm({
                 )}
               </Button>
 
-              {onResend && (
-                <div className="text-center">
-                  {canResend ? (
-                    <Button
-                      type="button"
-                      variant="link"
-                      onClick={handleResend}
-                      disabled={isResending}
-                      className="text-sm"
-                    >
-                      {isResending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Resending...
-                        </>
-                      ) : (
-                        'Resend Code'
-                      )}
-                    </Button>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      Resend code in {resendTimer} seconds
-                    </p>
-                  )}
-                </div>
-              )}
-
-              <div className="text-center">
+              <ButtonGroup className="justify-center">
+                {onResend ? (
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={handleResend}
+                    disabled={!canResend || isResending}
+                    className="text-sm"
+                  >
+                    {isResending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Resending...
+                      </>
+                    ) : (
+                      'Resend Code'
+                    )}
+                  </Button>
+                ) : null}
                 <Button
                   type="button"
                   variant="link"
@@ -246,7 +253,13 @@ export function OTPForm({
                 >
                   Go Back
                 </Button>
-              </div>
+              </ButtonGroup>
+
+              {onResend && !canResend ? (
+                <p className="text-center text-sm text-muted-foreground">
+                  Resend code in {resendTimer} seconds
+                </p>
+              ) : null}
             </div>
           </form>
         </Form>

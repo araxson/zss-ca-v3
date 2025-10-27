@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Empty,
   EmptyContent,
@@ -38,9 +39,11 @@ export function NotificationList({ notifications, hasUnread }: NotificationListP
     <div className="space-y-4">
       {hasUnread && (
         <div className="flex justify-end">
-          <Button onClick={handleMarkAllRead} variant="outline" size="sm">
-            Mark all as read
-          </Button>
+          <ButtonGroup>
+            <Button onClick={handleMarkAllRead} variant="outline" size="sm">
+              Mark all as read
+            </Button>
+          </ButtonGroup>
         </div>
       )}
 

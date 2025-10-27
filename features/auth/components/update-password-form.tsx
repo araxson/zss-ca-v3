@@ -6,8 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { Lock, Eye, EyeOff } from 'lucide-react'
+import { Lock, Eye, EyeOff, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Form,
   FormControl,
@@ -32,6 +33,7 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { updatePasswordAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
 import {
@@ -147,6 +149,17 @@ export function UpdatePasswordForm() {
             Use at least 8 characters with upper and lowercase letters and a number.
           </FieldDescription>
           <FieldGroup className="space-y-4">
+            <Item variant="outline" size="sm">
+              <ItemMedia>
+                <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{email}</ItemTitle>
+                <ItemDescription>
+                  Password will be updated for this account
+                </ItemDescription>
+              </ItemContent>
+            </Item>
             <FormField
               control={form.control}
               name="password"
@@ -240,7 +253,7 @@ export function UpdatePasswordForm() {
         </FieldSet>
 
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Updating...' : 'Update password'}
+          {loading ? <Spinner /> : 'Update password'}
         </Button>
       </form>
     </Form>

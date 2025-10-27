@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -13,6 +14,13 @@ import {
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import type { Database } from '@/lib/types/database.types'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -83,17 +91,17 @@ export function SiteDetailCard({ site }: SiteDetailCardProps) {
           <FieldGroup className="space-y-4">
             <Field>
               <FieldLabel>Client</FieldLabel>
-              <FieldDescription>
-                <Link
-                  href={`/admin/clients/${site.profile.id}`}
-                  className="text-primary hover:underline"
-                >
-                  {site.profile.company_name || site.profile.contact_name}
-                </Link>
-                <span className="block text-xs text-muted-foreground">
-                  {site.profile.contact_email}
-                </span>
-              </FieldDescription>
+              <Item variant="outline" size="sm">
+                <ItemContent>
+                  <ItemTitle>{site.profile.company_name || site.profile.contact_name}</ItemTitle>
+                  <ItemDescription>{site.profile.contact_email}</ItemDescription>
+                </ItemContent>
+                <ItemActions>
+                  <Button asChild variant="link" size="sm">
+                    <Link href={`/admin/clients/${site.profile.id}`}>Open client</Link>
+                  </Button>
+                </ItemActions>
+              </Item>
             </Field>
             <Field>
               <FieldLabel>Plan</FieldLabel>

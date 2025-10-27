@@ -11,18 +11,21 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { ROUTES } from '@/lib/constants/routes'
 import { ClientDetailCard } from './client-detail-card'
 import { EditClientForm } from './edit-client-form'
@@ -77,22 +80,27 @@ export function ClientDetailView({ client }: ClientDetailViewProps) {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Card className="bg-card">
-        <CardHeader className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-3">
-            <Button asChild variant="outline" size="sm">
-              <Link href={ROUTES.ADMIN_CLIENTS}>
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Link>
-            </Button>
-            <div className="space-y-1">
-              <CardTitle>{client.contact_name || 'Client Details'}</CardTitle>
-              <CardDescription>{client.contact_email}</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
+      <Item variant="outline" className="bg-card">
+        <ItemMedia>
+          <Avatar>
+            <AvatarFallback>
+              {(client.contact_name || client.contact_email || 'C').slice(0, 2)}
+            </AvatarFallback>
+          </Avatar>
+        </ItemMedia>
+        <ItemContent>
+          <ItemTitle>{client.contact_name || 'Client Details'}</ItemTitle>
+          <ItemDescription>{client.contact_email}</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Button asChild variant="outline" size="sm">
+            <Link href={ROUTES.ADMIN_CLIENTS}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back
+            </Link>
+          </Button>
+        </ItemActions>
+      </Item>
 
       <ClientDetailCard client={client} />
 

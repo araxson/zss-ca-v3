@@ -7,6 +7,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import {
   Field,
   FieldDescription,
   FieldGroup,
@@ -115,7 +121,14 @@ export function ClientDetailCard({ client }: ClientDetailCardProps) {
               )}
             </FieldGroup>
           ) : (
-            <div className="text-muted-foreground">No active subscription</div>
+            <Empty className="border border-dashed py-6">
+              <EmptyHeader>
+                <EmptyTitle>No active subscription</EmptyTitle>
+                <EmptyDescription>
+                  Assign a plan to unlock billing, analytics, and deployment workflows.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           )}
         </CardContent>
       </Card>

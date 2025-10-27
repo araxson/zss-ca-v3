@@ -18,6 +18,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Select,
   SelectContent,
@@ -273,9 +275,9 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
               </CollapsibleContent>
             </Collapsible>
 
-            <div className="flex gap-4">
+            <ButtonGroup>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Creating...' : 'Create Audit Log'}
+                {isSubmitting ? <Spinner /> : 'Create Audit Log'}
               </Button>
               <Button
                 type="button"
@@ -285,7 +287,7 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
               >
                 Cancel
               </Button>
-            </div>
+            </ButtonGroup>
           </form>
         </Form>
       </CardContent>

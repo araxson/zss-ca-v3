@@ -17,6 +17,13 @@ import { ReplyForm } from './reply-form'
 import { UpdateStatusButton } from './update-status-button'
 import type { TicketWithReplies } from '../api/queries'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 
 interface TicketDetailProps {
   ticket: TicketWithReplies
@@ -124,30 +131,22 @@ export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }:
               const isFromAdmin = reply.profile.role === 'admin'
 
               return (
-                <Card
+                <Item
                   key={reply.id}
+                  variant="outline"
                   className={isFromAdmin ? 'border-primary' : ''}
                 >
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <CardTitle>{reply.profile.contact_name || reply.profile.contact_email}</CardTitle>
-                          {isFromAdmin && (
-                            <Badge variant="outline">Support Team</Badge>
-                          )}
-                        </div>
-                        <CardDescription>
-                          {replyCreatedAt.toLocaleDateString()} at{' '}
-                          {replyCreatedAt.toLocaleTimeString()}
-                        </CardDescription>
-                      </div>
+                  <ItemContent className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <ItemTitle>{reply.profile.contact_name || reply.profile.contact_email}</ItemTitle>
+                      {isFromAdmin && <Badge variant="outline">Support Team</Badge>}
                     </div>
-                  </CardHeader>
-                  <CardContent>
+                    <ItemDescription>
+                      {replyCreatedAt.toLocaleDateString()} at {replyCreatedAt.toLocaleTimeString()}
+                    </ItemDescription>
                     <p className="whitespace-pre-wrap text-sm">{reply.message}</p>
-                  </CardContent>
-                </Card>
+                  </ItemContent>
+                </Item>
               )
             })}
           </CollapsibleContent>

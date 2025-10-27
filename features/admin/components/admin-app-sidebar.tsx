@@ -43,6 +43,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
 import { createClient } from '@/lib/supabase/client'
 import type { Database } from '@/lib/types/database.types'
@@ -207,22 +214,20 @@ export function AdminAppSidebar({ profile, pendingTickets = 0 }: AdminAppSidebar
                 sideOffset={4}
               >
                 <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage src={profile?.company_website || ''} />
-                      <AvatarFallback className="rounded-lg">
-                        {initials}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <div className="truncate font-semibold">
-                        {profile?.contact_name || 'Admin'}
-                      </div>
-                      <div className="truncate text-xs">
-                        {profile?.contact_email || ''}
-                      </div>
-                    </div>
-                  </div>
+                  <Item className="px-1 py-1.5">
+                    <ItemMedia>
+                      <Avatar className="h-8 w-8 rounded-lg">
+                        <AvatarImage src={profile?.company_website || ''} />
+                        <AvatarFallback className="rounded-lg">
+                          {initials}
+                        </AvatarFallback>
+                      </Avatar>
+                    </ItemMedia>
+                    <ItemContent>
+                      <ItemTitle>{profile?.contact_name || 'Admin'}</ItemTitle>
+                      <ItemDescription>{profile?.contact_email || ''}</ItemDescription>
+                    </ItemContent>
+                  </Item>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => router.push(ROUTES.ADMIN_PROFILE)}>

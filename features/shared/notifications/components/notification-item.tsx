@@ -3,13 +3,20 @@
 import { formatDistanceToNow } from 'date-fns'
 import { type LucideIcon, CheckCircle2, Info, AlertCircle, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { markNotificationReadAction } from '../api/mutations'
 import type { Notification } from '../api/queries'
 
@@ -54,29 +61,27 @@ export function NotificationItem({ notification }: NotificationItemProps) {
   const badgeLabel = formatTypeLabel(notification.notification_type)
 
   const content = (
-    <Card className={isUnread ? 'border-primary' : ''}>
-      <CardHeader>
-        <div className="flex items-start gap-3">
-          <Icon className="mt-1 h-5 w-5" aria-hidden />
-          <div className="flex-1 space-y-1">
-            <div className="flex items-start justify-between gap-4">
-              <CardTitle>{notification.title}</CardTitle>
-              <div className="flex items-center gap-2">
-                <Badge variant={badgeVariant}>{badgeLabel}</Badge>
-                {isUnread && <Badge variant="default">New</Badge>}
-                <span className="text-xs text-muted-foreground whitespace-nowrap">
-                  {formatDistanceToNow(createdAt, { addSuffix: true })}
-                </span>
-              </div>
-            </div>
-            {notification.body && (
-              <CardDescription>{notification.body}</CardDescription>
-            )}
+    <Item variant="outline" className={isUnread ? 'border-primary' : ''}>
+      <ItemMedia>
+        <Icon className="h-5 w-5 text-muted-foreground" aria-hidden />
+      </ItemMedia>
+      <ItemContent className="space-y-2">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-1">
+            <ItemTitle>{notification.title}</ItemTitle>
+            {notification.body ? (
+              <ItemDescription>{notification.body}</ItemDescription>
+            ) : null}
           </div>
+          <ItemActions className="gap-2">
+            <Badge variant={badgeVariant}>{badgeLabel}</Badge>
+            {isUnread && <Badge variant="default">New</Badge>}
+            <span className="text-xs text-muted-foreground whitespace-nowrap">
+              {formatDistanceToNow(createdAt, { addSuffix: true })}
+            </span>
+          </ItemActions>
         </div>
-      </CardHeader>
-      {isUnread && (
-        <CardContent className="pt-0">
+        {isUnread && (
           <FieldGroup className="flex items-center justify-between gap-4">
             <FieldLabel className="text-xs text-muted-foreground">
               Mark this update as reviewed.
@@ -85,9 +90,9 @@ export function NotificationItem({ notification }: NotificationItemProps) {
               Mark as read
             </Button>
           </FieldGroup>
-        </CardContent>
-      )}
-    </Card>
+        )}
+      </ItemContent>
+    </Item>
   )
 
   if (notification.action_url) {

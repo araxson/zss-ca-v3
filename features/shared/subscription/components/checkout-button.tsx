@@ -2,7 +2,15 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { createCheckoutSessionAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
 
@@ -46,27 +54,44 @@ export function CheckoutButton({
       })
 
       if (result.error) {
-        console.error('Checkout error:', result.error)
-        alert(result.error)
+        toast.error('Failed to start checkout', {
+          description: result.error,
+        })
       } else if (result.url) {
         window.location.href = result.url
       }
     } catch (error) {
-      console.error('Checkout error:', error)
-      alert('Failed to start checkout')
+      toast.error('Failed to start checkout', {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+      })
     } finally {
       setLoading(false)
     }
   }
 
+  const buttonLabel = hasSubscription ? 'Manage Plan' : 'Get Started'
+  const tooltipLabel = hasSubscription
+    ? `Manage your existing ${planName} subscription`
+    : `Start checkout for the ${planName} plan`
+
   return (
-    <Button
-      onClick={handleCheckout}
-      disabled={loading}
-      variant={variant}
-      className="w-full"
-    >
-      {loading ? 'Loading...' : hasSubscription ? 'Manage Plan' : 'Get Started'}
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            onClick={handleCheckout}
+            disabled={loading}
+            variant={variant}
+            className="w-full"
+            aria-label={tooltipLabel}
+          >
+            {loading ? <Spinner /> : buttonLabel}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltipLabel}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }

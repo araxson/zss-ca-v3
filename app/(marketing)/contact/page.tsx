@@ -1,11 +1,7 @@
-import { ContactContent } from '@/features/marketing/contact/components/contact-content'
+import { ContactPage, contactPageMetadata } from '@/features/marketing/contact'
 
-export default function ContactPage() {
-  return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-16">
-        <ContactContent />
-      </div>
-    </div>
-  )
+export const metadata = contactPageMetadata
+
+export default function Page() {
+  return <ContactPage />
 }

@@ -4,12 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Bell, CreditCard, Globe, LifeBuoy } from 'lucide-react'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -181,16 +181,16 @@ export function DashboardOverview({
       )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle>Subscription Plan</CardTitle>
-            {subscription && (
-              <Badge variant={subscription.status === 'active' ? 'default' : 'secondary'}>
-                {subscription.status}
-              </Badge>
-            )}
-          </CardHeader>
-          <CardContent>
+        <Item variant="outline" className="flex flex-col">
+          <ItemContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Subscription Plan</ItemTitle>
+              {subscription && (
+                <Badge variant={subscription.status === 'active' ? 'default' : 'secondary'}>
+                  {subscription.status}
+                </Badge>
+              )}
+            </div>
             {subscription ? (
               <div className="space-y-4">
                 <div>
@@ -217,24 +217,24 @@ export function DashboardOverview({
                 </Button>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </ItemContent>
+        </Item>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle>Websites</CardTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge variant="secondary">{sites.length}</Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Total websites</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </CardHeader>
-          <CardContent>
+        <Item variant="outline" className="flex flex-col">
+          <ItemContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Websites</ItemTitle>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge variant="secondary">{sites.length}</Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Total websites</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
             {sites.length > 0 ? (
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -267,19 +267,19 @@ export function DashboardOverview({
                 )}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </ItemContent>
+        </Item>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle>Support</CardTitle>
-            {openTicketsCount > 0 ? (
-              <Badge variant="destructive">{openTicketsCount}</Badge>
-            ) : (
-              <Badge variant="secondary">0</Badge>
-            )}
-          </CardHeader>
-          <CardContent>
+        <Item variant="outline" className="flex flex-col">
+          <ItemContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Support</ItemTitle>
+              {openTicketsCount > 0 ? (
+                <Badge variant="destructive">{openTicketsCount}</Badge>
+              ) : (
+                <Badge variant="secondary">0</Badge>
+              )}
+            </div>
             <div className="space-y-4">
               <div>
                 <div className="text-2xl font-bold">{openTicketsCount}</div>
@@ -293,8 +293,8 @@ export function DashboardOverview({
                 </Link>
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </ItemContent>
+        </Item>
       </div>
 
       <Tabs defaultValue="sites" className="space-y-4">

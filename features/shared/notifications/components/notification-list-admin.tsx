@@ -8,12 +8,14 @@ import { deleteNotificationAction } from '../api/mutations'
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
@@ -28,6 +30,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Spinner } from '@/components/ui/spinner'
 import {
   Empty,
   EmptyContent,
@@ -112,6 +115,7 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
 
       <ScrollArea className="rounded-md border">
         <Table className="min-w-[960px]">
+          <TableCaption>Latest notifications sent to clients with status tracking.</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Type</TableHead>
@@ -176,28 +180,32 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
                         <span className="sr-only">Delete</span>
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Notification</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to delete this notification? This action
-                          cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction asChild>
-                          <Button
-                            variant="destructive"
-                            onClick={() => handleDelete(notification.id)}
-                            disabled={deletingId === notification.id}
-                          >
-                            Delete
-                          </Button>
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Notification</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete this notification? This action
+                            cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <ButtonGroup>
+                            <AlertDialogCancel asChild>
+                              <Button variant="outline">Cancel</Button>
+                            </AlertDialogCancel>
+                            <AlertDialogAction asChild>
+                              <Button
+                                variant="destructive"
+                                onClick={() => handleDelete(notification.id)}
+                                disabled={deletingId === notification.id}
+                              >
+                                {deletingId === notification.id ? <Spinner /> : 'Delete'}
+                              </Button>
+                            </AlertDialogAction>
+                          </ButtonGroup>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                 </TableCell>
               </TableRow>
             ))}
