@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   FieldDescription,
@@ -34,6 +33,12 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
 
 type AnalyticsFormProps = {
@@ -87,150 +92,156 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
   }
 
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle>Add Analytics Data</CardTitle>
-        <CardDescription>
-          Manually add analytics data for a client site
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertTitle>Submission failed</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+    <div className="space-y-6">
+      <Item variant="muted" className="flex flex-col gap-2">
+        <ItemContent className="space-y-1">
+          <ItemTitle>Add Analytics Data</ItemTitle>
+          <ItemDescription>
+            Manually add analytics data for a client site
+          </ItemDescription>
+        </ItemContent>
+      </Item>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FieldSet className="space-y-4">
-              <FieldLegend>Site selection</FieldLegend>
-              <FieldDescription>
-                Choose the site and date for the metrics you&apos;re recording.
-              </FieldDescription>
-              <FieldGroup className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="client_site_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Site</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a site" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {sites.map((site) => (
-                              <SelectItem key={site.id} value={site.id}>
-                                {site.site_name} ({site.profile.contact_name || site.profile.contact_email})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>Submission failed</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-                <FormField
-                  control={form.control}
-                  name="metric_date"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Date</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormDescription>Date for these analytics metrics</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 rounded-lg border p-6"
+        >
+          <FieldSet className="space-y-4">
+            <FieldLegend>Site selection</FieldLegend>
+            <FieldDescription>
+              Choose the site and date for the metrics you&apos;re recording.
+            </FieldDescription>
+            <FieldGroup className="space-y-4">
+              <FormField
+                control={form.control}
+                name="client_site_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Site</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a site" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sites.map((site) => (
+                            <SelectItem key={site.id} value={site.id}>
+                              {site.site_name} ({site.profile.contact_name || site.profile.contact_email})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FieldSet className="space-y-4">
-              <FieldLegend>Performance metrics</FieldLegend>
-              <FieldDescription>Record the key performance indicators for this day.</FieldDescription>
-              <FieldGroup className="grid gap-4 md:grid-cols-3">
-                <FormField
-                  control={form.control}
-                  name="page_views"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Page Views</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="metric_date"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormDescription>Date for these analytics metrics</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
 
-                <FormField
-                  control={form.control}
-                  name="unique_visitors"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Unique Visitors</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <FieldSet className="space-y-4">
+            <FieldLegend>Performance metrics</FieldLegend>
+            <FieldDescription>
+              Record the key performance indicators for this day.
+            </FieldDescription>
+            <FieldGroup className="grid gap-4 md:grid-cols-3">
+              <FormField
+                control={form.control}
+                name="page_views"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Page Views</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="conversions"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Conversions</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
+              <FormField
+                control={form.control}
+                name="unique_visitors"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Unique Visitors</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <ButtonGroup>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? <Spinner /> : 'Add Analytics Data'}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-            </ButtonGroup>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+              <FormField
+                control={form.control}
+                name="conversions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Conversions</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="0"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
+
+          <ButtonGroup>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? <Spinner /> : 'Add Analytics Data'}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+          </ButtonGroup>
+        </form>
+      </Form>
+    </div>
   )
 }

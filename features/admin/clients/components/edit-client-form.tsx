@@ -21,7 +21,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   FieldDescription,
@@ -72,112 +71,113 @@ export function EditClientForm({ client }: EditClientFormProps) {
   }
 
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle>Edit Client Information</CardTitle>
-        <CardDescription>
-          Update client contact details and company information
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {error && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertTitle>Unable to update client</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+    <div className="space-y-6">
+      <Item variant="muted" className="flex flex-col gap-2">
+        <ItemContent className="space-y-1">
+          <ItemTitle>Edit Client Information</ItemTitle>
+          <ItemDescription>
+            Update client contact details and company information
+          </ItemDescription>
+        </ItemContent>
+      </Item>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FieldSet className="space-y-4">
-          <FieldLegend>Contact information</FieldLegend>
-          <FieldDescription>
-            Update the client details that appear in admin and client portals.
-          </FieldDescription>
-          <FieldGroup className="space-y-4">
-            <Item variant="outline" size="sm">
-              <ItemMedia>
-                <User className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              </ItemMedia>
-              <ItemContent>
-                <ItemTitle>{client.contact_name || 'Client'}</ItemTitle>
-                <ItemDescription>{client.contact_email}</ItemDescription>
-              </ItemContent>
-            </Item>
-            <FormField
-              control={form.control}
-              name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <InputGroup>
-                          <InputGroupAddon>
-                            <User className="size-4" />
-                          </InputGroupAddon>
-                          <InputGroupInput {...field} />
-                        </InputGroup>
-                      </FormControl>
-                      <FormDescription>
-                        Client&apos;s full name
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>Unable to update client</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-                <FormField
-                  control={form.control}
-                  name="company"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Company Name</FormLabel>
-                      <FormControl>
-                        <InputGroup>
-                          <InputGroupAddon>
-                            <Building2 className="size-4" />
-                          </InputGroupAddon>
-                          <InputGroupInput {...field} />
-                        </InputGroup>
-                      </FormControl>
-                      <FormDescription>
-                        Client&apos;s company or business name
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 rounded-lg border p-6"
+        >
+          <FieldSet className="space-y-4">
+            <FieldLegend>Contact information</FieldLegend>
+            <FieldDescription>
+              Update the client details that appear in admin and client portals.
+            </FieldDescription>
+            <FieldGroup className="space-y-4">
+              <Item variant="outline" size="sm">
+                <ItemMedia>
+                  <User className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                </ItemMedia>
+                <ItemContent>
+                  <ItemTitle>{client.contact_name || 'Client'}</ItemTitle>
+                  <ItemDescription>{client.contact_email}</ItemDescription>
+                </ItemContent>
+              </Item>
 
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <InputGroup>
-                          <InputGroupAddon>
-                            <Phone className="size-4" />
-                          </InputGroupAddon>
-                          <InputGroupInput type="tel" {...field} />
-                        </InputGroup>
-                      </FormControl>
-                      <FormDescription>
-                        Contact phone number
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <User className="size-4" />
+                        </InputGroupAddon>
+                        <InputGroupInput {...field} />
+                      </InputGroup>
+                    </FormControl>
+                    <FormDescription>Client&apos;s full name</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+              <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company Name</FormLabel>
+                    <FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <Building2 className="size-4" />
+                        </InputGroupAddon>
+                        <InputGroupInput {...field} />
+                      </InputGroup>
+                    </FormControl>
+                    <FormDescription>
+                      Client&apos;s company or business name
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <Phone className="size-4" />
+                        </InputGroupAddon>
+                        <InputGroupInput type="tel" {...field} />
+                      </InputGroup>
+                    </FormControl>
+                    <FormDescription>Contact phone number</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
+
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
+          </Button>
+        </form>
+      </Form>
+    </div>
   )
 }

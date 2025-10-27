@@ -9,3 +9,12 @@ export * from './contact'
 
 // Pricing
 export * from './pricing'
+
+// Services
+export * from './services'
+
+// Case Studies
+export * from './case-studies'
+
+// Resources
+export * from './resources'

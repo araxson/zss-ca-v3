@@ -4,11 +4,23 @@ export { homePageMetadata } from './home.seo'
 export { Hero, heroData } from './sections/hero'
 export type { HeroData } from './sections/hero'
 
+export { HomeMetrics, homeMetricsData } from './sections/metrics'
+export type { HomeMetricsData, HomeMetric } from './sections/metrics'
+
 export { Features, featuresData } from './sections/features'
 export type { Feature, FeaturesData } from './sections/features'
 
+export { HomeProcess, homeProcessData } from './sections/process'
+export type { HomeProcessData, HomeProcessStep } from './sections/process'
+
+export { HomeIndustries, homeIndustriesData } from './sections/industries'
+export type { HomeIndustriesData, HomeIndustry } from './sections/industries'
+
 export { PricingPreview, pricingPreviewData, getPlansForPreview } from './sections/pricing-preview'
 export type { PricingTier, PricingPreviewData, PlanWithPricing } from './sections/pricing-preview'
+
+export { HomeSupport, homeSupportData } from './sections/support'
+export type { HomeSupportData, HomeSupportHighlight } from './sections/support'
 
 export { Testimonials, testimonialsData } from './sections/testimonials'
 export type { Testimonial, TestimonialsData } from './sections/testimonials'

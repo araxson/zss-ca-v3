@@ -12,8 +12,8 @@ export const heroData: HeroData = {
       href: ROUTES.PRICING,
     },
     secondary: {
-      label: 'Sign In',
-      href: ROUTES.LOGIN,
+      label: 'View Services',
+      href: ROUTES.SERVICES,
     },
   },
 }

@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { ChevronDown } from 'lucide-react'
@@ -37,6 +36,12 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 
 type CreateAuditLogFormProps = {
   clients?: Array<{
@@ -118,179 +123,183 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create Manual Audit Log</CardTitle>
-        <CardDescription>
-          Document manual changes or external system integrations
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+    <div className="space-y-6">
+      <Item variant="muted" className="flex flex-col gap-2">
+        <ItemContent className="space-y-1">
+          <ItemTitle>Create Manual Audit Log</ItemTitle>
+          <ItemDescription>
+            Document manual changes or external system integrations
+          </ItemDescription>
+        </ItemContent>
+      </Item>
 
-        {success && (
-          <Alert className="mb-6">
-            <AlertDescription>Audit log created successfully</AlertDescription>
-          </Alert>
-        )}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FieldSet className="space-y-4">
-              <FieldLegend>Context</FieldLegend>
-              <FieldGroup className="space-y-4">
-                {clients.length > 0 && (
-                  <FormField
-                    control={form.control}
-                    name="profile_id"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Related User (Optional)</FormLabel>
-                        <Select
-                          onValueChange={(value) => field.onChange(value === 'none' ? null : value)}
-                          value={field.value ?? 'none'}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a user (optional)" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="none">None</SelectItem>
-                            {clients.map((client) => (
-                              <SelectItem key={client.id} value={client.id}>
-                                {client.contact_name || client.contact_email}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
+      {success && (
+        <Alert>
+          <AlertDescription>Audit log created successfully</AlertDescription>
+        </Alert>
+      )}
 
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 rounded-lg border p-6"
+        >
+          <FieldSet className="space-y-4">
+            <FieldLegend>Context</FieldLegend>
+            <FieldGroup className="space-y-4">
+              {clients.length > 0 && (
                 <FormField
                   control={form.control}
-                  name="action"
+                  name="profile_id"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Action</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., manual_update, external_import" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        Describe the action taken (e.g., manual_update, data_correction)
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
-
-            <FieldSet className="space-y-4">
-              <FieldLegend>Target resource</FieldLegend>
-              <FieldGroup className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="resource_table"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Resource Table</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
+                      <FormLabel>Related User (Optional)</FormLabel>
+                      <Select
+                        onValueChange={(value) => field.onChange(value === 'none' ? null : value)}
+                        value={field.value ?? 'none'}
+                      >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select table" />
+                            <SelectValue placeholder="Select a user (optional)" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {commonTables.map((table) => (
-                            <SelectItem key={table} value={table}>
-                              {table}
+                          <SelectItem value="none">None</SelectItem>
+                          {clients.map((client) => (
+                            <SelectItem key={client.id} value={client.id}>
+                              {client.contact_name || client.contact_email}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormDescription>The database table affected</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              )}
 
-                <FormField
-                  control={form.control}
-                  name="resource_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Resource ID (Optional)</FormLabel>
+              <FormField
+                control={form.control}
+                name="action"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Action</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., manual_update, external_import" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Describe the action taken (e.g., manual_update, data_correction)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
+
+          <FieldSet className="space-y-4">
+            <FieldLegend>Target resource</FieldLegend>
+            <FieldGroup className="space-y-4">
+              <FormField
+                control={form.control}
+                name="resource_table"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Resource Table</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <Input
-                          placeholder="UUID or record ID"
-                          {...field}
-                          value={field.value || ''}
-                        />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select table" />
+                        </SelectTrigger>
                       </FormControl>
-                      <FormDescription>
-                        The specific record ID that was modified
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
+                      <SelectContent>
+                        {commonTables.map((table) => (
+                          <SelectItem key={table} value={table}>
+                            {table}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>The database table affected</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
-              <CollapsibleTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full justify-between"
-                >
-                  <span>Advanced: Change Summary (Optional)</span>
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform ${
-                      isAdvancedOpen ? 'rotate-180' : ''
-                    }`}
-                  />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-2 pt-4">
-                <FormLabel>Change Summary (JSON)</FormLabel>
-                <Textarea
-                  value={changeSummary}
-                  onChange={(e) => setChangeSummary(e.target.value)}
-                  placeholder='{"before": {...}, "after": {...}, "reason": "..."}'
-                  rows={6}
-                  className="font-mono text-sm"
-                />
-                <FormDescription>
-                  JSON object describing what changed (before/after values, reason, etc.)
-                </FormDescription>
-              </CollapsibleContent>
-            </Collapsible>
+              <FormField
+                control={form.control}
+                name="resource_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Resource ID (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="UUID or record ID"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      The specific record ID that was modified
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
 
-            <ButtonGroup>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? <Spinner /> : 'Create Audit Log'}
-              </Button>
+          <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+            <CollapsibleTrigger asChild>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.back()}
-                disabled={isSubmitting}
+                className="w-full justify-between"
               >
-                Cancel
+                <span>Advanced: Change Summary (Optional)</span>
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${
+                    isAdvancedOpen ? 'rotate-180' : ''
+                  }`}
+                />
               </Button>
-            </ButtonGroup>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-2 pt-4">
+              <FormLabel>Change Summary (JSON)</FormLabel>
+              <Textarea
+                value={changeSummary}
+                onChange={(e) => setChangeSummary(e.target.value)}
+                placeholder='{"before": {...}, "after": {...}, "reason": "..."}'
+                rows={6}
+                className="font-mono text-sm"
+              />
+              <FormDescription>
+                JSON object describing what changed (before/after values, reason, etc.)
+              </FormDescription>
+            </CollapsibleContent>
+          </Collapsible>
+
+          <ButtonGroup>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? <Spinner /> : 'Create Audit Log'}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+          </ButtonGroup>
+        </form>
+      </Form>
+    </div>
   )
 }

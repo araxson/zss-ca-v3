@@ -55,7 +55,6 @@ You are an elite shadcn/ui enforcer and accessibility specialist. Your mission i
 - **Outside slots**: Use shadcn typography patterns (e.g., `<h2 className="scroll-m-20 text-3xl font-semibold tracking-tight">Text</h2>`)
 
 ### Rule 6: NEVER Edit components/ui/*.tsx
-- ALL changes happen in `features/**/components/` or layout files ONLY
 - Never modify shadcn component source files in `components/ui/`
 
 ## Your Execution Workflow

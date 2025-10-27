@@ -22,7 +22,6 @@ import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Users } from 'lucide-react'
 import { ROUTES } from '@/lib/constants/routes'
@@ -87,168 +86,174 @@ export function BulkNotificationForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          <CardTitle>Send to All Clients</CardTitle>
-        </div>
-        <CardDescription>
-          This notification will be sent to all active clients in the system
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+    <div className="space-y-6">
+      <Item variant="muted" className="flex flex-col gap-2">
+        <ItemContent className="space-y-1">
+          <div className="flex items-center gap-2">
+            <ItemMedia>
+              <Users className="h-5 w-5" />
+            </ItemMedia>
+            <ItemTitle>Send to All Clients</ItemTitle>
+          </div>
+          <ItemDescription>
+            This notification will be sent to all active clients in the system
+          </ItemDescription>
+        </ItemContent>
+      </Item>
 
-        {success && (
-          <Alert className="mb-6">
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        )}
+      {error && (
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FieldSet className="space-y-4">
-              <FieldLegend>Broadcast type</FieldLegend>
-              <FieldGroup>
-                <FormField
-                  control={form.control}
-                  name="notification_type"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Type</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          className="grid grid-cols-2 gap-3"
-                        >
-                          {notificationTypeOptions.map((option) => (
-                            <Label key={option.value} htmlFor={`type-${option.value}`} className="cursor-pointer">
-                              <Item variant="outline" size="sm" className="items-start gap-3">
-                                <ItemMedia>
-                                  <RadioGroupItem value={option.value} id={`type-${option.value}`} />
-                                </ItemMedia>
-                                <ItemContent>
-                                  <ItemTitle>{option.label}</ItemTitle>
-                                  <ItemDescription>{option.description}</ItemDescription>
-                                </ItemContent>
-                              </Item>
-                            </Label>
-                          ))}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
+      {success && (
+        <Alert>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
+      )}
 
-            <FieldSet className="space-y-4">
-              <FieldLegend>Content</FieldLegend>
-              <FieldGroup className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Notification title" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6 rounded-lg border p-6"
+        >
+          <FieldSet className="space-y-4">
+            <FieldLegend>Broadcast type</FieldLegend>
+            <FieldGroup>
+              <FormField
+                control={form.control}
+                name="notification_type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Type</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        className="grid grid-cols-2 gap-3"
+                      >
+                        {notificationTypeOptions.map((option) => (
+                          <Label key={option.value} htmlFor={`type-${option.value}`} className="cursor-pointer">
+                            <Item variant="outline" size="sm" className="items-start gap-3">
+                              <ItemMedia>
+                                <RadioGroupItem value={option.value} id={`type-${option.value}`} />
+                              </ItemMedia>
+                              <ItemContent>
+                                <ItemTitle>{option.label}</ItemTitle>
+                                <ItemDescription>{option.description}</ItemDescription>
+                              </ItemContent>
+                            </Item>
+                          </Label>
+                        ))}
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
 
-                <FormField
-                  control={form.control}
-                  name="body"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Message (Optional)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Notification message"
-                          {...field}
-                          value={field.value || ''}
-                        />
-                      </FormControl>
-                      <FormDescription>Additional details for the notification</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
+          <FieldSet className="space-y-4">
+            <FieldLegend>Content</FieldLegend>
+            <FieldGroup className="space-y-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Notification title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FieldSet className="space-y-4">
-              <FieldLegend>Follow-up</FieldLegend>
-              <FieldDescription>Optionally include a link and expiration for this announcement.</FieldDescription>
-              <FieldGroup className="grid gap-4 sm:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="action_url"
-                  render={({ field }) => (
-                    <FormItem className="sm:col-span-2">
-                      <FormLabel>Action URL (Optional)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="url"
-                          placeholder="https://example.com"
-                          {...field}
-                          value={field.value || ''}
-                        />
-                      </FormControl>
-                      <FormDescription>Link for users to take action</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="body"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Message (Optional)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Notification message"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormDescription>Additional details for the notification</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
 
-                <FormField
-                  control={form.control}
-                  name="expires_at"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Expires At (Optional)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="datetime-local"
-                          {...field}
-                          value={field.value || ''}
-                        />
-                      </FormControl>
-                      <FormDescription>Notification will auto-hide after this date</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </FieldGroup>
-            </FieldSet>
+          <FieldSet className="space-y-4">
+            <FieldLegend>Follow-up</FieldLegend>
+            <FieldDescription>Optionally include a link and expiration for this announcement.</FieldDescription>
+            <FieldGroup className="grid gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="action_url"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Action URL (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="https://example.com"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormDescription>Link for users to take action</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <ButtonGroup>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? <Spinner /> : 'Send to All Clients'}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-            </ButtonGroup>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+              <FormField
+                control={form.control}
+                name="expires_at"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Expires At (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="datetime-local"
+                        {...field}
+                        value={field.value || ''}
+                      />
+                    </FormControl>
+                    <FormDescription>Notification will auto-hide after this date</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+          </FieldSet>
+
+          <ButtonGroup>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? <Spinner /> : 'Send to All Clients'}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+          </ButtonGroup>
+        </form>
+      </Form>
+    </div>
   )
 }
 const notificationTypeOptions = [

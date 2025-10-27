@@ -1,5 +1,4 @@
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
   Collapsible,
@@ -10,7 +9,9 @@ import {
   Field,
   FieldDescription,
   FieldGroup,
+  FieldLegend,
   FieldLabel,
+  FieldSet,
 } from '@/components/ui/field'
 import { ChevronDown, MessageSquare } from 'lucide-react'
 import { ReplyForm } from './reply-form'
@@ -65,49 +66,47 @@ export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }:
 
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-start gap-4">
-            <div className="flex-1 space-y-2">
-              <CardTitle>{ticket.subject}</CardTitle>
-              <CardDescription>
-                Created by {ticket.profile.contact_name || ticket.profile.contact_email} on{' '}
-                {createdAt.toLocaleDateString()} at {createdAt.toLocaleTimeString()}
-              </CardDescription>
-            </div>
-            <div className="flex gap-2">
-              <Badge variant={getPriorityVariant(ticket.priority)}>
-                {ticket.priority}
-              </Badge>
-              <Badge variant={getStatusVariant(ticket.status)}>
-                {ticket.status.replace('_', ' ')}
-              </Badge>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <FieldGroup className="space-y-4">
+      <Item variant="outline" className="flex flex-col gap-4 p-4">
+        <ItemContent className="space-y-1">
+          <ItemTitle>{ticket.subject}</ItemTitle>
+          <ItemDescription>
+            Created by {ticket.profile.contact_name || ticket.profile.contact_email} on{' '}
+            {createdAt.toLocaleDateString()} at {createdAt.toLocaleTimeString()}
+          </ItemDescription>
+        </ItemContent>
+        <ItemActions className="flex gap-2">
+          <Badge variant={getPriorityVariant(ticket.priority)}>
+            {ticket.priority}
+          </Badge>
+          <Badge variant={getStatusVariant(ticket.status)}>
+            {ticket.status.replace('_', ' ')}
+          </Badge>
+        </ItemActions>
+      </Item>
+
+      <FieldSet className="space-y-4 rounded-lg border p-4">
+        <FieldLegend>Ticket details</FieldLegend>
+        <FieldGroup className="space-y-4">
+          <Field>
+            <FieldLabel>Category</FieldLabel>
+            <FieldDescription className="capitalize">
+              {ticket.category.replace('_', ' ')}
+            </FieldDescription>
+          </Field>
+          <Field>
+            <FieldLabel>Message</FieldLabel>
+            <p className="whitespace-pre-wrap text-sm leading-relaxed">
+              {ticket.message}
+            </p>
+          </Field>
+          {isAdmin && (
             <Field>
-              <FieldLabel>Category</FieldLabel>
-              <FieldDescription className="capitalize">
-                {ticket.category.replace('_', ' ')}
-              </FieldDescription>
+              <FieldLabel>Admin Controls</FieldLabel>
+              <UpdateStatusButton ticketId={ticket.id} currentStatus={ticket.status} />
             </Field>
-            <Field>
-              <FieldLabel>Message</FieldLabel>
-              <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                {ticket.message}
-              </p>
-            </Field>
-            {isAdmin && (
-              <Field>
-                <FieldLabel>Admin Controls</FieldLabel>
-                <UpdateStatusButton ticketId={ticket.id} currentStatus={ticket.status} />
-              </Field>
-            )}
-          </FieldGroup>
-        </CardContent>
-      </Card>
+          )}
+        </FieldGroup>
+      </FieldSet>
 
       {ticket.replies.length > 0 && (
         <Collapsible defaultOpen className="space-y-4">

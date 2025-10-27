@@ -85,6 +85,23 @@ components/
 proxy.ts              # Session refresh ONLY (Next.js 16)
 ```
 
+### Marketing Feature Pattern
+
+```
+features/
+  marketing/page-name
+    sections/
+      [section-name]/
+        [section-name].tsx
+        [section-name].data.ts
+        [section-name].types.ts     ← section-specific types (optional)
+        index.ts                    ← export component + data
+    [page-name]-page.tsx
+    [page-name].seo.ts              ← SEO metadata
+    [page-name].types.ts            ← feature-wide types (optional)
+    index.ts                        ← export page + sections
+```
+
 ---
 
 ## ⚠️ Common Gotchas

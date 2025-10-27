@@ -35,7 +35,10 @@ type Profile = Database['public']['Tables']['profile']['Row']
 
 const marketingNavItems = [
   { label: 'Home', href: ROUTES.HOME },
+  { label: 'Services', href: ROUTES.SERVICES },
   { label: 'Pricing', href: ROUTES.PRICING },
+  { label: 'Case Studies', href: ROUTES.CASE_STUDIES },
+  { label: 'Resources', href: ROUTES.RESOURCES },
   { label: 'About', href: ROUTES.ABOUT },
   { label: 'Contact', href: ROUTES.CONTACT },
 ]

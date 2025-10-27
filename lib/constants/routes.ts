@@ -3,6 +3,9 @@ export const ROUTES = {
   HOME: '/',
   PRICING: '/pricing',
   ABOUT: '/about',
+  CASE_STUDIES: '/case-studies',
+  SERVICES: '/services',
+  RESOURCES: '/resources',
   CONTACT: '/contact',
 
   // Auth routes

@@ -1,15 +1,17 @@
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from '@/components/ui/field'
 import {
   Item,
+  ItemActions,
   ItemContent,
   ItemDescription,
   ItemMedia,
@@ -34,17 +36,24 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   const yearlyPrice = monthlyPrice * 12
 
   return (
-    <Card>
-      <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-1">
-          <CardTitle>{plan.name} Plan</CardTitle>
-          <CardDescription>{plan.description}</CardDescription>
-        </div>
-        <Badge className="w-fit" variant={isActive ? 'default' : isPastDue ? 'destructive' : 'secondary'}>
-          {subscription.status}
-        </Badge>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="space-y-6 rounded-lg border p-6">
+      <Item variant="muted" className="flex flex-col gap-3">
+        <ItemContent className="space-y-1">
+          <ItemTitle>{plan.name} Plan</ItemTitle>
+          <ItemDescription>{plan.description}</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Badge
+            className="w-fit"
+            variant={isActive ? 'default' : isPastDue ? 'destructive' : 'secondary'}
+          >
+            {subscription.status}
+          </Badge>
+        </ItemActions>
+      </Item>
+
+      <FieldSet className="space-y-4">
+        <FieldLegend>Billing details</FieldLegend>
         <FieldGroup className="space-y-4">
           {currentPeriodEnd && (
             <>
@@ -99,19 +108,18 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
             </p>
           </Field>
         </FieldGroup>
+      </FieldSet>
 
-        {isPastDue && (
-          <Alert variant="destructive">
-            <AlertTitle>Payment Failed</AlertTitle>
-            <AlertDescription>
-              Please update your payment method to continue your subscription.
-            </AlertDescription>
-          </Alert>
-        )}
-      </CardContent>
-      <CardFooter>
-        <ManageSubscriptionButtons subscriptionId={subscription.id} />
-      </CardFooter>
-    </Card>
+      {isPastDue && (
+        <Alert variant="destructive">
+          <AlertTitle>Payment Failed</AlertTitle>
+          <AlertDescription>
+            Please update your payment method to continue your subscription.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <ManageSubscriptionButtons subscriptionId={subscription.id} />
+    </div>
   )
 }
