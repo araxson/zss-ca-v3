@@ -33,7 +33,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   FieldDescription,
@@ -45,6 +44,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
 import { deploySiteSchema, type DeploySiteInput } from '../schema'
@@ -83,34 +83,34 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
 
   if (isLive) {
     return (
-      <Card className="h-full">
-        <CardHeader>
-          <CardTitle>Site Already Live</CardTitle>
-          <CardDescription>
+      <Item variant="outline" className="h-full flex flex-col p-6">
+        <ItemHeader>
+          <ItemTitle>Site Already Live</ItemTitle>
+          <ItemDescription>
             This site has already been deployed. Use the edit form to update the deployment URL.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </ItemDescription>
+        </ItemHeader>
+        <ItemContent>
           <div className="text-sm text-muted-foreground">
             Update deployment details from the edit panel if you need to change URLs or notes.
           </div>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
     )
   }
 
   return (
-    <Card className="h-full">
-      <CardHeader>
+    <Item variant="outline" className="h-full flex flex-col p-6">
+      <ItemHeader className="gap-2">
         <div className="flex items-center gap-2">
           <Rocket className="h-5 w-5" />
-          <CardTitle>Deploy Site</CardTitle>
+          <ItemTitle>Deploy Site</ItemTitle>
         </div>
-        <CardDescription>
+        <ItemDescription>
           Deploy {siteName} and make it live for the client
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertTitle>Deployment failed</AlertTitle>
@@ -211,7 +211,7 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
             </AlertDialog>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

@@ -4,17 +4,25 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { aboutServicesData } from './about-services.data'
 
 export function AboutServices() {
   return (
     <section className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">{aboutServicesData.title}</h2>
-        <p className="text-muted-foreground">
-          Subscription-first delivery keeps every client launch on track.
-        </p>
-      </div>
+      <Item className="border-0 bg-transparent shadow-none text-center">
+        <ItemContent className="space-y-2">
+          <ItemTitle className="text-3xl font-bold tracking-tight">{aboutServicesData.title}</ItemTitle>
+          <ItemDescription className="text-muted-foreground">
+            Subscription-first delivery keeps every client launch on track.
+          </ItemDescription>
+        </ItemContent>
+      </Item>
       <Accordion type="single" collapsible className="w-full">
         {aboutServicesData.items.map((item) => (
           <AccordionItem key={item.id} value={item.id}>

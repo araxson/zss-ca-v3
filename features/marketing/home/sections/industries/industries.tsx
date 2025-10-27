@@ -2,6 +2,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
 import { homeIndustriesData } from './industries.data'
@@ -15,7 +16,7 @@ export function HomeIndustries() {
           We partner with Canadian organizations who rely on compelling storytelling and consistent lead flow.
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+      <ItemGroup className="grid gap-4 md:grid-cols-2">
         {homeIndustriesData.industries.map((industry) => (
           <Item key={industry.id} variant="outline" className="flex flex-col">
             <ItemContent className="space-y-2">
@@ -24,7 +25,7 @@ export function HomeIndustries() {
             </ItemContent>
           </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

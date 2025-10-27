@@ -6,15 +6,12 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
-import {
   Item,
   ItemActions,
   ItemContent,
   ItemDescription,
   ItemMedia,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
 import { markNotificationReadAction } from '../api/mutations'
@@ -82,14 +79,14 @@ export function NotificationItem({ notification }: NotificationItemProps) {
           </ItemActions>
         </div>
         {isUnread && (
-          <FieldGroup className="flex items-center justify-between gap-4">
-            <FieldLabel className="text-xs text-muted-foreground">
+          <ItemGroup className="flex items-center justify-between gap-4">
+            <ItemDescription className="text-xs text-muted-foreground">
               Mark this update as reviewed.
-            </FieldLabel>
+            </ItemDescription>
             <Button size="sm" variant="outline" onClick={handleMarkRead}>
               Mark as read
             </Button>
-          </FieldGroup>
+          </ItemGroup>
         )}
       </ItemContent>
     </Item>

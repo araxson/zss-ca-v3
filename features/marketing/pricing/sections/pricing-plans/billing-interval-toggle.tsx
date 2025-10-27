@@ -1,11 +1,11 @@
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Badge } from '@/components/ui/badge'
 import {
-  FieldDescription,
-  FieldGroup,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 
 type BillingInterval = 'monthly' | 'yearly'
 
@@ -16,12 +16,16 @@ interface BillingIntervalToggleProps {
 
 export function BillingIntervalToggle({ value, onChange }: BillingIntervalToggleProps) {
   return (
-    <FieldSet className="space-y-3">
-      <FieldLegend>Billing interval</FieldLegend>
-      <FieldDescription className="text-sm text-muted-foreground">
-        Toggle between monthly and yearly pricing to compare savings.
-      </FieldDescription>
-      <FieldGroup className="flex justify-center">
+    <Item variant="outline" className="flex flex-col gap-3 p-4">
+      <ItemContent className="space-y-2 text-center sm:text-left">
+        <ItemTitle className="text-sm font-semibold uppercase tracking-wide">
+          Billing interval
+        </ItemTitle>
+        <ItemDescription className="text-sm text-muted-foreground">
+          Toggle between monthly and yearly pricing to compare savings.
+        </ItemDescription>
+      </ItemContent>
+      <div className="flex justify-center">
         <ToggleGroup
           type="single"
           value={value}
@@ -35,8 +39,8 @@ export function BillingIntervalToggle({ value, onChange }: BillingIntervalToggle
             <Badge variant="secondary">Save 20%</Badge>
           </ToggleGroupItem>
         </ToggleGroup>
-      </FieldGroup>
-    </FieldSet>
+      </div>
+    </Item>
   )
 }
 

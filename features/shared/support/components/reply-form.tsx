@@ -19,16 +19,16 @@ import {
 } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   FieldGroup,
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import {
+  Item,
+  ItemContent,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
 import { replyToTicketSchema, type ReplyToTicketInput } from '../schema'
 import { replyToTicketAction } from '../api/mutations'
 
@@ -61,11 +61,11 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add Reply</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Item variant="outline" className="flex flex-col gap-4 p-6">
+      <ItemHeader>
+        <ItemTitle>Add Reply</ItemTitle>
+      </ItemHeader>
+      <ItemContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FieldSet className="space-y-3">
@@ -118,7 +118,7 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
             </ButtonGroup>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

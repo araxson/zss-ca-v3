@@ -1,10 +1,11 @@
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from '@/components/ui/field'
 import { Badge } from '@/components/ui/badge'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
+} from '@/components/ui/item'
 import { contactStepsData } from './contact-steps.data'
 
 export function ContactSteps() {
@@ -16,25 +17,23 @@ export function ContactSteps() {
           Here&apos;s how we turn your idea into a live website.
         </p>
       </div>
-      <div className="grid gap-6 md:grid-cols-3">
+      <ItemGroup className="grid gap-6 md:grid-cols-3">
         {contactStepsData.steps.map((step) => (
-          <FieldSet key={step.id} className="space-y-3 rounded-lg border p-6">
-            <FieldLabel asChild>
+          <Item key={step.id} variant="outline" className="flex flex-col p-6">
+            <ItemContent className="space-y-3">
               <Badge variant="outline" className="w-fit">
                 Step {step.id}
               </Badge>
-            </FieldLabel>
-            <FieldGroup className="space-y-2">
-              <FieldLabel className="text-base font-semibold text-foreground">
+              <ItemTitle className="text-base font-semibold text-foreground">
                 {step.title}
-              </FieldLabel>
-              <FieldDescription className="text-sm text-muted-foreground">
+              </ItemTitle>
+              <ItemDescription className="text-sm text-muted-foreground">
                 {step.description}
-              </FieldDescription>
-            </FieldGroup>
-          </FieldSet>
+              </ItemDescription>
+            </ItemContent>
+          </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

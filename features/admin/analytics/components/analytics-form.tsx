@@ -16,6 +16,11 @@ import {
   FormDescription,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
@@ -37,6 +42,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
@@ -92,7 +98,7 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <ItemGroup className="space-y-6">
       <Item variant="muted" className="flex flex-col gap-2">
         <ItemContent className="space-y-1">
           <ItemTitle>Add Analytics Data</ItemTitle>
@@ -109,11 +115,13 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
         </Alert>
       )}
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 rounded-lg border p-6"
-        >
+      <Item variant="outline" className="p-6">
+        <ItemContent>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
           <FieldSet className="space-y-4">
             <FieldLegend>Site selection</FieldLegend>
             <FieldDescription>
@@ -175,12 +183,17 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
                   <FormItem>
                     <FormLabel>Page Views</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min="0"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <span className="text-xs font-medium uppercase">PV</span>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          min="0"
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                        />
+                      </InputGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -194,12 +207,17 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
                   <FormItem>
                     <FormLabel>Unique Visitors</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min="0"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <span className="text-xs font-medium uppercase">UV</span>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          min="0"
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                        />
+                      </InputGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -213,12 +231,17 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
                   <FormItem>
                     <FormLabel>Conversions</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        min="0"
-                        {...field}
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                      />
+                      <InputGroup>
+                        <InputGroupAddon>
+                          <span className="text-xs font-medium uppercase">CV</span>
+                        </InputGroupAddon>
+                        <InputGroupInput
+                          type="number"
+                          min="0"
+                          {...field}
+                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
+                        />
+                      </InputGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -242,6 +265,8 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
           </ButtonGroup>
         </form>
       </Form>
-    </div>
+    </ItemContent>
+  </Item>
+</ItemGroup>
   )
 }

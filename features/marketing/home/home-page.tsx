@@ -8,10 +8,11 @@ import { HomeSupport } from './sections/support'
 import { Testimonials } from './sections/testimonials'
 import { Faq } from './sections/faq'
 import { Cta } from './sections/cta'
+import { ItemGroup } from '@/components/ui/item'
 
 export async function HomePage() {
   return (
-    <div className="container mx-auto flex flex-col gap-20 px-4 py-16 md:py-24">
+    <ItemGroup className="container mx-auto flex flex-col gap-20 px-4 py-16 md:py-24">
       <Hero />
       <HomeMetrics />
       <Features />
@@ -22,6 +23,6 @@ export async function HomePage() {
       <Testimonials />
       <Faq />
       <Cta />
-    </div>
+    </ItemGroup>
   )
 }

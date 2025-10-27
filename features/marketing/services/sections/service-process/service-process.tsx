@@ -2,6 +2,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
 import { serviceProcessData } from './service-process.data'
@@ -15,7 +16,7 @@ export function ServiceProcess() {
           A structured roadmap keeps stakeholders aligned and launches predictable.
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <ItemGroup className="grid gap-4 md:grid-cols-3">
         {serviceProcessData.phases.map((phase) => (
           <Item key={phase.id} variant="outline" className="flex flex-col">
             <ItemContent className="space-y-3">
@@ -27,7 +28,7 @@ export function ServiceProcess() {
             </ItemContent>
           </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

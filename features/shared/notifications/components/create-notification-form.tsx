@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ROUTES } from '@/lib/constants/routes'
 import {
@@ -40,6 +39,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemHeader,
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
@@ -93,14 +93,14 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create Notification</CardTitle>
-        <CardDescription>
+    <Item variant="outline" className="flex flex-col gap-4 p-6">
+      <ItemHeader>
+        <ItemTitle>Create Notification</ItemTitle>
+        <ItemDescription>
           Send a custom notification to a client. This will appear in their dashboard.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertDescription>{error}</AlertDescription>
@@ -273,7 +273,7 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
             </ButtonGroup>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

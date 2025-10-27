@@ -23,6 +23,7 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
 
@@ -65,7 +66,7 @@ export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }:
   const canReply = ticket.status !== 'closed'
 
   return (
-    <div className="space-y-6">
+    <ItemGroup className="space-y-6">
       <Item variant="outline" className="flex flex-col gap-4 p-4">
         <ItemContent className="space-y-1">
           <ItemTitle>{ticket.subject}</ItemTitle>
@@ -162,6 +163,6 @@ export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }:
           </AlertDescription>
         </Alert>
       )}
-    </div>
+    </ItemGroup>
   )
 }

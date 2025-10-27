@@ -27,6 +27,7 @@ interface CheckoutButtonProps {
 
 export function CheckoutButton({
   planId,
+  planName,
   billingInterval,
   isAuthenticated,
   hasSubscription,

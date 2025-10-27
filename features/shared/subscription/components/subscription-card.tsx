@@ -36,11 +36,12 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   const yearlyPrice = monthlyPrice * 12
 
   return (
-    <div className="space-y-6 rounded-lg border p-6">
-      <Item variant="muted" className="flex flex-col gap-3">
-        <ItemContent className="space-y-1">
-          <ItemTitle>{plan.name} Plan</ItemTitle>
-          <ItemDescription>{plan.description}</ItemDescription>
+    <Item variant="outline" className="space-y-6 rounded-lg border p-6">
+      <ItemContent className="space-y-6">
+        <Item variant="muted" className="flex flex-col gap-3">
+          <ItemContent className="space-y-1">
+            <ItemTitle>{plan.name} Plan</ItemTitle>
+            <ItemDescription>{plan.description}</ItemDescription>
         </ItemContent>
         <ItemActions>
           <Badge
@@ -120,6 +121,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
       )}
 
       <ManageSubscriptionButtons subscriptionId={subscription.id} />
-    </div>
+      </ItemContent>
+    </Item>
   )
 }

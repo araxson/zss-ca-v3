@@ -110,8 +110,10 @@ export function SignupForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <Item variant="outline" className="space-y-4 p-6">
+      <ItemContent className="space-y-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
@@ -305,17 +307,19 @@ export function SignupForm() {
           {loading ? <Spinner /> : 'Create account'}
         </Button>
 
-        <FieldGroup className="items-center justify-center gap-2">
-          <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
-            <FieldDescription>Already have an account?</FieldDescription>
-            <ButtonGroup>
-              <Button asChild variant="link" size="sm">
-                <Link href={ROUTES.LOGIN}>Sign in</Link>
-              </Button>
-            </ButtonGroup>
-          </Field>
-        </FieldGroup>
-      </form>
-    </Form>
+            <FieldGroup className="items-center justify-center gap-2">
+              <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
+                <FieldDescription>Already have an account?</FieldDescription>
+                <ButtonGroup>
+                  <Button asChild variant="link" size="sm">
+                    <Link href={ROUTES.LOGIN}>Sign in</Link>
+                  </Button>
+                </ButtonGroup>
+              </Field>
+            </FieldGroup>
+          </form>
+        </Form>
+      </ItemContent>
+    </Item>
   )
 }

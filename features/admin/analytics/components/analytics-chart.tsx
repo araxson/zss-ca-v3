@@ -1,5 +1,11 @@
 import { format } from 'date-fns'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
 import {
   Table,
   TableBody,
@@ -25,12 +31,12 @@ interface AnalyticsChartProps {
 export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
   if (analytics.length === 0) {
     return (
-      <Card className="h-full">
-        <CardHeader>
-          <CardTitle>Analytics Data</CardTitle>
-          <CardDescription>No analytics data available yet</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Item variant="outline" className="h-full flex flex-col">
+        <ItemHeader>
+          <ItemTitle>Analytics Data</ItemTitle>
+          <ItemDescription>No analytics data available yet</ItemDescription>
+        </ItemHeader>
+        <ItemContent>
           <Empty className="h-48">
             <EmptyHeader>
               <EmptyTitle>No analytics data</EmptyTitle>
@@ -39,20 +45,20 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
     )
   }
 
   return (
-    <Card className="h-full">
-      <CardHeader>
-        <CardTitle>Daily Metrics</CardTitle>
-        <CardDescription>
+    <Item variant="outline" className="h-full flex flex-col">
+      <ItemHeader>
+        <ItemTitle>Daily Metrics</ItemTitle>
+        <ItemDescription>
           Detailed breakdown of site performance over time
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         <ScrollArea className="h-96 rounded-md border">
           <Table className="min-w-[500px]">
             <TableCaption>Daily engagement metrics for client sites.</TableCaption>
@@ -81,7 +87,7 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
           </Table>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

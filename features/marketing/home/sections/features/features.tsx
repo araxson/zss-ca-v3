@@ -1,10 +1,12 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemHeader,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { featuresData } from './features.data'
 
 export function Features() {
@@ -18,25 +20,21 @@ export function Features() {
           {featuresData.subheading}
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {featuresData.features.map((feature) => (
-          <Card key={feature.id}>
-            <CardHeader>
-              <div className="flex items-center gap-4">
-                <div className="text-4xl" aria-hidden="true">
-                  {feature.icon}
-                </div>
-                <CardTitle>{feature.title}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>
-                {feature.description}
-              </CardDescription>
-            </CardContent>
-          </Card>
+          <Item key={feature.id} variant="outline" className="flex flex-col">
+            <ItemHeader className="items-center gap-4">
+              <ItemMedia variant="icon">
+                <span aria-hidden="true">{feature.icon}</span>
+              </ItemMedia>
+              <ItemTitle>{feature.title}</ItemTitle>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription>{feature.description}</ItemDescription>
+            </ItemContent>
+          </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

@@ -2,17 +2,12 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from '@/components/ui/field'
 import {
   Item,
@@ -75,104 +70,102 @@ function formatDate(dateString: string | null) {
 export function SiteDetailCard({ site }: SiteDetailCardProps) {
   return (
     <div className="space-y-6">
-      <Card className="h-full">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>{site.site_name}</CardTitle>
-              <CardDescription>Site information and deployment details</CardDescription>
-            </div>
-            <Badge variant={getStatusVariant(site.status)}>
-              {formatStatus(site.status)}
-            </Badge>
+      <FieldSet className="h-full space-y-6 rounded-lg border p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-1">
+            <FieldLegend className="text-lg font-semibold text-foreground">
+              {site.site_name}
+            </FieldLegend>
+            <FieldDescription>Site information and deployment details</FieldDescription>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <FieldGroup className="space-y-4">
+          <Badge variant={getStatusVariant(site.status)}>
+            {formatStatus(site.status)}
+          </Badge>
+        </div>
+        <FieldGroup className="space-y-4">
+          <Field>
+            <FieldLabel>Client</FieldLabel>
+            <Item variant="outline" size="sm">
+              <ItemContent>
+                <ItemTitle>{site.profile.company_name || site.profile.contact_name}</ItemTitle>
+                <ItemDescription>{site.profile.contact_email}</ItemDescription>
+              </ItemContent>
+              <ItemActions>
+                <Button asChild variant="link" size="sm">
+                  <Link href={`/admin/clients/${site.profile.id}`}>Open client</Link>
+                </Button>
+              </ItemActions>
+            </Item>
+          </Field>
+          <Field>
+            <FieldLabel>Plan</FieldLabel>
+            <p className="text-sm font-medium">
+              {site.plan?.name || 'No plan assigned'}
+            </p>
+          </Field>
+        </FieldGroup>
+
+        <FieldGroup className="grid gap-4 md:grid-cols-2">
+          <Field>
+            <FieldLabel>Created</FieldLabel>
+            <FieldDescription>{formatDate(site.created_at)}</FieldDescription>
+          </Field>
+          <Field>
+            <FieldLabel>Last Updated</FieldLabel>
+            <FieldDescription>{formatDate(site.updated_at)}</FieldDescription>
+          </Field>
+          {site.deployed_at && (
             <Field>
-              <FieldLabel>Client</FieldLabel>
-              <Item variant="outline" size="sm">
-                <ItemContent>
-                  <ItemTitle>{site.profile.company_name || site.profile.contact_name}</ItemTitle>
-                  <ItemDescription>{site.profile.contact_email}</ItemDescription>
-                </ItemContent>
-                <ItemActions>
-                  <Button asChild variant="link" size="sm">
-                    <Link href={`/admin/clients/${site.profile.id}`}>Open client</Link>
-                  </Button>
-                </ItemActions>
-              </Item>
+              <FieldLabel>Deployed</FieldLabel>
+              <FieldDescription>{formatDate(site.deployed_at)}</FieldDescription>
             </Field>
+          )}
+          {site.last_revision_at && (
             <Field>
-              <FieldLabel>Plan</FieldLabel>
-              <p className="text-sm font-medium">
-                {site.plan?.name || 'No plan assigned'}
+              <FieldLabel>Last Revision</FieldLabel>
+              <FieldDescription>{formatDate(site.last_revision_at)}</FieldDescription>
+            </Field>
+          )}
+        </FieldGroup>
+
+        <FieldGroup className="space-y-4">
+          {site.deployment_url && (
+            <Field>
+              <FieldLabel>Deployment URL</FieldLabel>
+              <FieldDescription>
+                <a
+                  href={site.deployment_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  {site.deployment_url}
+                </a>
+              </FieldDescription>
+            </Field>
+          )}
+          {site.custom_domain && (
+            <Field>
+              <FieldLabel>Custom Domain</FieldLabel>
+              <p className="text-sm font-medium">{site.custom_domain}</p>
+            </Field>
+          )}
+          {site.deployment_notes && (
+            <Field>
+              <FieldLabel>Deployment Notes</FieldLabel>
+              <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                {site.deployment_notes}
               </p>
             </Field>
-          </FieldGroup>
-
-          <FieldGroup className="grid gap-4 md:grid-cols-2">
+          )}
+          {site.slug && (
             <Field>
-              <FieldLabel>Created</FieldLabel>
-              <FieldDescription>{formatDate(site.created_at)}</FieldDescription>
+              <FieldLabel>Slug</FieldLabel>
+              <p className="font-mono text-xs">{site.slug}</p>
             </Field>
-            <Field>
-              <FieldLabel>Last Updated</FieldLabel>
-              <FieldDescription>{formatDate(site.updated_at)}</FieldDescription>
-            </Field>
-            {site.deployed_at && (
-              <Field>
-                <FieldLabel>Deployed</FieldLabel>
-                <FieldDescription>{formatDate(site.deployed_at)}</FieldDescription>
-              </Field>
-            )}
-            {site.last_revision_at && (
-              <Field>
-                <FieldLabel>Last Revision</FieldLabel>
-                <FieldDescription>{formatDate(site.last_revision_at)}</FieldDescription>
-              </Field>
-            )}
-          </FieldGroup>
-
-          <FieldGroup className="space-y-4">
-            {site.deployment_url && (
-              <Field>
-                <FieldLabel>Deployment URL</FieldLabel>
-                <FieldDescription>
-                  <a
-                    href={site.deployment_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline"
-                  >
-                    {site.deployment_url}
-                  </a>
-                </FieldDescription>
-              </Field>
-            )}
-            {site.custom_domain && (
-              <Field>
-                <FieldLabel>Custom Domain</FieldLabel>
-                <p className="text-sm font-medium">{site.custom_domain}</p>
-              </Field>
-            )}
-            {site.deployment_notes && (
-              <Field>
-                <FieldLabel>Deployment Notes</FieldLabel>
-                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
-                  {site.deployment_notes}
-                </p>
-              </Field>
-            )}
-            {site.slug && (
-              <Field>
-                <FieldLabel>Slug</FieldLabel>
-                <p className="font-mono text-xs">{site.slug}</p>
-              </Field>
-            )}
-          </FieldGroup>
-        </CardContent>
-      </Card>
+          )}
+        </FieldGroup>
+      </FieldSet>
     </div>
   )
 }

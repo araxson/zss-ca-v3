@@ -1,16 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
 import { TicketList } from '@/features/shared/support/components/ticket-list'
@@ -35,12 +29,12 @@ export function AdminSupportDashboard({ tickets }: AdminSupportDashboardProps) {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>Support Tickets</CardTitle>
-          <CardDescription>Manage all customer support requests</CardDescription>
-        </CardHeader>
-      </Card>
+      <Item variant="outline" className="bg-card flex flex-col">
+        <ItemHeader>
+          <ItemTitle>Support Tickets</ItemTitle>
+          <ItemDescription>Manage all customer support requests</ItemDescription>
+        </ItemHeader>
+      </Item>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (

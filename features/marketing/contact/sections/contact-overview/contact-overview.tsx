@@ -5,15 +5,10 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
 import { contactLocationIcon, contactOverviewData } from './contact-overview.data'
 
 export function ContactOverview() {
@@ -35,16 +30,23 @@ export function ContactOverview() {
             <ItemDescription>
               Reach out and we&apos;ll respond within one business day.
             </ItemDescription>
-            <FieldGroup className="space-y-4">
+            <ItemGroup className="space-y-3">
               {contactOverviewData.channels.map((channel) => (
-                <Field key={channel.label} className="flex items-center gap-3">
-                  <channel.icon className="h-5 w-5 text-primary" aria-hidden />
-                  <FieldLabel className="text-base font-medium text-foreground">
-                    <a href={channel.href}>{channel.value}</a>
-                  </FieldLabel>
-                </Field>
+                <Item key={channel.label} className="items-center gap-3">
+                  <ItemMedia variant="icon">
+                    <channel.icon className="h-5 w-5 text-primary" aria-hidden />
+                  </ItemMedia>
+                  <ItemContent className="flex-1">
+                    <ItemTitle className="text-base font-medium text-foreground">
+                      {channel.label}
+                    </ItemTitle>
+                    <ItemDescription>
+                      <a href={channel.href}>{channel.value}</a>
+                    </ItemDescription>
+                  </ItemContent>
+                </Item>
               ))}
-            </FieldGroup>
+            </ItemGroup>
           </ItemContent>
           <ItemActions>
             <Button asChild className="w-full">
@@ -56,21 +58,17 @@ export function ContactOverview() {
         <Item variant="outline" className="flex flex-col">
           <ItemContent className="space-y-4 text-muted-foreground">
             <ItemTitle className="text-foreground">Visit our studio</ItemTitle>
-            <FieldGroup className="space-y-3">
-              <Field className="flex items-start gap-3">
-                <ItemMedia>
-                  <LocationIcon className="h-5 w-5 text-primary" aria-hidden />
-                </ItemMedia>
-                <div>
-                  {contactOverviewData.office.addressLines.map((line) => (
-                    <p key={line} className="text-sm text-foreground">
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              </Field>
-              <FieldDescription>{contactOverviewData.office.hours}</FieldDescription>
-            </FieldGroup>
+            <div className="flex items-start gap-3">
+              <ItemMedia>
+                <LocationIcon className="h-5 w-5 text-primary" aria-hidden />
+              </ItemMedia>
+              <div className="space-y-1 text-sm text-foreground">
+                {contactOverviewData.office.addressLines.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
+            </div>
+            <ItemDescription>{contactOverviewData.office.hours}</ItemDescription>
           </ItemContent>
         </Item>
       </div>

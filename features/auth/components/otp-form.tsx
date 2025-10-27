@@ -23,7 +23,6 @@ import {
 } from '@/components/ui/input-otp'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Field,
   FieldDescription,
@@ -36,6 +35,7 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemHeader,
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
@@ -138,12 +138,12 @@ export function OTPForm({
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Item variant="outline" className="w-full max-w-md mx-auto flex flex-col gap-4 p-6">
+      <ItemHeader className="space-y-1">
+        <ItemTitle>{title}</ItemTitle>
+        <ItemDescription>{description}</ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         <FieldSet className="mb-6 space-y-3">
           <FieldGroup>
             <Field>
@@ -263,7 +263,7 @@ export function OTPForm({
             </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

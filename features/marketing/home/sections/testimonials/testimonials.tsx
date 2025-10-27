@@ -1,10 +1,11 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
 import { testimonialsData } from './testimonials.data'
 
 export function Testimonials() {
@@ -18,30 +19,33 @@ export function Testimonials() {
           {testimonialsData.subheading}
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {testimonialsData.testimonials.map((testimonial) => (
-          <Card key={testimonial.id}>
-            <CardHeader>
-              <div className="flex items-center gap-1 mb-2">
-                {Array.from({ length: testimonial.rating }).map((_, i) => (
-                  <span key={i} className="text-primary" aria-hidden="true">
+          <Item key={testimonial.id} variant="outline" className="flex flex-col gap-4">
+            <ItemHeader className="flex flex-col gap-2">
+              <div
+                className="flex items-center gap-1"
+                aria-label={`${testimonial.rating} star rating`}
+              >
+                {Array.from({ length: testimonial.rating }).map((_, index) => (
+                  <span key={index} className="text-primary" aria-hidden="true">
                     ★
                   </span>
                 ))}
               </div>
-              <CardTitle>{testimonial.name}</CardTitle>
-              <CardDescription>
+              <ItemTitle>{testimonial.name}</ItemTitle>
+              <ItemDescription>
                 {testimonial.role}, {testimonial.company}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              </ItemDescription>
+            </ItemHeader>
+            <ItemContent>
+              <ItemDescription className="text-sm leading-relaxed">
                 {testimonial.content}
-              </p>
-            </CardContent>
-          </Card>
+              </ItemDescription>
+            </ItemContent>
+          </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

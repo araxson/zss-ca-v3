@@ -31,6 +31,7 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
+import { Item, ItemContent } from '@/components/ui/item'
 import { loginSchema, type LoginInput } from '../schema'
 import { loginAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -81,8 +82,10 @@ export function LoginForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    <Item variant="outline" className="space-y-4 p-6">
+      <ItemContent className="space-y-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
@@ -169,27 +172,29 @@ export function LoginForm() {
           </FieldGroup>
         </FieldSet>
 
-        <ButtonGroup className="justify-end">
-          <Button asChild variant="link" size="sm">
-            <Link href={ROUTES.RESET_PASSWORD}>Forgot password?</Link>
-          </Button>
-        </ButtonGroup>
-
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? <Spinner /> : 'Sign in'}
-        </Button>
-
-        <FieldGroup className="items-center justify-center gap-2">
-          <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
-            <FieldDescription>Don&apos;t have an account?</FieldDescription>
-            <ButtonGroup>
+            <ButtonGroup className="justify-end">
               <Button asChild variant="link" size="sm">
-                <Link href={ROUTES.SIGNUP}>Sign up</Link>
+                <Link href={ROUTES.RESET_PASSWORD}>Forgot password?</Link>
               </Button>
             </ButtonGroup>
-          </Field>
-        </FieldGroup>
-      </form>
-    </Form>
+
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? <Spinner /> : 'Sign in'}
+            </Button>
+
+            <FieldGroup className="items-center justify-center gap-2">
+              <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
+                <FieldDescription>Don&apos;t have an account?</FieldDescription>
+                <ButtonGroup>
+                  <Button asChild variant="link" size="sm">
+                    <Link href={ROUTES.SIGNUP}>Sign up</Link>
+                  </Button>
+                </ButtonGroup>
+              </Field>
+            </FieldGroup>
+          </form>
+        </Form>
+      </ItemContent>
+    </Item>
   )
 }

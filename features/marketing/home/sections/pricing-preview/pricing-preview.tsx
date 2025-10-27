@@ -1,17 +1,19 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemGroup,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
 import { Separator } from '@/components/ui/separator'
 import { ROUTES } from '@/lib/constants/routes'
 import { getPlansForPreview } from './api/queries'
+import { cn } from '@/lib/utils'
 
 type PlanFeature = {
   name: string
@@ -37,7 +39,7 @@ export async function PricingPreview() {
           support, and maintenance.
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-3 mb-8">
         {plans.map((plan, index) => {
           const features = Array.isArray(plan.features)
             ? (plan.features as PlanFeature[])
@@ -45,18 +47,22 @@ export async function PricingPreview() {
           const isPopular = index === 1 // Mark second plan (Business) as popular
 
           return (
-            <Card
+            <Item
               key={plan.id}
-              className={isPopular ? 'border-primary shadow-lg' : ''}
+              variant="outline"
+              className={cn(
+                'flex flex-col',
+                isPopular && 'border-primary shadow-lg'
+              )}
             >
-              <CardHeader>
+              <ItemHeader className="gap-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle>{plan.name}</CardTitle>
+                  <ItemTitle>{plan.name}</ItemTitle>
                   {isPopular && <Badge variant="default">Popular</Badge>}
                 </div>
-                <CardDescription>{plan.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+                <ItemDescription>{plan.description}</ItemDescription>
+              </ItemHeader>
+              <ItemContent className="space-y-4">
                 <div>
                   {plan.priceMonthly ? (
                     <>
@@ -93,8 +99,8 @@ export async function PricingPreview() {
                       </li>
                     ))}
                 </ul>
-              </CardContent>
-              <CardFooter>
+              </ItemContent>
+              <ItemFooter>
                 <Button
                   asChild
                   className="w-full"
@@ -102,11 +108,11 @@ export async function PricingPreview() {
                 >
                   <Link href={ROUTES.PRICING}>Get Started</Link>
                 </Button>
-              </CardFooter>
-            </Card>
+              </ItemFooter>
+            </Item>
           )
         })}
-      </div>
+      </ItemGroup>
       <div className="text-center">
         <Button asChild variant="outline" size="lg">
           <Link href={ROUTES.PRICING}>View All Plans</Link>

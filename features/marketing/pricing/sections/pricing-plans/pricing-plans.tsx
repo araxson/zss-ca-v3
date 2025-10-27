@@ -9,14 +9,10 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemGroup,
+  ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
 import { CheckoutButton } from '@/features/shared/subscription/components/checkout-button'
 import { pricingPlansCopy } from './pricing-plans.copy'
 import type { PricingPlansProps, PricingPlan } from './pricing-plans.types'
@@ -57,7 +53,7 @@ export function PricingPlans({ plans, isAuthenticated, hasSubscription }: Pricin
   return (
     <section className="space-y-8">
       <BillingIntervalToggle value={interval} onChange={setInterval} />
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {plans.map((plan, index) => {
           const features = getPlanFeatures(plan)
           const isPopular = index === 1
@@ -79,49 +75,56 @@ export function PricingPlans({ plans, isAuthenticated, hasSubscription }: Pricin
                 {plan.description ? (
                   <ItemDescription>{plan.description}</ItemDescription>
                 ) : null}
-                <FieldGroup className="space-y-1">
+                <div className="space-y-1">
                   {monthlyRate > 0 ? (
-                    <FieldLabel className="flex items-baseline gap-1 text-3xl font-bold">
+                    <p className="flex items-baseline gap-1 text-3xl font-bold">
                       ${displayRate.toFixed(2)}
                       <span className="text-base font-medium text-muted-foreground">/mo</span>
-                    </FieldLabel>
+                    </p>
                   ) : (
-                    <FieldLabel className="text-2xl font-bold text-foreground">
+                    <p className="text-2xl font-bold text-foreground">
                       Contact for pricing
-                    </FieldLabel>
+                    </p>
                   )}
                   {interval === 'yearly' && monthlyRate > 0 ? (
-                    <FieldDescription className="text-xs text-muted-foreground">
+                    <ItemDescription className="text-xs text-muted-foreground">
                       ${(yearlyTotal).toFixed(2)} billed annually (20% savings)
-                    </FieldDescription>
+                    </ItemDescription>
                   ) : null}
                   {monthlyRate > 0 ? (
-                    <FieldDescription className="text-sm text-muted-foreground">
+                    <ItemDescription className="text-sm text-muted-foreground">
                       {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'} •{' '}
                       {plan.revision_limit ? `${plan.revision_limit} revisions/mo` : 'Unlimited revisions'}
-                    </FieldDescription>
+                    </ItemDescription>
                   ) : null}
-                </FieldGroup>
+                </div>
                 {features.length > 0 ? (
-                  <FieldGroup className="space-y-2">
+                  <ItemGroup className="space-y-2" aria-label={`${plan.name} features`}>
                     {features
                       .filter((feature) => feature.included)
                       .map((feature) => (
-                        <Field key={feature.name} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
-                          <div>
-                            <FieldLabel className="text-sm font-medium text-foreground">
+                        <Item
+                          key={feature.name}
+                          variant="muted"
+                          size="sm"
+                          className="items-start gap-2"
+                        >
+                          <ItemMedia variant="icon">
+                            <Check className="h-4 w-4 text-primary" aria-hidden />
+                          </ItemMedia>
+                          <ItemContent className="space-y-1">
+                            <ItemTitle className="text-sm font-medium text-foreground">
                               {feature.name}
-                            </FieldLabel>
+                            </ItemTitle>
                             {feature.description ? (
-                              <FieldDescription className="text-xs text-muted-foreground">
+                              <ItemDescription className="text-xs text-muted-foreground">
                                 {feature.description}
-                              </FieldDescription>
+                              </ItemDescription>
                             ) : null}
-                          </div>
-                        </Field>
+                          </ItemContent>
+                        </Item>
                       ))}
-                  </FieldGroup>
+                  </ItemGroup>
                 ) : null}
               </ItemContent>
               <ItemActions className="mt-auto">
@@ -143,7 +146,7 @@ export function PricingPlans({ plans, isAuthenticated, hasSubscription }: Pricin
             </Item>
           )
         })}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

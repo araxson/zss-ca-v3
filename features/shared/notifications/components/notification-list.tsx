@@ -9,6 +9,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
+import { ItemGroup } from '@/components/ui/item'
 import { NotificationItem } from './notification-item'
 import { markAllNotificationsReadAction } from '../api/mutations'
 import type { Notification } from '../api/queries'
@@ -47,11 +48,11 @@ export function NotificationList({ notifications, hasUnread }: NotificationListP
         </div>
       )}
 
-      <div className="space-y-3">
+      <ItemGroup className="space-y-3">
         {notifications.map((notification) => (
           <NotificationItem key={notification.id} notification={notification} />
         ))}
-      </div>
+      </ItemGroup>
     </div>
   )
 }

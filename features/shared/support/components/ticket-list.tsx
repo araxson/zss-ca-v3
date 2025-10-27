@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
+import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { MessageSquare } from 'lucide-react'
 import type { TicketWithProfile } from '../api/queries'
@@ -58,7 +58,7 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
   }
 
   return (
-    <div className="space-y-3">
+    <ItemGroup className="space-y-3">
           {tickets.map((ticket) => {
             const createdAt = new Date(ticket.created_at)
 
@@ -85,7 +85,7 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
             </Link>
           </Item>
         )
-      })}
-    </div>
+          })}
+    </ItemGroup>
   )
 }

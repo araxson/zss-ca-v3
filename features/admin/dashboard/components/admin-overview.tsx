@@ -3,13 +3,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Bell, LifeBuoy, ScrollText, UserCog, Users as UsersIcon, Globe } from 'lucide-react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
@@ -40,10 +33,12 @@ import {
 } from '@/components/ui/empty'
 import {
   Item,
-  ItemContent,
-  ItemTitle,
-  ItemDescription,
   ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemHeader,
+  ItemTitle,
 } from '@/components/ui/item'
 import {
   Command,
@@ -141,7 +136,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
 
       <Separator />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <ItemGroup className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Item variant="outline" className="flex h-full flex-col">
           <ItemContent className="space-y-3">
             <div className="flex items-center justify-between">
@@ -223,7 +218,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
             </Button>
           </ItemActions>
         </Item>
-      </div>
+      </ItemGroup>
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
@@ -234,12 +229,12 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Growth Trend</CardTitle>
-                <CardDescription>Client and subscription growth over time</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <Item variant="outline" className="flex h-full flex-col">
+              <ItemHeader className="gap-1">
+                <ItemTitle>Growth Trend</ItemTitle>
+                <ItemDescription>Client and subscription growth over time</ItemDescription>
+              </ItemHeader>
+              <ItemContent>
                 <ChartContainer
                   config={{
                     clients: {
@@ -284,15 +279,15 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                     </AreaChart>
                   </ResponsiveContainer>
                 </ChartContainer>
-              </CardContent>
-            </Card>
+              </ItemContent>
+            </Item>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Subscription Distribution</CardTitle>
-                <CardDescription>Active subscriptions by plan</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <Item variant="outline" className="flex h-full flex-col">
+              <ItemHeader className="gap-1">
+                <ItemTitle>Subscription Distribution</ItemTitle>
+                <ItemDescription>Active subscriptions by plan</ItemDescription>
+              </ItemHeader>
+              <ItemContent>
                 {planChartData.length > 0 ? (
                   <ChartContainer
                     config={{
@@ -331,17 +326,17 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                     </EmptyHeader>
                   </Empty>
                 )}
-              </CardContent>
-            </Card>
+              </ItemContent>
+            </Item>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Site Status Distribution</CardTitle>
-                <CardDescription>Websites by deployment status</CardDescription>
-              </CardHeader>
-              <CardContent>
+            <Item variant="outline" className="flex h-full flex-col">
+              <ItemHeader className="gap-1">
+                <ItemTitle>Site Status Distribution</ItemTitle>
+                <ItemDescription>Websites by deployment status</ItemDescription>
+              </ItemHeader>
+              <ItemContent>
                 {statusChartData.length > 0 ? (
                   <ChartContainer
                     config={{
@@ -369,15 +364,15 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                     </EmptyHeader>
                   </Empty>
                 )}
-              </CardContent>
-            </Card>
+              </ItemContent>
+            </Item>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Platform Metrics</CardTitle>
-                <CardDescription>Key performance indicators</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <Item variant="outline" className="flex h-full flex-col">
+              <ItemHeader className="gap-1">
+                <ItemTitle>Platform Metrics</ItemTitle>
+                <ItemDescription>Key performance indicators</ItemDescription>
+              </ItemHeader>
+              <ItemContent className="space-y-4">
                 <Item>
                   <ItemContent>
                     <ItemTitle>Conversion Rate</ItemTitle>
@@ -415,16 +410,16 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                     </Badge>
                   </ItemActions>
                 </Item>
-              </CardContent>
-            </Card>
+              </ItemContent>
+            </Item>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-              <CardDescription>Common administrative tasks</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <Item variant="outline" className="flex h-full flex-col">
+            <ItemHeader className="gap-1">
+              <ItemTitle>Quick Actions</ItemTitle>
+              <ItemDescription>Common administrative tasks</ItemDescription>
+            </ItemHeader>
+            <ItemContent>
               <Command
                 aria-label="Admin quick navigation"
                 className="w-full rounded-md border"
@@ -479,17 +474,17 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                   </CommandGroup>
                 </CommandList>
               </Command>
-            </CardContent>
-          </Card>
+            </ItemContent>
+          </Item>
         </TabsContent>
 
         <TabsContent value="clients" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Clients</CardTitle>
-              <CardDescription>Latest registered client accounts</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <Item variant="outline" className="flex flex-col">
+            <ItemHeader className="gap-1">
+              <ItemTitle>Recent Clients</ItemTitle>
+              <ItemDescription>Latest registered client accounts</ItemDescription>
+            </ItemHeader>
+            <ItemContent>
               {stats.recentClients.length > 0 ? (
                 <ScrollArea className="rounded-md border">
                   <Table className="min-w-[600px]">
@@ -531,17 +526,17 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                   </EmptyHeader>
                 </Empty>
               )}
-            </CardContent>
-          </Card>
+            </ItemContent>
+          </Item>
         </TabsContent>
 
         <TabsContent value="tickets" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Support Tickets</CardTitle>
-              <CardDescription>Latest customer support requests</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <Item variant="outline" className="flex flex-col">
+            <ItemHeader className="gap-1">
+              <ItemTitle>Recent Support Tickets</ItemTitle>
+              <ItemDescription>Latest customer support requests</ItemDescription>
+            </ItemHeader>
+            <ItemContent>
               {stats.recentTickets.length > 0 ? (
                 <ScrollArea className="rounded-md border">
                   <Table className="min-w-[700px]">
@@ -611,8 +606,8 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                   </EmptyHeader>
                 </Empty>
               )}
-            </CardContent>
-          </Card>
+            </ItemContent>
+          </Item>
         </TabsContent>
       </Tabs>
     </div>

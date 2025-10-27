@@ -2,13 +2,9 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
 import { serviceOfferingsData } from './service-offerings.data'
 
 export function ServiceOfferings() {
@@ -20,28 +16,33 @@ export function ServiceOfferings() {
           We own the full lifecycle so you have one partner for everything web.
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <ItemGroup className="grid gap-4 md:grid-cols-3">
         {serviceOfferingsData.cards.map((card) => (
           <Item key={card.id} variant="outline" className="flex flex-col">
             <ItemContent className="space-y-3">
               <ItemTitle>{card.title}</ItemTitle>
               <ItemDescription>{card.summary}</ItemDescription>
-              <FieldGroup className="space-y-2">
+              <ItemGroup className="space-y-2">
                 {card.features.map((feature) => (
-                  <div key={feature.title} className="space-y-1">
-                    <FieldLabel className="text-sm font-semibold text-foreground">
+                  <Item
+                    key={feature.title}
+                    variant="muted"
+                    size="sm"
+                    className="flex flex-col gap-1 p-3"
+                  >
+                    <ItemTitle className="text-sm font-semibold text-foreground">
                       {feature.title}
-                    </FieldLabel>
-                    <FieldDescription className="text-sm text-muted-foreground">
+                    </ItemTitle>
+                    <ItemDescription className="text-sm text-muted-foreground">
                       {feature.description}
-                    </FieldDescription>
-                  </div>
+                    </ItemDescription>
+                  </Item>
                 ))}
-              </FieldGroup>
+              </ItemGroup>
             </ItemContent>
           </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

@@ -1,43 +1,46 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item'
 import { heroData } from './hero.data'
 
 export function Hero() {
   return (
-    <Card className="max-w-4xl border-none shadow-none bg-transparent">
-      <CardHeader className="space-y-6 text-center">
-        <div className="flex justify-center">
-          <Badge variant="secondary">
-            {heroData.tagline}
-          </Badge>
-        </div>
-        <CardTitle>
-          {heroData.title}
-        </CardTitle>
-        <div className="max-w-2xl mx-auto">
-          <CardDescription>{heroData.description}</CardDescription>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button asChild size="lg">
-          <Link href={heroData.cta.primary.href}>
-            {heroData.cta.primary.label}
-          </Link>
-        </Button>
-        <Button asChild variant="outline" size="lg">
-          <Link href={heroData.cta.secondary.href}>
-            {heroData.cta.secondary.label}
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
+    <section className="max-w-4xl mx-auto">
+      <Item className="border-0 bg-transparent shadow-none flex flex-col items-center gap-6 text-center">
+        <ItemContent className="space-y-6 w-full">
+          <div className="flex justify-center">
+            <Badge variant="secondary">{heroData.tagline}</Badge>
+          </div>
+          <ItemTitle className="text-4xl font-semibold tracking-tight sm:text-5xl">
+            {heroData.title}
+          </ItemTitle>
+          <ItemDescription className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            {heroData.description}
+          </ItemDescription>
+        </ItemContent>
+        <ItemActions className="w-full justify-center">
+          <ButtonGroup className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
+            <Button asChild size="lg">
+              <Link href={heroData.cta.primary.href}>
+                {heroData.cta.primary.label}
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href={heroData.cta.secondary.href}>
+                {heroData.cta.secondary.label}
+              </Link>
+            </Button>
+          </ButtonGroup>
+        </ItemActions>
+      </Item>
+    </section>
   )
 }

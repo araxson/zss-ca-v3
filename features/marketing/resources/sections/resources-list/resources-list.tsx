@@ -4,6 +4,7 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
 import { Badge } from '@/components/ui/badge'
@@ -15,7 +16,7 @@ export function ResourcesList() {
       <div className="text-center space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">{resourcesListData.heading}</h2>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <ItemGroup className="grid gap-4 md:grid-cols-3">
         {resourcesListData.resources.map((resource) => (
           <Item key={resource.id} variant="outline" className="flex flex-col">
             <ItemContent className="space-y-3">
@@ -32,7 +33,7 @@ export function ResourcesList() {
             </ItemActions>
           </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

@@ -5,6 +5,7 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
 import { homeSupportData } from './support.data'
@@ -18,7 +19,7 @@ export function HomeSupport() {
           {homeSupportData.subheading}
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <ItemGroup className="grid gap-4 md:grid-cols-3">
         {homeSupportData.highlights.map((highlight) => (
           <Item key={highlight.title} variant="outline" className="flex flex-col">
             <ItemContent className="space-y-3">
@@ -27,7 +28,7 @@ export function HomeSupport() {
             </ItemContent>
           </Item>
         ))}
-      </div>
+      </ItemGroup>
       <div className="flex justify-center">
         <Button asChild size="lg">
           <Link href={homeSupportData.cta.href}>{homeSupportData.cta.label}</Link>

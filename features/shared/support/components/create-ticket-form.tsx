@@ -27,13 +27,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   FieldDescription,
   FieldGroup,
   FieldLegend,
@@ -44,6 +37,7 @@ import {
   ItemContent,
   ItemDescription,
   ItemMedia,
+  ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
 import { createTicketSchema, type CreateTicketInput } from '../schema'
@@ -121,14 +115,14 @@ export function CreateTicketForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Create Support Ticket</CardTitle>
-        <CardDescription>
+    <Item variant="outline" className="flex flex-col gap-4 p-6">
+      <ItemHeader>
+        <ItemTitle>Create Support Ticket</ItemTitle>
+        <ItemDescription>
           We&apos;ll respond to your ticket as soon as possible
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+        </ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FieldSet className="space-y-4">
@@ -272,7 +266,7 @@ export function CreateTicketForm() {
             </ButtonGroup>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

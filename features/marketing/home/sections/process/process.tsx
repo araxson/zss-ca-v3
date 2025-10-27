@@ -1,9 +1,10 @@
 import {
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from '@/components/ui/field'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
+} from '@/components/ui/item'
 import { homeProcessData } from './process.data'
 
 export function HomeProcess() {
@@ -15,23 +16,21 @@ export function HomeProcess() {
           {homeProcessData.subheading}
         </p>
       </div>
-      <div className="grid gap-4 md:grid-cols-3">
+      <ItemGroup className="grid gap-4 md:grid-cols-3">
         {homeProcessData.steps.map((step) => (
-          <FieldSet key={step.id} className="space-y-3 rounded-lg border p-6">
-            <FieldLabel className="text-sm font-semibold text-primary uppercase tracking-wide">
-              Step {step.id}
-            </FieldLabel>
-            <FieldGroup className="space-y-2">
-              <FieldLabel className="text-lg font-semibold text-foreground">
-                {step.title}
-              </FieldLabel>
-              <FieldDescription className="text-sm text-muted-foreground">
+          <Item key={step.id} variant="outline" className="flex flex-col p-6">
+            <ItemContent className="space-y-2">
+              <p className="text-sm font-semibold uppercase tracking-wide text-primary">
+                Step {step.id}
+              </p>
+              <ItemTitle>{step.title}</ItemTitle>
+              <ItemDescription className="text-sm text-muted-foreground">
                 {step.description}
-              </FieldDescription>
-            </FieldGroup>
-          </FieldSet>
+              </ItemDescription>
+            </ItemContent>
+          </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

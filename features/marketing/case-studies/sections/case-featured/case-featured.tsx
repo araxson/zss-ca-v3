@@ -2,13 +2,9 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
 import { caseFeaturedData } from './case-featured.data'
 
 export function CaseFeatured() {
@@ -24,18 +20,22 @@ export function CaseFeatured() {
         <ItemContent className="space-y-4 lg:w-1/2">
           <ItemTitle>Project snapshot</ItemTitle>
           <ItemDescription>{caseFeaturedData.summary}</ItemDescription>
-          <FieldGroup className="grid gap-3 sm:grid-cols-3">
+          <ItemGroup className="grid gap-3 sm:grid-cols-3">
             {caseFeaturedData.metrics.map((metric) => (
-              <div key={metric.label} className="space-y-1 text-center sm:text-left">
-                <FieldLabel className="text-2xl font-semibold text-foreground">
+              <Item
+                key={metric.label}
+                variant="muted"
+                className="flex flex-col items-center gap-1 p-4 text-center sm:items-start sm:text-left"
+              >
+                <ItemTitle className="text-2xl font-semibold text-foreground">
                   {metric.value}
-                </FieldLabel>
-                <FieldDescription className="text-xs uppercase tracking-wide text-muted-foreground">
+                </ItemTitle>
+                <ItemDescription className="text-xs uppercase tracking-wide text-muted-foreground">
                   {metric.label}
-                </FieldDescription>
-              </div>
+                </ItemDescription>
+              </Item>
             ))}
-          </FieldGroup>
+          </ItemGroup>
         </ItemContent>
         <ItemContent className="space-y-3 lg:w-1/2">
           <ItemTitle>Client perspective</ItemTitle>

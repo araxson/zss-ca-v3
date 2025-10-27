@@ -2,13 +2,9 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
 import { Badge } from '@/components/ui/badge'
 import { caseGridData } from './case-grid.data'
 
@@ -18,7 +14,7 @@ export function CaseGrid() {
       <div className="text-center space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">{caseGridData.heading}</h2>
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+      <ItemGroup className="grid gap-4 md:grid-cols-2">
         {caseGridData.cases.map((item) => (
           <Item key={item.id} variant="outline" className="flex flex-col">
             <ItemContent className="space-y-3">
@@ -27,20 +23,24 @@ export function CaseGrid() {
                 <Badge variant="secondary">{item.industry}</Badge>
               </div>
               <ItemDescription>{item.summary}</ItemDescription>
-              <FieldGroup className="flex flex-wrap gap-2">
+              <ItemGroup className="flex flex-wrap gap-2" aria-label="Services delivered">
                 {item.services.map((service) => (
-                  <FieldLabel
+                  <Item
                     key={service}
-                    className="rounded-full bg-muted px-3 py-1 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                    variant="muted"
+                    size="sm"
+                    className="w-fit bg-muted px-3 py-1"
                   >
-                    {service}
-                  </FieldLabel>
+                    <ItemTitle className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      {service}
+                    </ItemTitle>
+                  </Item>
                 ))}
-              </FieldGroup>
+              </ItemGroup>
             </ItemContent>
           </Item>
         ))}
-      </div>
+      </ItemGroup>
     </section>
   )
 }

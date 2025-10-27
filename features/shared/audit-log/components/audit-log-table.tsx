@@ -1,19 +1,19 @@
 import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
 import {
   Table,
   TableBody,
@@ -71,14 +71,14 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Audit Logs</CardTitle>
-        <CardDescription>
+    <Item variant="outline" className="flex flex-col">
+      <ItemHeader>
+        <ItemTitle>Audit Logs</ItemTitle>
+        <ItemDescription>
           Complete record of all actions performed in the system
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="p-0">
+        </ItemDescription>
+      </ItemHeader>
+      <ItemContent className="p-0">
         <ScrollArea className="rounded-md">
           <Table>
             <TableCaption>Chronological record of admin actions across the platform.</TableCaption>
@@ -87,13 +87,13 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
                 <TableHead>Timestamp</TableHead>
                 <TableHead>Actor</TableHead>
                 <TableHead>Action</TableHead>
-              <TableHead>Resource</TableHead>
-              <TableHead>Details</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {logs.map((log) => (
-              <TableRow key={log.id}>
+                <TableHead>Resource</TableHead>
+                <TableHead>Details</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {logs.map((log) => (
+                <TableRow key={log.id}>
                 <TableCell className="whitespace-nowrap">
                   <span className="text-xs">
                     {formatDistanceToNow(new Date(log.created_at), { addSuffix: true })}
@@ -144,13 +144,13 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
                     </Popover>
                   )}
                 </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }
