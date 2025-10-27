@@ -15,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import {
   InputGroup,
   InputGroupAddon,
@@ -23,6 +22,12 @@ import {
 } from '@/components/ui/input-group'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { updateClientProfileSchema, type UpdateClientProfileInput } from '../schema'
 import { updateClientProfileAction } from '../api/mutations'
 import type { Database } from '@/lib/types/database.types'
@@ -76,71 +81,79 @@ export function EditClientForm({ client }: EditClientFormProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <User className="size-4" />
-                      </InputGroupAddon>
-                      <InputGroupInput {...field} />
-                    </InputGroup>
-                  </FormControl>
-                  <FormDescription>
-                    Client&apos;s full name
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FieldSet className="space-y-4">
+              <FieldLegend>Contact information</FieldLegend>
+              <FieldDescription>
+                Update the client details that appear in admin and client portals.
+              </FieldDescription>
+              <FieldGroup className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <User className="size-4" />
+                          </InputGroupAddon>
+                          <InputGroupInput {...field} />
+                        </InputGroup>
+                      </FormControl>
+                      <FormDescription>
+                        Client&apos;s full name
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <Building2 className="size-4" />
-                      </InputGroupAddon>
-                      <InputGroupInput {...field} />
-                    </InputGroup>
-                  </FormControl>
-                  <FormDescription>
-                    Client&apos;s company or business name
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="company"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Company Name</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Building2 className="size-4" />
+                          </InputGroupAddon>
+                          <InputGroupInput {...field} />
+                        </InputGroup>
+                      </FormControl>
+                      <FormDescription>
+                        Client&apos;s company or business name
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <Phone className="size-4" />
-                      </InputGroupAddon>
-                      <InputGroupInput type="tel" {...field} />
-                    </InputGroup>
-                  </FormControl>
-                  <FormDescription>
-                    Contact phone number
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Phone className="size-4" />
+                          </InputGroupAddon>
+                          <InputGroupInput type="tel" {...field} />
+                        </InputGroup>
+                      </FormControl>
+                      <FormDescription>
+                        Contact phone number
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
             <div className="flex gap-2">
               <Button type="submit" disabled={form.formState.isSubmitting}>

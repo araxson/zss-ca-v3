@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Card,
   CardContent,
@@ -24,14 +25,14 @@ export function HeroSection() {
         <p className="text-muted-foreground">
           Subscription-based website development with predictable monthly pricing
         </p>
-        <div className="flex gap-4 justify-center">
+        <ButtonGroup className="justify-center gap-4">
           <Button asChild size="lg">
             <Link href={ROUTES.PRICING}>View Pricing</Link>
           </Button>
           <Button asChild variant="outline" size="lg">
             <Link href={ROUTES.LOGIN}>Sign In</Link>
           </Button>
-        </div>
+        </ButtonGroup>
       </CardContent>
     </Card>
   )

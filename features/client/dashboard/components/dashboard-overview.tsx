@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Bell, CreditCard, Globe, LifeBuoy } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -29,6 +31,12 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import {
   Empty,
   EmptyHeader,
   EmptyTitle,
@@ -42,7 +50,13 @@ import {
   ItemDescription,
   ItemActions,
 } from '@/components/ui/item'
-import { ButtonGroup } from '@/components/ui/button-group'
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command'
 import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
 import { ROUTES } from '@/lib/constants/routes'
 import type { Database } from '@/lib/types/database.types'
@@ -79,6 +93,7 @@ export function DashboardOverview({
   tickets,
   openTicketsCount,
 }: DashboardOverviewProps) {
+  const router = useRouter()
   const activeSites = sites.filter(s => s.status === 'live')
   const sitesInProgress = sites.filter(s =>
     ['pending', 'in_production', 'awaiting_client_content', 'ready_for_review'].includes(s.status)
@@ -144,7 +159,7 @@ export function DashboardOverview({
         <h1 className="text-3xl font-bold tracking-tight">
           Welcome back{profile?.company_name ? `, ${profile.company_name}` : ''}
         </h1>
-        <p className="text-muted-foreground">Here's an overview of your account</p>
+        <p className="text-muted-foreground">Here&apos;s an overview of your account</p>
       </div>
 
       <Separator />
@@ -168,7 +183,7 @@ export function DashboardOverview({
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Subscription Plan</CardTitle>
+            <CardTitle>Subscription Plan</CardTitle>
             {subscription && (
               <Badge variant={subscription.status === 'active' ? 'default' : 'secondary'}>
                 {subscription.status}
@@ -207,7 +222,7 @@ export function DashboardOverview({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Websites</CardTitle>
+            <CardTitle>Websites</CardTitle>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -257,7 +272,7 @@ export function DashboardOverview({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Support</CardTitle>
+            <CardTitle>Support</CardTitle>
             {openTicketsCount > 0 ? (
               <Badge variant="destructive">{openTicketsCount}</Badge>
             ) : (
@@ -306,7 +321,7 @@ export function DashboardOverview({
                           color: 'hsl(var(--chart-1))',
                         },
                       }}
-                      className="h-[200px]"
+                      className="h-52"
                     >
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
@@ -376,49 +391,72 @@ export function DashboardOverview({
                 </Card>
               </div>
 
-              <div className="grid gap-4">
-                {sites.map((site) => (
-                  <Card key={site.id}>
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-1">
-                          <CardTitle>{site.site_name ?? 'Website'}</CardTitle>
-                          <CardDescription>
-                            {site.custom_domain ?? site.deployment_url ?? 'No domain yet'}
-                          </CardDescription>
+              <ScrollArea className="h-[600px]">
+                <div className="grid gap-4 pr-4">
+                  {sites.map((site) => (
+                    <Card key={site.id}>
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <CardTitle>{site.site_name ?? 'Website'}</CardTitle>
+                            <CardDescription>
+                              {site.custom_domain ?? site.deployment_url ?? 'No domain yet'}
+                            </CardDescription>
+                          </div>
+                          <HoverCard>
+                            <HoverCardTrigger asChild>
+                              <Badge
+                                variant={
+                                  site.status === 'live'
+                                    ? 'default'
+                                    : site.status === 'pending'
+                                    ? 'secondary'
+                                    : 'outline'
+                                }
+                                className="cursor-help"
+                              >
+                                {getStatusLabel(site.status)}
+                              </Badge>
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-80">
+                              <div className="space-y-2">
+                                <h4 className="text-sm font-semibold">{getStatusLabel(site.status)}</h4>
+                                <p className="text-sm text-muted-foreground">
+                                  {site.status === 'pending' && 'Your website is queued for development. Our team will begin work shortly.'}
+                                  {site.status === 'in_production' && 'Your website is currently being developed by our team.'}
+                                  {site.status === 'awaiting_client_content' && 'We need content from you to proceed. Please check your support tickets.'}
+                                  {site.status === 'ready_for_review' && 'Your website is ready for your review. Please provide feedback.'}
+                                  {site.status === 'live' && 'Your website is live and accessible to the public.'}
+                                </p>
+                                <div className="flex items-center justify-between pt-2">
+                                  <span className="text-xs text-muted-foreground">Progress</span>
+                                  <span className="text-xs font-medium">{getStatusProgress(site.status)}%</span>
+                                </div>
+                              </div>
+                            </HoverCardContent>
+                          </HoverCard>
                         </div>
-                        <Badge
-                          variant={
-                            site.status === 'live'
-                              ? 'default'
-                              : site.status === 'pending'
-                              ? 'secondary'
-                              : 'outline'
-                          }
-                        >
-                          {getStatusLabel(site.status)}
-                        </Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Progress</span>
-                          <span className="font-medium">{getStatusProgress(site.status)}%</span>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-muted-foreground">Progress</span>
+                            <span className="font-medium">{getStatusProgress(site.status)}%</span>
+                          </div>
+                          <Progress value={getStatusProgress(site.status)} />
                         </div>
-                        <Progress value={getStatusProgress(site.status)} />
-                      </div>
-                      {site.status === 'live' && (site.custom_domain ?? site.deployment_url) && (
-                        <Button asChild variant="outline" className="w-full">
-                          <a href={site.custom_domain ?? site.deployment_url ?? '#'} target="_blank" rel="noopener noreferrer">
-                            View Site
-                          </a>
-                        </Button>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                        {site.status === 'live' && (site.custom_domain ?? site.deployment_url) && (
+                          <Button asChild variant="outline" className="w-full">
+                            <a href={site.custom_domain ?? site.deployment_url ?? '#'} target="_blank" rel="noopener noreferrer">
+                              View Site
+                            </a>
+                          </Button>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </ScrollArea>
             </>
           ) : (
             <Empty>
@@ -457,7 +495,7 @@ export function DashboardOverview({
                             color: 'hsl(var(--chart-3))',
                           },
                         }}
-                        className="h-[200px]"
+                        className="h-52"
                       >
                         <ResponsiveContainer width="100%" height="100%">
                           <BarChart data={ticketChartData}>
@@ -469,7 +507,7 @@ export function DashboardOverview({
                         </ResponsiveContainer>
                       </ChartContainer>
                     ) : (
-                      <Empty className="h-[200px]">
+                      <Empty className="h-52">
                         <EmptyHeader>
                           <EmptyTitle>No ticket data</EmptyTitle>
                           <EmptyDescription>Ticket statistics will appear here</EmptyDescription>
@@ -524,59 +562,61 @@ export function DashboardOverview({
                   <CardDescription>Your latest support requests</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Subject</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Priority</TableHead>
-                        <TableHead>Created</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {tickets.map((ticket) => (
-                        <TableRow key={ticket.id}>
-                          <TableCell className="font-medium">
-                            <Link
-                              href={`${ROUTES.CLIENT_SUPPORT}/${ticket.id}`}
-                              className="hover:underline"
-                            >
-                              {ticket.subject}
-                            </Link>
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
-                                ticket.status === 'open'
-                                  ? 'destructive'
-                                  : ticket.status === 'in_progress'
-                                  ? 'default'
-                                  : 'secondary'
-                              }
-                            >
-                              {ticket.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={
-                                ticket.priority === 'urgent'
-                                  ? 'destructive'
-                                  : ticket.priority === 'high'
-                                  ? 'default'
-                                  : 'secondary'
-                              }
-                            >
-                              {ticket.priority}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {new Date(ticket.created_at).toLocaleDateString()}
-                          </TableCell>
+                  <ScrollArea className="h-[400px]">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Subject</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Priority</TableHead>
+                          <TableHead>Created</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {tickets.map((ticket) => (
+                          <TableRow key={ticket.id}>
+                            <TableCell className="font-medium">
+                              <Link
+                                href={`${ROUTES.CLIENT_SUPPORT}/${ticket.id}`}
+                                className="hover:underline"
+                              >
+                                {ticket.subject}
+                              </Link>
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  ticket.status === 'open'
+                                    ? 'destructive'
+                                    : ticket.status === 'in_progress'
+                                    ? 'default'
+                                    : 'secondary'
+                                }
+                              >
+                                {ticket.status}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <Badge
+                                variant={
+                                  ticket.priority === 'urgent'
+                                    ? 'destructive'
+                                    : ticket.priority === 'high'
+                                    ? 'default'
+                                    : 'secondary'
+                                }
+                              >
+                                {ticket.priority}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {new Date(ticket.created_at).toLocaleDateString()}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </ScrollArea>
                 </CardContent>
               </Card>
             </>
@@ -584,7 +624,7 @@ export function DashboardOverview({
             <Empty>
               <EmptyHeader>
                 <EmptyTitle>No support tickets</EmptyTitle>
-                <EmptyDescription>You haven't submitted any support requests yet</EmptyDescription>
+                <EmptyDescription>You haven&apos;t submitted any support requests yet</EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
                 <Button asChild>
@@ -604,27 +644,27 @@ export function DashboardOverview({
               <CardDescription>Your profile details</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+              <dl className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Name</span>
-                  <span className="font-medium">{profile?.contact_name ?? '—'}</span>
+                  <dt className="text-sm text-muted-foreground">Name</dt>
+                  <dd className="font-medium">{profile?.contact_name ?? '—'}</dd>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Email</span>
-                  <span className="font-medium">{profile?.contact_email ?? '—'}</span>
+                  <dt className="text-sm text-muted-foreground">Email</dt>
+                  <dd className="font-medium">{profile?.contact_email ?? '—'}</dd>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Company</span>
-                  <span className="font-medium">{profile?.company_name ?? '—'}</span>
+                  <dt className="text-sm text-muted-foreground">Company</dt>
+                  <dd className="font-medium">{profile?.company_name ?? '—'}</dd>
                 </div>
                 <Separator />
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Phone</span>
-                  <span className="font-medium">{profile?.contact_phone ?? '—'}</span>
+                  <dt className="text-sm text-muted-foreground">Phone</dt>
+                  <dd className="font-medium">{profile?.contact_phone ?? '—'}</dd>
                 </div>
-              </div>
+              </dl>
               <Button asChild variant="outline" className="w-full">
                 <Link href={ROUTES.CLIENT_PROFILE}>
                   Edit Profile
@@ -639,32 +679,46 @@ export function DashboardOverview({
               <CardDescription>Common tasks</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-3">
-                <ButtonGroup>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.CLIENT_SITES}>
-                      My Websites
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.CLIENT_SUBSCRIPTION}>
-                      Subscription
-                    </Link>
-                  </Button>
-                </ButtonGroup>
-                <ButtonGroup>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.CLIENT_SUPPORT}>
-                      Support
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.CLIENT_NOTIFICATIONS}>
-                      Notifications
-                    </Link>
-                  </Button>
-                </ButtonGroup>
-              </div>
+              <Command
+                aria-label="Client quick navigation"
+                className="w-full rounded-md border"
+              >
+                <CommandList>
+                  <CommandGroup heading="Account">
+                    <CommandItem
+                      value="client-sites"
+                      onSelect={() => router.push(ROUTES.CLIENT_SITES)}
+                    >
+                      <Globe className="mr-2 h-4 w-4" />
+                      <span>My Websites</span>
+                    </CommandItem>
+                    <CommandItem
+                      value="client-subscription"
+                      onSelect={() => router.push(ROUTES.CLIENT_SUBSCRIPTION)}
+                    >
+                      <CreditCard className="mr-2 h-4 w-4" />
+                      <span>Subscription</span>
+                    </CommandItem>
+                  </CommandGroup>
+                  <CommandSeparator />
+                  <CommandGroup heading="Support">
+                    <CommandItem
+                      value="client-support"
+                      onSelect={() => router.push(ROUTES.CLIENT_SUPPORT)}
+                    >
+                      <LifeBuoy className="mr-2 h-4 w-4" />
+                      <span>Support</span>
+                    </CommandItem>
+                    <CommandItem
+                      value="client-notifications"
+                      onSelect={() => router.push(ROUTES.CLIENT_NOTIFICATIONS)}
+                    >
+                      <Bell className="mr-2 h-4 w-4" />
+                      <span>Notifications</span>
+                    </CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
             </CardContent>
           </Card>
         </TabsContent>

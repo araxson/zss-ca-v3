@@ -15,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import {
   InputGroup,
   InputGroupAddon,
@@ -32,6 +31,12 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { updateSiteSchema, type UpdateSiteInput } from '../schema'
 import { updateSiteAction } from '../api/mutations'
 import type { Database } from '@/lib/types/database.types'
@@ -101,132 +106,146 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="site_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Site Name</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <Globe className="size-4" />
-                      </InputGroupAddon>
-                      <InputGroupInput {...field} />
-                    </InputGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FieldSet className="space-y-4">
+              <FieldLegend>Project status</FieldLegend>
+              <FieldDescription>Keep the deployment record current for your team.</FieldDescription>
+              <FieldGroup className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="site_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Site Name</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <Globe className="size-4" />
+                          </InputGroupAddon>
+                          <InputGroupInput {...field} />
+                        </InputGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <FormControl>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {siteStatuses.map((status) => (
-                          <SelectItem key={status} value={status}>
-                            {formatStatusLabel(status)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormDescription>
-                    Current project status
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {siteStatuses.map((status) => (
+                              <SelectItem key={status} value={status}>
+                                {formatStatusLabel(status)}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormDescription>
+                        Current project status
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
-            <FormField
-              control={form.control}
-              name="deployment_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deployment URL</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupInput
-                        {...field}
-                        placeholder="example.com"
-                        className="!pl-1"
-                        value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                      <InputGroupAddon>
-                        <InputGroupText>https://</InputGroupText>
-                      </InputGroupAddon>
-                      <InputGroupAddon align="inline-end">
-                        <Link2 className="size-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </FormControl>
-                  <FormDescription>
-                    The live URL where the site is deployed
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FieldSet className="space-y-4">
+              <FieldLegend>Deployment access</FieldLegend>
+              <FieldDescription>
+                Track where the site is hosted and any custom domain mappings.
+              </FieldDescription>
+              <FieldGroup className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="deployment_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Deployment URL</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupInput
+                            {...field}
+                            placeholder="example.com"
+                            className="!pl-1"
+                            value={field.value?.replace(/^https?:\/\//i, '') || ''}
+                            onChange={(e) => field.onChange(e.target.value)}
+                          />
+                          <InputGroupAddon>
+                            <InputGroupText>https://</InputGroupText>
+                          </InputGroupAddon>
+                          <InputGroupAddon align="inline-end">
+                            <Link2 className="size-4" />
+                          </InputGroupAddon>
+                        </InputGroup>
+                      </FormControl>
+                      <FormDescription>
+                        The live URL where the site is deployed
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="custom_domain"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Custom Domain</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupInput
-                        {...field}
-                        placeholder="example.com"
-                        className="!pl-1"
-                        value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                      <InputGroupAddon>
-                        <InputGroupText>https://</InputGroupText>
-                      </InputGroupAddon>
-                      <InputGroupAddon align="inline-end">
-                        <Globe className="size-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </FormControl>
-                  <FormDescription>
-                    Custom domain if different from deployment URL
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="custom_domain"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Custom Domain</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupInput
+                            {...field}
+                            placeholder="example.com"
+                            className="!pl-1"
+                            value={field.value?.replace(/^https?:\/\//i, '') || ''}
+                            onChange={(e) => field.onChange(e.target.value)}
+                          />
+                          <InputGroupAddon>
+                            <InputGroupText>https://</InputGroupText>
+                          </InputGroupAddon>
+                          <InputGroupAddon align="inline-end">
+                            <Globe className="size-4" />
+                          </InputGroupAddon>
+                        </InputGroup>
+                      </FormControl>
+                      <FormDescription>
+                        Custom domain if different from deployment URL
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="deployment_notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deployment Notes</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Internal notes about deployment..."
-                      className="min-h-20"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="deployment_notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Deployment Notes</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Internal notes about deployment..."
+                          className="min-h-20"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
             <div className="flex gap-2">
               <Button type="submit" disabled={form.formState.isSubmitting}>

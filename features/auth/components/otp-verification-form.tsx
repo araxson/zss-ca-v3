@@ -1,6 +1,12 @@
 'use client'
 
 import { useSearchParams, useRouter } from 'next/navigation'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
 import { OTPForm } from './otp-form'
 import { verifyOTPAction, resendOTPAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -74,9 +80,14 @@ export function OTPVerificationForm() {
 
   if (!email) {
     return (
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground">Invalid verification link</p>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>Missing verification email</EmptyTitle>
+          <EmptyDescription>
+            This verification link is incomplete. Request a new code to continue.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 

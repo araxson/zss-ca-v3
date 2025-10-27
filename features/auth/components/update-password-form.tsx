@@ -26,6 +26,12 @@ import {
 } from '@/components/ui/input-group'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { updatePasswordAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
 import {
@@ -135,95 +141,103 @@ export function UpdatePasswordForm() {
           </Alert>
         )}
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <Lock className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your new password"
-                    {...field}
-                    disabled={loading}
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
-                      )}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
-              {field.value && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <FormDescription className={passwordStrength.color}>
-                      {passwordStrength.feedback}
-                    </FormDescription>
-                    <InputGroupText className="text-xs">
-                      {passwordStrength.score}/7
-                    </InputGroupText>
-                  </div>
-                  <Progress
-                    value={getPasswordStrengthPercentage(passwordStrength.score)}
-                    className="h-1"
-                  />
-                </div>
+        <FieldSet className="space-y-4">
+          <FieldLegend>Create a new password</FieldLegend>
+          <FieldDescription>
+            Use at least 8 characters with upper and lowercase letters and a number.
+          </FieldDescription>
+          <FieldGroup className="space-y-4">
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Enter your new password"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormControl>
+                  {field.value && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <FormDescription className={passwordStrength.color}>
+                          {passwordStrength.feedback}
+                        </FormDescription>
+                        <InputGroupText className="text-xs">
+                          {passwordStrength.score}/7
+                        </InputGroupText>
+                      </div>
+                      <Progress
+                        value={getPasswordStrengthPercentage(passwordStrength.score)}
+                        className="h-1"
+                      />
+                    </div>
+                  )}
+                  <FormMessage />
+                </FormItem>
               )}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            />
 
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <Lock className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Confirm your new password"
-                    {...field}
-                    disabled={loading}
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      aria-label={
-                        showConfirmPassword ? 'Hide password' : 'Show password'
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
-                      )}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder="Confirm your new password"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          aria-label={
+                            showConfirmPassword ? 'Hide password' : 'Show password'
+                          }
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
 
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? 'Updating...' : 'Update password'}

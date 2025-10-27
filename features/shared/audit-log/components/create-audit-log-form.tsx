@@ -27,6 +27,14 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { ChevronDown } from 'lucide-react'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 
 type CreateAuditLogFormProps = {
   clients?: Array<{
@@ -52,6 +60,7 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
   const [success, setSuccess] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [changeSummary, setChangeSummary] = useState('{}')
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false)
 
   const form = useForm<CreateAuditLogInput>({
     resolver: zodResolver(createAuditLogSchema),
@@ -100,7 +109,7 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
       setTimeout(() => {
         router.refresh()
       }, 1500)
-    } catch (err) {
+    } catch (_error) {
       setError('An unexpected error occurred')
       setIsSubmitting(false)
     }
@@ -129,114 +138,140 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {clients.length > 0 && (
-              <FormField
-                control={form.control}
-                name="profile_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Related User (Optional)</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || undefined}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a user (optional)" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
-                        {clients.map((client) => (
-                          <SelectItem key={client.id} value={client.id}>
-                            {client.contact_name || client.contact_email}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
+            <FieldSet className="space-y-4">
+              <FieldLegend>Context</FieldLegend>
+              <FieldGroup className="space-y-4">
+                {clients.length > 0 && (
+                  <FormField
+                    control={form.control}
+                    name="profile_id"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Related User (Optional)</FormLabel>
+                        <Select
+                          onValueChange={(value) => field.onChange(value === 'none' ? null : value)}
+                          value={field.value ?? 'none'}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a user (optional)" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {clients.map((client) => (
+                              <SelectItem key={client.id} value={client.id}>
+                                {client.contact_name || client.contact_email}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 )}
-              />
-            )}
 
-            <FormField
-              control={form.control}
-              name="action"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Action</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g., manual_update, external_import" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Describe the action taken (e.g., manual_update, data_correction)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="action"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Action</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., manual_update, external_import" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        Describe the action taken (e.g., manual_update, data_correction)
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
-            <FormField
-              control={form.control}
-              name="resource_table"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Resource Table</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select table" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {commonTables.map((table) => (
-                        <SelectItem key={table} value={table}>
-                          {table}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>The database table affected</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FieldSet className="space-y-4">
+              <FieldLegend>Target resource</FieldLegend>
+              <FieldGroup className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="resource_table"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Resource Table</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select table" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {commonTables.map((table) => (
+                            <SelectItem key={table} value={table}>
+                              {table}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>The database table affected</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="resource_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Resource ID (Optional)</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="UUID or record ID"
-                      {...field}
-                      value={field.value || ''}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    The specific record ID that was modified
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="resource_id"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Resource ID (Optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="UUID or record ID"
+                          {...field}
+                          value={field.value || ''}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        The specific record ID that was modified
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
-            <div className="space-y-2">
-              <FormLabel>Change Summary (JSON)</FormLabel>
-              <Textarea
-                value={changeSummary}
-                onChange={(e) => setChangeSummary(e.target.value)}
-                placeholder='{"before": {...}, "after": {...}, "reason": "..."}'
-                rows={6}
-                className="font-mono text-sm"
-              />
-              <FormDescription>
-                JSON object describing what changed (before/after values, reason, etc.)
-              </FormDescription>
-            </div>
+            <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+              <CollapsibleTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full justify-between"
+                >
+                  <span>Advanced: Change Summary (Optional)</span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform ${
+                      isAdvancedOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-2 pt-4">
+                <FormLabel>Change Summary (JSON)</FormLabel>
+                <Textarea
+                  value={changeSummary}
+                  onChange={(e) => setChangeSummary(e.target.value)}
+                  placeholder='{"before": {...}, "after": {...}, "reason": "..."}'
+                  rows={6}
+                  className="font-mono text-sm"
+                />
+                <FormDescription>
+                  JSON object describing what changed (before/after values, reason, etc.)
+                </FormDescription>
+              </CollapsibleContent>
+            </Collapsible>
 
             <div className="flex gap-4">
               <Button type="submit" disabled={isSubmitting}>

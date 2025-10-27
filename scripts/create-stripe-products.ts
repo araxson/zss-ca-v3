@@ -11,6 +11,7 @@
 
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import Stripe from 'stripe';
 
 // Load .env.local
 config({ path: resolve(process.cwd(), '.env.local') });
@@ -22,7 +23,9 @@ if (!STRIPE_SECRET_KEY) {
   process.exit(1);
 }
 
-const stripe = require('stripe')(STRIPE_SECRET_KEY);
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
+  apiVersion: '2025-09-30.clover',
+});
 
 interface PlanConfig {
   name: string;
@@ -211,8 +214,9 @@ async function createProductsAndPrices() {
 
       console.log(`   ✅ Default price set to monthly\n`);
 
-    } catch (error: any) {
-      console.error(`   ❌ Error creating ${plan.name}:`, error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`   ❌ Error creating ${plan.name}:`, message);
     }
   }
 
@@ -229,7 +233,8 @@ createProductsAndPrices()
     console.log('\n✅ Done!');
     process.exit(0);
   })
-  .catch((error) => {
-    console.error('\n❌ Fatal error:', error);
+  .catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error('\n❌ Fatal error:', message);
     process.exit(1);
   });

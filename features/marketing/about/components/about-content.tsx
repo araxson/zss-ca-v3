@@ -1,9 +1,23 @@
+import { Check } from 'lucide-react'
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Separator } from '@/components/ui/separator'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from '@/components/ui/field'
 
 export function AboutContent() {
   return (
@@ -29,77 +43,83 @@ export function AboutContent() {
         </CardContent>
       </Card>
 
+      <Separator />
+
       <Card>
         <CardHeader>
           <CardTitle>What We Do</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <h3 className="font-semibold mb-2">
-              Subscription-Based Website Development
-            </h3>
-            <p className="text-muted-foreground">
-              We build and maintain professional static websites for small
-              businesses on a monthly subscription basis. No large upfront
-              costs, just predictable monthly pricing.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold mb-2">
-              Ongoing Support & Maintenance
-            </h3>
-            <p className="text-muted-foreground">
-              Your subscription includes regular updates, security patches, and
-              dedicated support to ensure your website stays current and
-              performs optimally.
-            </p>
-          </div>
-          <div>
-            <h3 className="font-semibold mb-2">Professional Design</h3>
-            <p className="text-muted-foreground">
-              Every website is custom-designed by our team to match your brand
-              and business goals, ensuring a unique and professional online
-              presence.
-            </p>
-          </div>
+        <CardContent>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="subscription">
+              <AccordionTrigger>
+                Subscription-Based Website Development
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                We build and maintain professional static websites for small
+                businesses on a monthly subscription basis. No large upfront
+                costs, just predictable monthly pricing.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="support">
+              <AccordionTrigger>
+                Ongoing Support & Maintenance
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Your subscription includes regular updates, security patches, and
+                dedicated support to ensure your website stays current and
+                performs optimally.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="design">
+              <AccordionTrigger>Professional Design</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Every website is custom-designed by our team to match your brand
+                and business goals, ensuring a unique and professional online
+                presence.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </CardContent>
       </Card>
+
+      <Separator />
 
       <Card>
         <CardHeader>
           <CardTitle>Why Choose Us</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul className="space-y-2">
-            <li className="flex items-start">
-              <span className="mr-2 font-bold">•</span>
-              <span className="text-muted-foreground">
-                <strong>Predictable Pricing:</strong> No hidden fees or
-                surprise costs
-              </span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 font-bold">•</span>
-              <span className="text-muted-foreground">
-                <strong>Canadian-Focused:</strong> Built for Canadian businesses
-                by Canadians
-              </span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 font-bold">•</span>
-              <span className="text-muted-foreground">
-                <strong>Professional Quality:</strong> Enterprise-level design
-                and development
-              </span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-2 font-bold">•</span>
-              <span className="text-muted-foreground">
-                <strong>Dedicated Support:</strong> Real humans ready to help
-                when you need it
-              </span>
-            </li>
-          </ul>
+          <FieldSet className="grid gap-3 sm:grid-cols-2">
+            {[
+              {
+                title: 'Predictable Pricing',
+                description: 'No hidden fees or surprise costs.',
+              },
+              {
+                title: 'Canadian-Focused',
+                description: 'Built for Canadian businesses by Canadians.',
+              },
+              {
+                title: 'Professional Quality',
+                description: 'Enterprise-level design and development.',
+              },
+              {
+                title: 'Dedicated Support',
+                description: 'Real humans ready to help when you need it.',
+              },
+            ].map((item) => (
+              <FieldGroup key={item.title} className="flex items-start gap-3 rounded-md border p-4">
+                <Check className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden />
+                <div className="space-y-1">
+                  <FieldLabel className="font-semibold text-foreground">{item.title}</FieldLabel>
+                  <FieldDescription className="text-sm text-muted-foreground">
+                    {item.description}
+                  </FieldDescription>
+                </div>
+              </FieldGroup>
+            ))}
+          </FieldSet>
         </CardContent>
       </Card>
     </div>

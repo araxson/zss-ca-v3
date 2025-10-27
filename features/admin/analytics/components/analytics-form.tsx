@@ -72,7 +72,7 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
       form.reset()
       router.push(ROUTES.ADMIN_SITES)
       router.refresh()
-    } catch (err) {
+    } catch (_error) {
       setError('An unexpected error occurred')
       setIsSubmitting(false)
     }

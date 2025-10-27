@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import {
   InputGroup,
   InputGroupAddon,
@@ -35,6 +34,12 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { deploySiteSchema, type DeploySiteInput } from '../schema'
 import { deploySiteAction } from '../api/mutations'
 import { Rocket, Link2 } from 'lucide-react'
@@ -108,57 +113,63 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="deployment_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deployment URL</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupInput
-                        {...field}
-                        placeholder="example.com"
-                        className="!pl-1"
-                        value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                        onChange={(e) => field.onChange(e.target.value)}
-                      />
-                      <InputGroupAddon>
-                        <InputGroupText>https://</InputGroupText>
-                      </InputGroupAddon>
-                      <InputGroupAddon align="inline-end">
-                        <Link2 className="size-4" />
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </FormControl>
-                  <FormDescription>
-                    The live URL where the site is now accessible
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FieldSet className="space-y-4">
+              <FieldLegend>Deployment metadata</FieldLegend>
+              <FieldDescription>Confirm the live URL and capture any launch notes.</FieldDescription>
+              <FieldGroup className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="deployment_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Deployment URL</FormLabel>
+                      <FormControl>
+                        <InputGroup>
+                          <InputGroupInput
+                            {...field}
+                            placeholder="example.com"
+                            className="!pl-1"
+                            value={field.value?.replace(/^https?:\/\//i, '') || ''}
+                            onChange={(e) => field.onChange(e.target.value)}
+                          />
+                          <InputGroupAddon>
+                            <InputGroupText>https://</InputGroupText>
+                          </InputGroupAddon>
+                          <InputGroupAddon align="inline-end">
+                            <Link2 className="size-4" />
+                          </InputGroupAddon>
+                        </InputGroup>
+                      </FormControl>
+                      <FormDescription>
+                        The live URL where the site is now accessible
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="deployment_notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Deployment Notes (Optional)</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Any notes about the deployment..."
-                      className="min-h-20"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Internal notes about this deployment
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="deployment_notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Deployment Notes (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Any notes about the deployment..."
+                          className="min-h-20"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Internal notes about this deployment
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
             <AlertDialog>
               <AlertDialogTrigger asChild>

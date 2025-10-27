@@ -1,14 +1,16 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Empty,
   EmptyContent,
@@ -48,8 +50,8 @@ export function ClientsTable({ clients }: ClientsTableProps) {
   }
 
   return (
-    <div className="border rounded-lg">
-      <Table>
+    <ScrollArea className="rounded-md border">
+      <Table className="min-w-[720px]">
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
@@ -72,11 +74,11 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                 </TableCell>
                 <TableCell>{client.contact_email}</TableCell>
                 <TableCell>{client.company_name || 'N/A'}</TableCell>
-                <TableCell>
+                <TableCell className="text-sm">
                   {client.subscription && client.subscription.plan ? (
-                    <div className="text-sm">{client.subscription.plan.name}</div>
+                    client.subscription.plan.name
                   ) : (
-                    <div className="text-sm text-muted-foreground">None</div>
+                    <span className="text-muted-foreground">None</span>
                   )}
                 </TableCell>
                 <TableCell>
@@ -100,15 +102,37 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                   {joinedDate.toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button asChild variant="ghost" size="sm">
-                    <Link href={`/admin/clients/${client.id}`}>View</Link>
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        Manage
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Client actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href={`/admin/clients/${client.id}`}>View details</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href={`${ROUTES.ADMIN_SITES}?client=${client.id}`}>
+                          View sites
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href={`${ROUTES.ADMIN_SUPPORT}?client=${client.id}`}>
+                          Support history
+                        </Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             )
           })}
         </TableBody>
       </Table>
-    </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   )
 }

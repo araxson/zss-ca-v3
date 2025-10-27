@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { Bell, LifeBuoy, ScrollText, UserCog, Users as UsersIcon, Globe } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -21,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   Tooltip,
@@ -34,7 +37,6 @@ import {
   EmptyHeader,
   EmptyTitle,
   EmptyDescription,
-  EmptyContent,
 } from '@/components/ui/empty'
 import {
   Item,
@@ -43,7 +45,13 @@ import {
   ItemDescription,
   ItemActions,
 } from '@/components/ui/item'
-import { ButtonGroup } from '@/components/ui/button-group'
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/command'
 import { ROUTES } from '@/lib/constants/routes'
 import {
   BarChart,
@@ -51,8 +59,6 @@ import {
   XAxis,
   YAxis,
   ResponsiveContainer,
-  LineChart,
-  Line,
   AreaChart,
   Area,
   PieChart,
@@ -88,6 +94,7 @@ interface AdminOverviewProps {
 }
 
 export function AdminOverview({ stats }: AdminOverviewProps) {
+  const router = useRouter()
   const planChartData = Object.entries(stats.planDistribution).map(([name, count]) => ({
     name,
     count,
@@ -137,7 +144,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
+            <CardTitle>Total Clients</CardTitle>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -163,7 +170,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Subscriptions</CardTitle>
+            <CardTitle>Active Subscriptions</CardTitle>
             <Badge variant="default">{stats.activeSubscriptions}</Badge>
           </CardHeader>
           <CardContent>
@@ -181,7 +188,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Live Sites</CardTitle>
+            <CardTitle>Live Sites</CardTitle>
             <Badge variant="default">{stats.liveSites}</Badge>
           </CardHeader>
           <CardContent>
@@ -198,7 +205,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Open Tickets</CardTitle>
+            <CardTitle>Open Tickets</CardTitle>
             {stats.openTickets > 0 ? (
               <Badge variant="destructive">{stats.openTickets}</Badge>
             ) : (
@@ -250,7 +257,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                       color: 'hsl(var(--chart-2))',
                     },
                   }}
-                  className="h-[250px]"
+                  className="h-64"
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={trendData}>
@@ -300,7 +307,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                         color: 'hsl(var(--primary))',
                       },
                     }}
-                    className="h-[250px]"
+                    className="h-64"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -323,7 +330,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                     </ResponsiveContainer>
                   </ChartContainer>
                 ) : (
-                  <Empty className="h-[250px]">
+                  <Empty className="h-64">
                     <EmptyHeader>
                       <EmptyTitle>No subscription data</EmptyTitle>
                       <EmptyDescription>No active subscriptions to display</EmptyDescription>
@@ -349,7 +356,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                         color: 'hsl(var(--chart-2))',
                       },
                     }}
-                    className="h-[250px]"
+                    className="h-64"
                   >
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={statusChartData} layout="vertical">
@@ -361,7 +368,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
                     </ResponsiveContainer>
                   </ChartContainer>
                 ) : (
-                  <Empty className="h-[250px]">
+                  <Empty className="h-64">
                     <EmptyHeader>
                       <EmptyTitle>No site data</EmptyTitle>
                       <EmptyDescription>No sites to display</EmptyDescription>
@@ -424,42 +431,60 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
               <CardDescription>Common administrative tasks</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-3">
-                <ButtonGroup>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.ADMIN_CLIENTS}>
-                      Manage Clients
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.ADMIN_SITES}>
-                      View Sites
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.ADMIN_SUPPORT}>
-                      Support
-                    </Link>
-                  </Button>
-                </ButtonGroup>
-                <ButtonGroup>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.ADMIN_AUDIT_LOGS}>
-                      Audit Logs
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.ADMIN_PROFILE}>
-                      Profile
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link href={ROUTES.ADMIN_NOTIFICATIONS}>
-                      Notifications
-                    </Link>
-                  </Button>
-                </ButtonGroup>
-              </div>
+              <Command
+                aria-label="Admin quick navigation"
+                className="w-full rounded-md border"
+              >
+                <CommandList>
+                  <CommandGroup heading="Management">
+                    <CommandItem
+                      value="admin-clients"
+                      onSelect={() => router.push(ROUTES.ADMIN_CLIENTS)}
+                    >
+                      <UsersIcon className="mr-2 h-4 w-4" />
+                      <span>Manage Clients</span>
+                    </CommandItem>
+                    <CommandItem
+                      value="admin-sites"
+                      onSelect={() => router.push(ROUTES.ADMIN_SITES)}
+                    >
+                      <Globe className="mr-2 h-4 w-4" />
+                      <span>View Sites</span>
+                    </CommandItem>
+                    <CommandItem
+                      value="admin-support"
+                      onSelect={() => router.push(ROUTES.ADMIN_SUPPORT)}
+                    >
+                      <LifeBuoy className="mr-2 h-4 w-4" />
+                      <span>Support</span>
+                    </CommandItem>
+                  </CommandGroup>
+                  <CommandSeparator />
+                  <CommandGroup heading="Operations">
+                    <CommandItem
+                      value="admin-audit-logs"
+                      onSelect={() => router.push(ROUTES.ADMIN_AUDIT_LOGS)}
+                    >
+                      <ScrollText className="mr-2 h-4 w-4" />
+                      <span>Audit Logs</span>
+                    </CommandItem>
+                    <CommandItem
+                      value="admin-profile"
+                      onSelect={() => router.push(ROUTES.ADMIN_PROFILE)}
+                    >
+                      <UserCog className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </CommandItem>
+                    <CommandItem
+                      value="admin-notifications"
+                      onSelect={() => router.push(ROUTES.ADMIN_NOTIFICATIONS)}
+                    >
+                      <Bell className="mr-2 h-4 w-4" />
+                      <span>Notifications</span>
+                    </CommandItem>
+                  </CommandGroup>
+                </CommandList>
+              </Command>
             </CardContent>
           </Card>
         </TabsContent>
@@ -472,37 +497,40 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
             </CardHeader>
             <CardContent>
               {stats.recentClients.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Client</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Company</TableHead>
-                      <TableHead>Joined</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {stats.recentClients.map((client) => (
-                      <TableRow key={client.id}>
-                        <TableCell className="flex items-center gap-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback>
-                              {client.contact_name?.charAt(0).toUpperCase() ?? 'C'}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span>{client.contact_name ?? 'Unknown'}</span>
-                        </TableCell>
-                        <TableCell>{client.contact_email}</TableCell>
-                        <TableCell>{client.company_name ?? '—'}</TableCell>
-                        <TableCell>
-                          {new Date(client.created_at).toLocaleDateString()}
-                        </TableCell>
+                <ScrollArea className="rounded-md border">
+                  <Table className="min-w-[600px]">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Client</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Company</TableHead>
+                        <TableHead>Joined</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {stats.recentClients.map((client) => (
+                        <TableRow key={client.id}>
+                          <TableCell className="flex items-center gap-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback>
+                                {client.contact_name?.charAt(0).toUpperCase() ?? 'C'}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span>{client.contact_name ?? 'Unknown'}</span>
+                          </TableCell>
+                          <TableCell>{client.contact_email}</TableCell>
+                          <TableCell>{client.company_name ?? '—'}</TableCell>
+                          <TableCell>
+                            {new Date(client.created_at).toLocaleDateString()}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               ) : (
-                <Empty className="h-[200px]">
+                <Empty className="h-52">
                   <EmptyHeader>
                     <EmptyTitle>No clients yet</EmptyTitle>
                     <EmptyDescription>Client accounts will appear here once registered</EmptyDescription>
@@ -521,65 +549,68 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
             </CardHeader>
             <CardContent>
               {stats.recentTickets.length > 0 ? (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Subject</TableHead>
-                      <TableHead>Client</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Priority</TableHead>
-                      <TableHead>Created</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {stats.recentTickets.map((ticket) => (
-                      <TableRow key={ticket.id}>
-                        <TableCell className="font-medium">
-                          <Link
-                            href={`${ROUTES.ADMIN_SUPPORT}/${ticket.id}`}
-                            className="hover:underline"
-                          >
-                            {ticket.subject}
-                          </Link>
-                        </TableCell>
-                        <TableCell>
-                          {ticket.profile?.company_name ?? ticket.profile?.contact_name ?? 'Unknown'}
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              ticket.status === 'open'
-                                ? 'destructive'
-                                : ticket.status === 'in_progress'
-                                ? 'default'
-                                : 'secondary'
-                            }
-                          >
-                            {ticket.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            variant={
-                              ticket.priority === 'urgent'
-                                ? 'destructive'
-                                : ticket.priority === 'high'
-                                ? 'default'
-                                : 'secondary'
-                            }
-                          >
-                            {ticket.priority}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {new Date(ticket.created_at).toLocaleDateString()}
-                        </TableCell>
+                <ScrollArea className="rounded-md border">
+                  <Table className="min-w-[700px]">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Subject</TableHead>
+                        <TableHead>Client</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Priority</TableHead>
+                        <TableHead>Created</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {stats.recentTickets.map((ticket) => (
+                        <TableRow key={ticket.id}>
+                          <TableCell className="font-medium">
+                            <Link
+                              href={`${ROUTES.ADMIN_SUPPORT}/${ticket.id}`}
+                              className="hover:underline"
+                            >
+                              {ticket.subject}
+                            </Link>
+                          </TableCell>
+                          <TableCell>
+                            {ticket.profile?.company_name ?? ticket.profile?.contact_name ?? 'Unknown'}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                ticket.status === 'open'
+                                  ? 'destructive'
+                                  : ticket.status === 'in_progress'
+                                  ? 'default'
+                                  : 'secondary'
+                              }
+                            >
+                              {ticket.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                ticket.priority === 'urgent'
+                                  ? 'destructive'
+                                  : ticket.priority === 'high'
+                                  ? 'default'
+                                  : 'secondary'
+                              }
+                            >
+                              {ticket.priority}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {new Date(ticket.created_at).toLocaleDateString()}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               ) : (
-                <Empty className="h-[200px]">
+                <Empty className="h-52">
                   <EmptyHeader>
                     <EmptyTitle>No tickets yet</EmptyTitle>
                     <EmptyDescription>Support tickets will appear here when clients submit requests</EmptyDescription>

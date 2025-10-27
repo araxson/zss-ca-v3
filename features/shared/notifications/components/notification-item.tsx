@@ -6,6 +6,10 @@ import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import {
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
 import { markNotificationReadAction } from '../api/mutations'
 import type { Notification } from '../api/queries'
 
@@ -73,9 +77,14 @@ export function NotificationItem({ notification }: NotificationItemProps) {
       </CardHeader>
       {isUnread && (
         <CardContent className="pt-0">
-          <Button size="sm" variant="outline" onClick={handleMarkRead}>
-            Mark as read
-          </Button>
+          <FieldGroup className="flex items-center justify-between gap-4">
+            <FieldLabel className="text-xs text-muted-foreground">
+              Mark this update as reviewed.
+            </FieldLabel>
+            <Button size="sm" variant="outline" onClick={handleMarkRead}>
+              Mark as read
+            </Button>
+          </FieldGroup>
         </CardContent>
       )}
     </Card>

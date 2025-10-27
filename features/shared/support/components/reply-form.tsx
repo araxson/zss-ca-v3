@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -19,6 +20,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { replyToTicketSchema, type ReplyToTicketInput } from '../schema'
 import { replyToTicketAction } from '../api/mutations'
 
@@ -40,8 +46,11 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
     const result = await replyToTicketAction(data)
 
     if (result.error) {
-      alert(result.error)
+      toast.error('Failed to send reply', {
+        description: result.error,
+      })
     } else {
+      toast.success('Reply sent successfully')
       form.reset({ ticketId, message: '' })
       router.refresh()
     }
@@ -55,23 +64,28 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Your Reply</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Type your reply here..."
-                      className="min-h-[120px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FieldSet className="space-y-3">
+              <FieldLegend>Reply message</FieldLegend>
+              <FieldGroup>
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Your Reply</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Type your reply here..."
+                          className="min-h-32"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
             <Button
               type="submit"

@@ -1,12 +1,12 @@
 import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
 import { ManageSubscriptionButtons } from './manage-subscription-buttons'
 import type { SubscriptionWithPlan } from '../api/queries'
 
@@ -26,57 +26,57 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle>{plan.name} Plan</CardTitle>
-            <CardDescription>{plan.description}</CardDescription>
-          </div>
-          <Badge variant={isActive ? 'default' : isPastDue ? 'destructive' : 'secondary'}>
-            {subscription.status}
-          </Badge>
+      <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-1">
+          <CardTitle>{plan.name} Plan</CardTitle>
+          <CardDescription>{plan.description}</CardDescription>
         </div>
+        <Badge className="w-fit" variant={isActive ? 'default' : isPastDue ? 'destructive' : 'secondary'}>
+          {subscription.status}
+        </Badge>
       </CardHeader>
       <CardContent className="space-y-4">
-        {currentPeriodEnd && (
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">Current Period</p>
+        <FieldGroup className="space-y-4">
+          {currentPeriodEnd && (
+            <Field>
+              <FieldLabel>Current Period</FieldLabel>
+              <FieldDescription>
+                Renews on {currentPeriodEnd.toLocaleDateString()}
+              </FieldDescription>
+            </Field>
+          )}
+
+          <Field>
+            <FieldLabel>Plan Features</FieldLabel>
+            <FieldDescription asChild>
+              <ul className="space-y-1 text-sm">
+                <li>
+                  {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
+                </li>
+                <li>
+                  {plan.revision_limit
+                    ? `${plan.revision_limit} revisions/month`
+                    : 'Unlimited revisions'}
+                </li>
+              </ul>
+            </FieldDescription>
+          </Field>
+
+          <Field>
+            <FieldLabel>Pricing</FieldLabel>
             <p className="font-medium">
-              Renews on {currentPeriodEnd.toLocaleDateString()}
+              ${monthlyPrice}/month or ${yearlyPrice}/year
             </p>
-          </div>
-        )}
-
-        <div>
-          <p className="text-sm text-muted-foreground mb-1">Plan Features</p>
-          <ul className="space-y-1 text-sm">
-            <li>
-              {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
-            </li>
-            <li>
-              {plan.revision_limit
-                ? `${plan.revision_limit} revisions/month`
-                : 'Unlimited revisions'}
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-sm text-muted-foreground mb-1">Pricing</p>
-          <p className="font-medium">
-            ${monthlyPrice}/month or ${yearlyPrice}/year
-          </p>
-        </div>
+          </Field>
+        </FieldGroup>
 
         {isPastDue && (
-          <div className="bg-destructive/10 p-3 rounded-md">
-            <p className="text-sm text-destructive font-medium">
-              Payment Failed
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
+          <Alert variant="destructive">
+            <AlertTitle>Payment Failed</AlertTitle>
+            <AlertDescription>
               Please update your payment method to continue your subscription.
-            </p>
-          </div>
+            </AlertDescription>
+          </Alert>
         )}
       </CardContent>
       <CardFooter>

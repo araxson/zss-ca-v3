@@ -1,9 +1,19 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import Stripe from 'stripe';
 
 config({ path: resolve(process.cwd(), '.env.local') });
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+
+if (!STRIPE_SECRET_KEY) {
+  console.error('Error: STRIPE_SECRET_KEY not found in environment variables');
+  process.exit(1);
+}
+
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
+  apiVersion: '2025-09-30.clover',
+});
 
 // Import constants
 import {
@@ -11,7 +21,6 @@ import {
   STRIPE_PRICES,
   STRIPE_LOOKUP_KEYS,
   PLAN_IDS,
-  PLAN_SLUGS,
 } from '../lib/constants/stripe';
 
 async function verifyIntegration() {
@@ -46,7 +55,7 @@ async function verifyIntegration() {
         console.log(`   ⚠️  Warning: No statement descriptor on ${slug} product`);
         warnings++;
       }
-    } catch (error: any) {
+    } catch (_error: unknown) {
       console.log(`   ❌ Error: ${slug} product not found (${productId})`);
       errors++;
     }
@@ -59,7 +68,7 @@ async function verifyIntegration() {
   for (const [key, priceId] of Object.entries(STRIPE_PRICES)) {
     try {
       const price = await stripe.prices.retrieve(priceId);
-      const amount = (price.unit_amount / 100).toFixed(2);
+      const amount = price.unit_amount ? (price.unit_amount / 100).toFixed(2) : '0.00';
       const interval = price.recurring?.interval || 'one-time';
       console.log(`   ✅ ${key}: $${amount} CAD/${interval} (${priceId})`);
 
@@ -74,7 +83,7 @@ async function verifyIntegration() {
         console.log(`   ⚠️  Warning: ${key} tax_behavior is ${price.tax_behavior}, should be exclusive`);
         warnings++;
       }
-    } catch (error: any) {
+    } catch (_error: unknown) {
       console.log(`   ❌ Error: ${key} price not found (${priceId})`);
       errors++;
     }
@@ -95,11 +104,12 @@ async function verifyIntegration() {
         errors++;
       } else {
         const price = prices.data[0];
-        const amount = (price.unit_amount / 100).toFixed(2);
+        const amount = price.unit_amount ? (price.unit_amount / 100).toFixed(2) : '0.00';
         console.log(`   ✅ ${key}: $${amount} CAD (lookup: ${lookupKey})`);
       }
-    } catch (error: any) {
-      console.log(`   ❌ Error querying lookup key "${lookupKey}": ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.log(`   ❌ Error querying lookup key "${lookupKey}": ${message}`);
       errors++;
     }
   }
@@ -151,4 +161,8 @@ async function verifyIntegration() {
   process.exit(errors > 0 ? 1 : 0);
 }
 
-verifyIntegration().catch(console.error);
+verifyIntegration().catch((error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error('❌ Fatal error running verification:', message);
+  process.exit(1);
+});

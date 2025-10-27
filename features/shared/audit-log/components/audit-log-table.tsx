@@ -8,6 +8,13 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import {
   Table,
   TableBody,
   TableCell,
@@ -15,6 +22,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Button } from '@/components/ui/button'
+import { Eye } from 'lucide-react'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import type { AuditLogWithProfiles } from '../api/queries'
 
 interface AuditLogTableProps {
@@ -44,12 +59,13 @@ function formatResourceTable(table: string) {
 export function AuditLogTable({ logs }: AuditLogTableProps) {
   if (logs.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Audit Logs</CardTitle>
-          <CardDescription>No audit logs found</CardDescription>
-        </CardHeader>
-      </Card>
+      <Empty className="border border-dashed">
+        <EmptyHeader>
+          <EmptyTitle>No audit activity yet</EmptyTitle>
+          <EmptyDescription>Actions will appear here once the team starts making changes.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent />
+      </Empty>
     )
   }
 
@@ -61,13 +77,14 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
           Complete record of all actions performed in the system
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Timestamp</TableHead>
-              <TableHead>Actor</TableHead>
-              <TableHead>Action</TableHead>
+      <CardContent className="p-0">
+        <ScrollArea className="rounded-md">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Timestamp</TableHead>
+                <TableHead>Actor</TableHead>
+                <TableHead>Action</TableHead>
               <TableHead>Resource</TableHead>
               <TableHead>Details</TableHead>
             </TableRow>
@@ -105,17 +122,32 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="max-w-xs">
+                <TableCell>
                   {log.change_summary && typeof log.change_summary === 'object' && (
-                    <pre className="text-xs overflow-auto max-h-20">
-                      {JSON.stringify(log.change_summary, null, 2)}
-                    </pre>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <Eye className="h-4 w-4 mr-2" />
+                          View Details
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[500px]" align="end">
+                        <div className="space-y-2">
+                          <h4 className="font-medium">Change Summary</h4>
+                          <pre className="text-xs overflow-auto max-h-96 rounded-md bg-muted p-4">
+                            {JSON.stringify(log.change_summary, null, 2)}
+                          </pre>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   )}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-        </Table>
+          </Table>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </CardContent>
     </Card>
   )

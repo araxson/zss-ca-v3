@@ -22,6 +22,12 @@ import {
   InputGroupButton,
 } from '@/components/ui/input-group'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { loginSchema, type LoginInput } from '../schema'
 import { loginAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -80,79 +86,85 @@ export function LoginForm() {
           </Alert>
         )}
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    {loading ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : (
-                      <Mail className="size-4" />
-                    )}
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type="email"
-                    placeholder="you@example.com"
-                    {...field}
-                    disabled={loading}
-                  />
-                  {field.value && !loading && (
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        onClick={() => form.setValue('email', '')}
-                        aria-label="Clear email"
-                      >
-                        <X className="size-4" />
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  )}
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <Lock className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    {...field}
-                    disabled={loading}
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
+        <FieldSet className="space-y-4">
+          <FieldLegend>Sign in to your account</FieldLegend>
+          <FieldDescription>Enter the credentials associated with your subscription.</FieldDescription>
+          <FieldGroup className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        {loading ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Mail className="size-4" />
+                        )}
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type="email"
+                        placeholder="you@example.com"
+                        {...field}
+                        disabled={loading}
+                      />
+                      {field.value && !loading && (
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            onClick={() => form.setValue('email', '')}
+                            aria-label="Clear email"
+                          >
+                            <X className="size-4" />
+                          </InputGroupButton>
+                        </InputGroupAddon>
                       )}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="••••••••"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
 
         <div className="flex items-center justify-between">
           <Link

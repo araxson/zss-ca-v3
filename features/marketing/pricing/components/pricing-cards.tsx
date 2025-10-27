@@ -11,6 +11,19 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from '@/components/ui/field'
 import { BillingIntervalToggle } from './billing-interval-toggle'
 import { CheckoutButton } from '@/features/shared/subscription/components/checkout-button'
 import type { Database } from '@/lib/types/database.types'
@@ -39,11 +52,14 @@ export function PricingCards({
 
   if (plans.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">
-          No active plans available at the moment. Please check back later.
-        </p>
-      </div>
+      <Empty className="border border-dashed py-16">
+        <EmptyHeader>
+          <EmptyTitle>Plans coming soon</EmptyTitle>
+          <EmptyDescription>
+            No active subscriptions are available right now. Check back shortly or contact our team.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 
@@ -75,48 +91,45 @@ export function PricingCards({
                 <CardDescription>{plan.description}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold">
+                <FieldSet className="space-y-4">
+                  <FieldGroup className="space-y-1">
+                    <FieldLabel className="flex items-baseline gap-1 text-3xl font-bold">
                       ${price.toFixed(2)}
-                    </span>
-                    <span className="text-muted-foreground">/mo</span>
-                  </div>
-                  {billingInterval === 'yearly' && (
-                    <p className="text-xs text-muted-foreground">
-                      ${totalYearly.toFixed(2)} billed annually
-                    </p>
-                  )}
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {plan.page_limit
-                      ? `${plan.page_limit} pages`
-                      : 'Unlimited pages'}
-                    {' • '}
-                    {plan.revision_limit
-                      ? `${plan.revision_limit} revisions/mo`
-                      : 'Unlimited revisions'}
-                  </p>
-                </div>
-                <ul className="space-y-2">
-                  {features
-                    .filter((f) => f.included)
-                    .map((feature) => (
-                      <li
-                        key={feature.name}
-                        className="text-sm flex items-start gap-2"
-                      >
-                        <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <div>
-                          <span className="font-medium">{feature.name}</span>
-                          {feature.description && (
-                            <p className="text-muted-foreground text-xs">
-                              {feature.description}
-                            </p>
-                          )}
-                        </div>
-                      </li>
-                    ))}
-                </ul>
+                      <span className="text-base font-medium text-muted-foreground">/mo</span>
+                    </FieldLabel>
+                    {billingInterval === 'yearly' && (
+                      <FieldDescription className="text-xs text-muted-foreground">
+                        ${totalYearly.toFixed(2)} billed annually
+                      </FieldDescription>
+                    )}
+                    <FieldDescription className="text-sm text-muted-foreground">
+                      {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
+                      {' • '}
+                      {plan.revision_limit
+                        ? `${plan.revision_limit} revisions/mo`
+                        : 'Unlimited revisions'}
+                    </FieldDescription>
+                  </FieldGroup>
+                  <FieldGroup className="space-y-2">
+                    {features
+                      .filter((f) => f.included)
+                      .map((feature) => (
+                        <Field key={feature.name} className="flex items-start gap-2">
+                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden />
+                          <div>
+                            <FieldLabel className="text-sm font-medium text-foreground">
+                              {feature.name}
+                            </FieldLabel>
+                            {feature.description && (
+                              <FieldDescription className="text-xs text-muted-foreground">
+                                {feature.description}
+                              </FieldDescription>
+                            )}
+                          </div>
+                        </Field>
+                      ))}
+                  </FieldGroup>
+                </FieldSet>
               </CardContent>
               <CardFooter>
                 <CheckoutButton

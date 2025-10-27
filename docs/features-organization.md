@@ -272,6 +272,6 @@ Features map to database tables/domains:
 
 ## References
 
-- **UI Patterns:** See `docs/stack-patterns/ui-patterns.md`
-- **TypeScript Patterns:** See `docs/stack-patterns/typescript-patterns.md`
+- **UI Patterns:** See `docs/rules/ui.md`
+- **TypeScript Patterns:** See `docs/rules/typescript-patterns.md`
 - **Project Overview:** See `PROJECT_OVERVIEW.md`

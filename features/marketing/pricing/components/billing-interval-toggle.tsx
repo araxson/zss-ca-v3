@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/badge'
 
 type BillingInterval = 'monthly' | 'yearly'
 
@@ -25,9 +26,9 @@ export function BillingIntervalToggle({ onIntervalChange }: BillingIntervalToggl
           <TabsTrigger value="monthly">Monthly</TabsTrigger>
           <TabsTrigger value="yearly">
             Yearly
-            <span className="ml-2 text-xs bg-primary/10 px-2 py-0.5 rounded">
+            <Badge variant="secondary" className="ml-2">
               Save 20%
-            </span>
+            </Badge>
           </TabsTrigger>
         </TabsList>
       </Tabs>

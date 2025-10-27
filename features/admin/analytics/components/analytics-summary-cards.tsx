@@ -6,6 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
 import type { AnalyticsSummary } from '../api/queries'
 
 interface AnalyticsSummaryCardsProps {
@@ -25,7 +30,12 @@ export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsPr
           <Eye className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary.totalPageViews.toLocaleString()}</div>
+          <FieldGroup>
+            <FieldLabel className="text-2xl font-bold">{summary.totalPageViews.toLocaleString()}</FieldLabel>
+            <FieldDescription className="text-xs text-muted-foreground">
+              Compared to prior period: +12%
+            </FieldDescription>
+          </FieldGroup>
         </CardContent>
       </Card>
 
@@ -38,7 +48,12 @@ export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsPr
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary.totalUniqueVisitors.toLocaleString()}</div>
+          <FieldGroup>
+            <FieldLabel className="text-2xl font-bold">{summary.totalUniqueVisitors.toLocaleString()}</FieldLabel>
+            <FieldDescription className="text-xs text-muted-foreground">
+              Returning visitor rate: 38%
+            </FieldDescription>
+          </FieldGroup>
         </CardContent>
       </Card>
 
@@ -51,7 +66,12 @@ export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsPr
           <Target className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary.totalConversions.toLocaleString()}</div>
+          <FieldGroup>
+            <FieldLabel className="text-2xl font-bold">{summary.totalConversions.toLocaleString()}</FieldLabel>
+            <FieldDescription className="text-xs text-muted-foreground">
+              Conversion rate: 4.6%
+            </FieldDescription>
+          </FieldGroup>
         </CardContent>
       </Card>
 
@@ -64,7 +84,12 @@ export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsPr
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary.averagePageViews.toLocaleString()}</div>
+          <FieldGroup>
+            <FieldLabel className="text-2xl font-bold">{summary.averagePageViews.toLocaleString()}</FieldLabel>
+            <FieldDescription className="text-xs text-muted-foreground">
+              Peak traffic on Wednesdays
+            </FieldDescription>
+          </FieldGroup>
         </CardContent>
       </Card>
     </div>

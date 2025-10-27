@@ -22,7 +22,15 @@ import {
   InputOTPSlot,
 } from '@/components/ui/input-otp'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from '@/components/ui/field'
 import { Loader2, Mail } from 'lucide-react'
 import { ROUTES } from '@/lib/constants/routes'
 
@@ -127,10 +135,23 @@ export function OTPForm({
         <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 flex items-center justify-center rounded-lg bg-muted p-4">
-          <Mail className="mr-2 h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">{email}</span>
-        </div>
+        <FieldSet className="mb-6 space-y-3">
+          <FieldGroup>
+            <Field>
+              <FieldLabel>Verification email</FieldLabel>
+              <div className="flex items-center justify-between gap-3 rounded-md bg-muted/50 px-3 py-2 text-sm font-medium">
+                <span className="inline-flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  {email}
+                </span>
+                <Badge variant="secondary">{verificationType.replace('_', ' ')}</Badge>
+              </div>
+              <FieldDescription>
+                Enter the code we sent to this address to continue.
+              </FieldDescription>
+            </Field>
+          </FieldGroup>
+        </FieldSet>
 
         {error && (
           <Alert variant="destructive" className="mb-4">

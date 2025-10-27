@@ -7,6 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
 import type { Database } from '@/lib/types/database.types'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -73,83 +79,90 @@ export function SiteDetailCard({ site }: SiteDetailCardProps) {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Client</div>
-              <Link
-                href={`/admin/clients/${site.profile.id}`}
-                className="text-sm text-primary hover:underline"
-              >
-                {site.profile.company_name || site.profile.contact_name}
-              </Link>
-              <div className="text-xs text-muted-foreground">{site.profile.contact_email}</div>
-            </div>
+        <CardContent className="space-y-6">
+          <FieldGroup className="space-y-4">
+            <Field>
+              <FieldLabel>Client</FieldLabel>
+              <FieldDescription>
+                <Link
+                  href={`/admin/clients/${site.profile.id}`}
+                  className="text-primary hover:underline"
+                >
+                  {site.profile.company_name || site.profile.contact_name}
+                </Link>
+                <span className="block text-xs text-muted-foreground">
+                  {site.profile.contact_email}
+                </span>
+              </FieldDescription>
+            </Field>
+            <Field>
+              <FieldLabel>Plan</FieldLabel>
+              <p className="text-sm font-medium">
+                {site.plan?.name || 'No plan assigned'}
+              </p>
+            </Field>
+          </FieldGroup>
 
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Plan</div>
-              <div className="text-sm">{site.plan?.name || 'No plan assigned'}</div>
-            </div>
-
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Created</div>
-              <div className="text-sm">{formatDate(site.created_at)}</div>
-            </div>
-
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Last Updated</div>
-              <div className="text-sm">{formatDate(site.updated_at)}</div>
-            </div>
-
+          <FieldGroup className="grid gap-4 md:grid-cols-2">
+            <Field>
+              <FieldLabel>Created</FieldLabel>
+              <FieldDescription>{formatDate(site.created_at)}</FieldDescription>
+            </Field>
+            <Field>
+              <FieldLabel>Last Updated</FieldLabel>
+              <FieldDescription>{formatDate(site.updated_at)}</FieldDescription>
+            </Field>
             {site.deployed_at && (
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Deployed</div>
-                <div className="text-sm">{formatDate(site.deployed_at)}</div>
-              </div>
+              <Field>
+                <FieldLabel>Deployed</FieldLabel>
+                <FieldDescription>{formatDate(site.deployed_at)}</FieldDescription>
+              </Field>
             )}
-
             {site.last_revision_at && (
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Last Revision</div>
-                <div className="text-sm">{formatDate(site.last_revision_at)}</div>
-              </div>
+              <Field>
+                <FieldLabel>Last Revision</FieldLabel>
+                <FieldDescription>{formatDate(site.last_revision_at)}</FieldDescription>
+              </Field>
             )}
-          </div>
+          </FieldGroup>
 
-          {site.deployment_url && (
-            <div>
-              <div className="mb-1 text-sm font-medium text-muted-foreground">Deployment URL</div>
-              <a
-                href={site.deployment_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-primary hover:underline"
-              >
-                {site.deployment_url}
-              </a>
-            </div>
-          )}
-
-          {site.custom_domain && (
-            <div>
-              <div className="mb-1 text-sm font-medium text-muted-foreground">Custom Domain</div>
-              <div className="text-sm">{site.custom_domain}</div>
-            </div>
-          )}
-
-          {site.deployment_notes && (
-            <div>
-              <div className="mb-1 text-sm font-medium text-muted-foreground">Deployment Notes</div>
-              <div className="whitespace-pre-wrap text-sm">{site.deployment_notes}</div>
-            </div>
-          )}
-
-          {site.slug && (
-            <div>
-              <div className="mb-1 text-sm font-medium text-muted-foreground">Slug</div>
-              <div className="text-sm font-mono">{site.slug}</div>
-            </div>
-          )}
+          <FieldGroup className="space-y-4">
+            {site.deployment_url && (
+              <Field>
+                <FieldLabel>Deployment URL</FieldLabel>
+                <FieldDescription>
+                  <a
+                    href={site.deployment_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    {site.deployment_url}
+                  </a>
+                </FieldDescription>
+              </Field>
+            )}
+            {site.custom_domain && (
+              <Field>
+                <FieldLabel>Custom Domain</FieldLabel>
+                <p className="text-sm font-medium">{site.custom_domain}</p>
+              </Field>
+            )}
+            {site.deployment_notes && (
+              <Field>
+                <FieldLabel>Deployment Notes</FieldLabel>
+                <p className="whitespace-pre-wrap text-sm text-muted-foreground">
+                  {site.deployment_notes}
+                </p>
+              </Field>
+            )}
+            {site.slug && (
+              <Field>
+                <FieldLabel>Slug</FieldLabel>
+                <p className="font-mono text-xs">{site.slug}</p>
+              </Field>
+            )}
+          </FieldGroup>
         </CardContent>
       </Card>
     </div>

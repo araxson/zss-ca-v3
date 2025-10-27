@@ -7,6 +7,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from '@/components/ui/field'
 import { ExternalLink } from 'lucide-react'
 import type { Database } from '@/lib/types/database.types'
 
@@ -71,122 +84,158 @@ export function SiteDetail({ site }: SiteDetailProps) {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Plan</div>
-              <div className="text-sm">{site.plan?.name || 'No plan assigned'}</div>
-            </div>
+          <FieldSet className="space-y-4">
+            <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field>
+                <FieldLabel>Plan</FieldLabel>
+                <FieldDescription>
+                  {site.plan?.name || 'No plan assigned'}
+                </FieldDescription>
+              </Field>
+              {site.plan?.page_limit && (
+                <Field>
+                  <FieldLabel>Page Limit</FieldLabel>
+                  <p className="text-sm font-medium">{site.plan.page_limit} pages</p>
+                </Field>
+              )}
+              {site.plan?.revision_limit && (
+                <Field>
+                  <FieldLabel>Monthly Revisions</FieldLabel>
+                  <p className="text-sm font-medium">
+                    {site.plan.revision_limit} revisions
+                  </p>
+                </Field>
+              )}
+              <Field>
+                <FieldLabel>Created</FieldLabel>
+                <FieldDescription>{formatDate(site.created_at)}</FieldDescription>
+              </Field>
+              {site.deployed_at && (
+                <Field>
+                  <FieldLabel>Deployed</FieldLabel>
+                  <FieldDescription>{formatDate(site.deployed_at)}</FieldDescription>
+                </Field>
+              )}
+              {site.last_revision_at && (
+                <Field>
+                  <FieldLabel>Last Revision</FieldLabel>
+                  <FieldDescription>{formatDate(site.last_revision_at)}</FieldDescription>
+                </Field>
+              )}
+            </FieldGroup>
+          </FieldSet>
 
-            {site.plan?.page_limit && (
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Page Limit</div>
-                <div className="text-sm">{site.plan.page_limit} pages</div>
-              </div>
+          <FieldGroup className="space-y-4">
+            {site.deployment_url && (
+              <Field>
+                <FieldLabel>Website URL</FieldLabel>
+                <div className="flex gap-2">
+                  <Button asChild>
+                    <a
+                      href={site.deployment_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      {site.deployment_url}
+                    </a>
+                  </Button>
+                </div>
+              </Field>
             )}
 
-            {site.plan?.revision_limit && (
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Monthly Revisions</div>
-                <div className="text-sm">{site.plan.revision_limit} revisions</div>
-              </div>
+            {site.custom_domain && (
+              <Field>
+                <FieldLabel>Custom Domain</FieldLabel>
+                <FieldDescription>{site.custom_domain}</FieldDescription>
+              </Field>
             )}
-
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Created</div>
-              <div className="text-sm">{formatDate(site.created_at)}</div>
-            </div>
-
-            {site.deployed_at && (
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Deployed</div>
-                <div className="text-sm">{formatDate(site.deployed_at)}</div>
-              </div>
-            )}
-
-            {site.last_revision_at && (
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Last Revision</div>
-                <div className="text-sm">{formatDate(site.last_revision_at)}</div>
-              </div>
-            )}
-          </div>
-
-          {site.deployment_url && (
-            <div>
-              <div className="mb-2 text-sm font-medium text-muted-foreground">Website URL</div>
-              <div className="flex gap-2">
-                <Button asChild>
-                  <a
-                    href={site.deployment_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    {site.deployment_url}
-                  </a>
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {site.custom_domain && (
-            <div>
-              <div className="mb-1 text-sm font-medium text-muted-foreground">Custom Domain</div>
-              <div className="text-sm">{site.custom_domain}</div>
-            </div>
-          )}
+          </FieldGroup>
         </CardContent>
       </Card>
 
       <Card className="h-full">
         <CardHeader>
-          <CardTitle>Status Information</CardTitle>
-          <CardDescription>Current state of your website</CardDescription>
+          <CardTitle>Additional Information</CardTitle>
+          <CardDescription>More details about your website</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {site.status === 'pending' && (
-              <div className="text-sm">
-                Your website project has been created and is in the queue. Our team will begin
-                working on it shortly.
-              </div>
-            )}
+          <Accordion type="single" collapsible defaultValue="status">
+            <AccordionItem value="status">
+              <AccordionTrigger>Status Information</AccordionTrigger>
+              <AccordionContent className="space-y-4">
+                {site.status === 'pending' && (
+                  <div className="text-sm">
+                    Your website project has been created and is in the queue. Our team will begin
+                    working on it shortly.
+                  </div>
+                )}
 
-            {site.status === 'in_production' && (
-              <div className="text-sm">
-                Our team is actively working on your website. We will notify you when it is
-                ready for review.
-              </div>
-            )}
+                {site.status === 'in_production' && (
+                  <div className="text-sm">
+                    Our team is actively working on your website. We will notify you when it is
+                    ready for review.
+                  </div>
+                )}
 
-            {site.status === 'awaiting_client_content' && (
-              <div className="text-sm">
-                We are waiting for content or feedback from you. Please check your email for
-                our request or contact support if you need assistance.
-              </div>
-            )}
+                {site.status === 'awaiting_client_content' && (
+                  <div className="text-sm">
+                    We are waiting for content or feedback from you. Please check your email for
+                    our request or contact support if you need assistance.
+                  </div>
+                )}
 
-            {site.status === 'ready_for_review' && (
-              <div className="text-sm">
-                Your website is ready for review! Please check the preview and let us know if
-                any changes are needed.
-              </div>
-            )}
+                {site.status === 'ready_for_review' && (
+                  <div className="text-sm">
+                    Your website is ready for review! Please check the preview and let us know if
+                    any changes are needed.
+                  </div>
+                )}
 
-            {site.status === 'live' && (
-              <div className="text-sm">
-                Your website is live and accessible to the public. Thank you for choosing our
-                service!
-              </div>
-            )}
+                {site.status === 'live' && (
+                  <div className="text-sm">
+                    Your website is live and accessible to the public. Thank you for choosing our
+                    service!
+                  </div>
+                )}
 
-            {site.status === 'paused' && (
-              <div className="text-sm">
-                Your website project has been paused. Please contact support if you would like
-                to resume development.
-              </div>
+                {site.status === 'paused' && (
+                  <div className="text-sm">
+                    Your website project has been paused. Please contact support if you would like
+                    to resume development.
+                  </div>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+
+            {site.plan && (
+              <AccordionItem value="plan">
+                <AccordionTrigger>Plan Details</AccordionTrigger>
+                <AccordionContent>
+                  <FieldGroup className="space-y-3">
+                    <Field>
+                      <FieldLabel>Plan Name</FieldLabel>
+                      <FieldDescription>{site.plan.name}</FieldDescription>
+                    </Field>
+                    {site.plan.page_limit && (
+                      <Field>
+                        <FieldLabel>Page Limit</FieldLabel>
+                        <FieldDescription>{site.plan.page_limit} pages</FieldDescription>
+                      </Field>
+                    )}
+                    {site.plan.revision_limit && (
+                      <Field>
+                        <FieldLabel>Monthly Revisions</FieldLabel>
+                        <FieldDescription>
+                          {site.plan.revision_limit} revisions
+                        </FieldDescription>
+                      </Field>
+                    )}
+                  </FieldGroup>
+                </AccordionContent>
+              </AccordionItem>
             )}
-          </div>
+          </Accordion>
         </CardContent>
       </Card>
     </div>

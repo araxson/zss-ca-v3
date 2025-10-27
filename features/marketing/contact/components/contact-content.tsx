@@ -8,6 +8,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
+import { Badge } from '@/components/ui/badge'
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from '@/components/ui/field'
 import { siteConfig } from '@/lib/config/site.config'
 
 export function ContactContent() {
@@ -32,19 +41,21 @@ export function ContactContent() {
               Reach out and we&apos;ll respond within one business day.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Mail className="size-5 text-primary" />
-              <a href={`mailto:${contact.email}`} className="font-medium">
-                {contact.email}
-              </a>
-            </div>
-            <div className="flex items-center gap-3">
-              <Phone className="size-5 text-primary" />
-              <a href={`tel:${phoneHref}`} className="font-medium">
-                {contact.phone}
-              </a>
-            </div>
+          <CardContent>
+            <FieldGroup className="space-y-4">
+              <Field className="flex items-center gap-3">
+                <Mail className="size-5 text-primary" aria-hidden />
+                <a href={`mailto:${contact.email}`} className="font-medium">
+                  {contact.email}
+                </a>
+              </Field>
+              <Field className="flex items-center gap-3">
+                <Phone className="size-5 text-primary" aria-hidden />
+                <a href={`tel:${phoneHref}`} className="font-medium">
+                  {contact.phone}
+                </a>
+              </Field>
+            </FieldGroup>
           </CardContent>
           <CardFooter>
             <Button asChild className="w-full">
@@ -58,21 +69,25 @@ export function ContactContent() {
             <CardTitle>Visit our studio</CardTitle>
             <CardDescription>Drop by or schedule an in-person strategy session.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3 text-muted-foreground">
-            <div className="flex items-start gap-3">
-              <MapPin className="mt-1 size-5 text-primary" />
-              <div>
-                <p className="font-medium">{contact.address.line1}</p>
-                <p>
-                  {contact.address.city}, {contact.address.region} {contact.address.postal}
-                </p>
-                <p>{contact.address.country}</p>
-              </div>
-            </div>
-            <p>Office hours: Monday–Friday, 9am–5pm MT</p>
+          <CardContent>
+            <FieldGroup className="space-y-3 text-muted-foreground">
+              <Field className="flex items-start gap-3">
+                <MapPin className="mt-1 size-5 text-primary" aria-hidden />
+                <div>
+                  <p className="font-medium text-foreground">{contact.address.line1}</p>
+                  <p>
+                    {contact.address.city}, {contact.address.region} {contact.address.postal}
+                  </p>
+                  <p>{contact.address.country}</p>
+                </div>
+              </Field>
+              <FieldDescription>Office hours: Monday–Friday, 9am–5pm MT</FieldDescription>
+            </FieldGroup>
           </CardContent>
         </Card>
       </div>
+
+      <Separator />
 
       <Card>
         <CardHeader>
@@ -82,25 +97,39 @@ export function ContactContent() {
           </div>
           <CardDescription>Here&apos;s how we turn your idea into a live website.</CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-3">
+        <CardContent className="grid gap-6 md:grid-cols-3">
           {[
             {
+              step: 1,
               title: 'Discovery call',
               description: 'We learn about your business, goals, and timeline.',
             },
             {
+              step: 2,
               title: 'Proposal & onboarding',
               description: 'Pick a plan, connect Stripe billing, and share brand assets.',
             },
             {
+              step: 3,
               title: 'Design & launch',
               description: 'We build, review together, and deploy your new site.',
             },
-          ].map((step) => (
-            <div key={step.title} className="space-y-2 text-muted-foreground">
-              <h3 className="text-base font-semibold text-foreground">{step.title}</h3>
-              <p className="text-sm">{step.description}</p>
-            </div>
+          ].map((item) => (
+            <FieldSet key={item.step} className="space-y-2 rounded-lg border p-4">
+              <FieldLabel asChild>
+                <Badge variant="outline" className="w-fit">
+                  Step {item.step}
+                </Badge>
+              </FieldLabel>
+              <FieldGroup className="space-y-1">
+                <FieldLabel className="text-base font-semibold text-foreground">
+                  {item.title}
+                </FieldLabel>
+                <FieldDescription className="text-sm text-muted-foreground">
+                  {item.description}
+                </FieldDescription>
+              </FieldGroup>
+            </FieldSet>
           ))}
         </CardContent>
       </Card>

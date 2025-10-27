@@ -23,6 +23,12 @@ import {
   InputGroupButton,
 } from '@/components/ui/input-group'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { resetPasswordSchema, type ResetPasswordInput } from '../schema'
 import { resetPasswordAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -78,43 +84,49 @@ export function ResetPasswordForm() {
           </Alert>
         )}
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    {loading ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : (
-                      <Mail className="size-4" />
-                    )}
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type="email"
-                    placeholder="you@example.com"
-                    {...field}
-                    disabled={loading}
-                  />
-                  {field.value && !loading && (
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        onClick={() => form.setValue('email', '')}
-                        aria-label="Clear email"
-                      >
-                        <X className="size-4" />
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  )}
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FieldSet className="space-y-3">
+          <FieldLegend>Account email</FieldLegend>
+          <FieldDescription>We&apos;ll send a verification code to this address.</FieldDescription>
+          <FieldGroup>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        {loading ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Mail className="size-4" />
+                        )}
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type="email"
+                        placeholder="you@example.com"
+                        {...field}
+                        disabled={loading}
+                      />
+                      {field.value && !loading && (
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            onClick={() => form.setValue('email', '')}
+                            aria-label="Clear email"
+                          >
+                            <X className="size-4" />
+                          </InputGroupButton>
+                        </InputGroupAddon>
+                      )}
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
 
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? 'Sending...' : 'Send verification code'}

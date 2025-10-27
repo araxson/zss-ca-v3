@@ -25,6 +25,12 @@ import {
 } from '@/components/ui/input-group'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { updateProfileAction } from '../api/mutations'
 import { updateProfileSchema, type UpdateProfileInput } from '../schema'
 import type { Database } from '@/lib/types/database.types'
@@ -90,229 +96,243 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           </Alert>
         )}
 
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="contact_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <InputGroup>
-                    <InputGroupAddon>
-                      <User className="size-4" />
-                    </InputGroupAddon>
-                    <InputGroupInput {...field} placeholder="John Doe" />
-                  </InputGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FieldSet className="space-y-4">
+          <FieldLegend>Contact details</FieldLegend>
+          <FieldGroup className="space-y-4">
+            <FormField
+              control={form.control}
+              name="contact_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <User className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput {...field} placeholder="John Doe" />
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="contact_email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <InputGroup>
-                    <InputGroupAddon>
-                      <Mail className="size-4" />
-                    </InputGroupAddon>
-                    <InputGroupInput {...field} type="email" placeholder="john@example.com" />
-                  </InputGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormField
+              control={form.control}
+              name="contact_email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Mail className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput {...field} type="email" placeholder="john@example.com" />
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="contact_phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <InputGroup>
-                    <InputGroupAddon>
-                      <Phone className="size-4" />
-                    </InputGroupAddon>
-                    <InputGroupInput {...field} type="tel" placeholder="+1 (555) 123-4567" />
-                  </InputGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+            <FormField
+              control={form.control}
+              name="contact_phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone Number</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Phone className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput {...field} type="tel" placeholder="+1 (555) 123-4567" />
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
 
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="company_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company Name</FormLabel>
-                <FormControl>
-                  <InputGroup>
-                    <InputGroupAddon>
-                      <Building2 className="size-4" />
-                    </InputGroupAddon>
-                    <InputGroupInput {...field} placeholder="Acme Inc." />
-                  </InputGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FieldSet className="space-y-4">
+          <FieldLegend>Company information</FieldLegend>
+          <FieldGroup className="space-y-4">
+            <FormField
+              control={form.control}
+              name="company_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company Name</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Building2 className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput {...field} placeholder="Acme Inc." />
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="company_website"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Company Website</FormLabel>
-                <FormControl>
-                  <InputGroup>
-                    <InputGroupInput
-                      {...field}
-                      placeholder="example.com"
-                      className="!pl-1"
-                      value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                      onChange={(e) => field.onChange(e.target.value)}
+            <FormField
+              control={form.control}
+              name="company_website"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company Website</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        placeholder="example.com"
+                        className="!pl-1"
+                        value={field.value?.replace(/^https?:\/\//i, '') || ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                      />
+                      <InputGroupAddon>
+                        <InputGroupText>https://</InputGroupText>
+                      </InputGroupAddon>
+                      <InputGroupAddon align="inline-end">
+                        <Globe className="size-4" />
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
+
+        <FieldSet className="space-y-4">
+          <FieldLegend>Business address</FieldLegend>
+          <FieldGroup className="space-y-4">
+            <FormField
+              control={form.control}
+              name="address_line1"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address Line 1</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <MapPin className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput {...field} placeholder="123 Main St" />
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="address_line2"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address Line 2</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Suite 100" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Toronto" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="region"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Province/State</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="ON" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="postal_code"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Postal Code</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="M5H 2N2" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Canada" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </FieldGroup>
+        </FieldSet>
+
+        <FieldSet>
+          <FieldLegend>Preferences</FieldLegend>
+          <FieldGroup>
+            <FormField
+              control={form.control}
+              name="marketing_opt_in"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
-                    <InputGroupAddon>
-                      <InputGroupText>https://</InputGroupText>
-                    </InputGroupAddon>
-                    <InputGroupAddon align="inline-end">
-                      <Globe className="size-4" />
-                    </InputGroupAddon>
-                  </InputGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="address_line1"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address Line 1</FormLabel>
-                <FormControl>
-                  <InputGroup>
-                    <InputGroupAddon>
-                      <MapPin className="size-4" />
-                    </InputGroupAddon>
-                    <InputGroupInput {...field} placeholder="123 Main St" />
-                  </InputGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="address_line2"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address Line 2</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Suite 100" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>City</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Toronto" />
                   </FormControl>
-                  <FormMessage />
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Marketing Communications</FormLabel>
+                    <FormDescription>
+                      Receive emails about new features, updates, and promotions
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name="region"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Province/State</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="ON" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="postal_code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Postal Code</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="M5H 2N2" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Canada" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
-
-        <FormField
-          control={form.control}
-          name="marketing_opt_in"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Marketing Communications</FormLabel>
-                <FormDescription>
-                  Receive emails about new features, updates, and promotions
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
+          </FieldGroup>
+        </FieldSet>
 
         <Button type="submit" disabled={form.formState.isSubmitting}>
           {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}

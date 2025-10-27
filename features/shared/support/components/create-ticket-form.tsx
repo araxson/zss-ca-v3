@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
 import { MessageSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,7 +15,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import {
   InputGroup,
   InputGroupAddon,
@@ -35,6 +35,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { createTicketSchema, type CreateTicketInput } from '../schema'
 import { createTicketAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -55,8 +61,13 @@ export function CreateTicketForm() {
     const result = await createTicketAction(data)
 
     if (result.error) {
-      alert(result.error)
+      toast.error('Failed to create ticket', {
+        description: result.error,
+      })
     } else {
+      toast.success('Ticket created successfully', {
+        description: 'We will respond to your ticket as soon as possible.',
+      })
       form.reset()
       router.push(ROUTES.CLIENT_SUPPORT)
       router.refresh()
@@ -74,73 +85,82 @@ export function CreateTicketForm() {
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="subject"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Subject</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <MessageSquare className="size-4" />
-                      </InputGroupAddon>
-                      <InputGroupInput placeholder="Brief description of your issue" {...field} />
-                    </InputGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <FieldSet className="space-y-4">
+              <FieldLegend>Ticket summary</FieldLegend>
+              <FieldGroup className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="subject"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Subject</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
+                        <InputGroup>
+                          <InputGroupAddon>
+                            <MessageSquare className="size-4" />
+                          </InputGroupAddon>
+                          <InputGroupInput placeholder="Brief description of your issue" {...field} />
+                        </InputGroup>
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="technical">Technical Issue</SelectItem>
-                        <SelectItem value="content_change">Content Change</SelectItem>
-                        <SelectItem value="billing">Billing Question</SelectItem>
-                        <SelectItem value="general_inquiry">General Inquiry</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
-              <FormField
-                control={form.control}
-                name="priority"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Priority</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FieldSet className="space-y-4">
+              <FieldLegend>Routing details</FieldLegend>
+              <FieldDescription>Select the category and urgency so support can triage faster.</FieldDescription>
+              <FieldGroup className="grid gap-4 sm:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="technical">Technical Issue</SelectItem>
+                          <SelectItem value="content_change">Content Change</SelectItem>
+                          <SelectItem value="billing">Billing Question</SelectItem>
+                          <SelectItem value="general_inquiry">General Inquiry</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="priority"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Priority</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </FieldGroup>
+            </FieldSet>
 
             <FormField
               control={form.control}
@@ -151,7 +171,7 @@ export function CreateTicketForm() {
                   <FormControl>
                     <Textarea
                       placeholder="Please provide as much detail as possible"
-                      className="min-h-[150px]"
+                      className="min-h-40"
                       {...field}
                     />
                   </FormControl>

@@ -1,17 +1,27 @@
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import Stripe from 'stripe';
 
 config({ path: resolve(process.cwd(), '.env.local') });
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+
+if (!STRIPE_SECRET_KEY) {
+  console.error('Error: STRIPE_SECRET_KEY not found in environment variables');
+  process.exit(1);
+}
+
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
+  apiVersion: '2025-09-30.clover',
+});
 
 async function verifySetup() {
   console.log('🔍 Verifying Stripe Products Setup\n');
 
   const products = await stripe.products.list({ limit: 10 });
 
-  const ourProducts = products.data.filter((p: any) =>
-    ['Essential Plan', 'Growth Plan', 'Pro Plan', 'Elite Plan'].includes(p.name)
+  const ourProducts = products.data.filter((product) =>
+    ['Essential Plan', 'Growth Plan', 'Pro Plan', 'Elite Plan'].includes(product.name)
   );
 
   for (const product of ourProducts) {
@@ -29,7 +39,8 @@ async function verifySetup() {
     console.log(`   Prices:`);
     for (const price of prices.data) {
       const interval = price.recurring?.interval || 'one-time';
-      const amount = (price.unit_amount / 100).toFixed(2);
+      const unitAmount = price.unit_amount ?? 0;
+      const amount = (unitAmount / 100).toFixed(2);
       console.log(`      - ${price.nickname} ($${amount} CAD/${interval})`);
       console.log(`        Lookup Key: ${price.lookup_key}`);
       console.log(`        Tax Behavior: ${price.tax_behavior}`);
@@ -48,4 +59,8 @@ async function verifySetup() {
   console.log(`      ✓ Monthly & Annual pricing`);
 }
 
-verifySetup().catch(console.error);
+verifySetup().catch((error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error('❌ Fatal error verifying Stripe setup:', message);
+  process.exit(1);
+});

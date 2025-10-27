@@ -14,8 +14,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card'
 import { Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { deleteClientAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
 
@@ -33,50 +39,64 @@ export function DeleteClientButton({ clientId, clientName }: DeleteClientButtonP
     const result = await deleteClientAction({ profileId: clientId })
 
     if (result.error) {
-      alert(result.error)
+      toast.error('Delete failed', {
+        description: result.error,
+      })
       setIsDeleting(false)
     } else {
+      toast.success('Client deleted', {
+        description: 'The client account has been permanently deleted.',
+      })
       router.push(ROUTES.ADMIN_CLIENTS)
       router.refresh()
     }
   }
 
   return (
-    <Card className="border-destructive">
-      <CardHeader>
-        <CardTitle>Danger Zone</CardTitle>
-        <CardDescription>
+    <div className="space-y-4">
+      <Alert variant="destructive">
+        <AlertTitle>Danger Zone</AlertTitle>
+        <AlertDescription>
           Permanently delete this client account. This action cannot be undone.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive" disabled={isDeleting}>
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete Client
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Delete {clientName}?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete the client account and all associated data.
-                This action cannot be undone. Are you absolutely sure?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
+        </AlertDescription>
+      </Alert>
+      <AlertDialog>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" disabled={isDeleting}>
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete Client
+              </Button>
+            </AlertDialogTrigger>
+          </HoverCardTrigger>
+          <HoverCardContent align="start" className="text-sm text-muted-foreground">
+            Removing this client deletes project data, tickets, and analytics snapshots.
+            Export records before you proceed.
+          </HoverCardContent>
+        </HoverCard>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {clientName}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the client account and all associated data.
+              This action cannot be undone. Are you absolutely sure?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction asChild>
+              <Button
+                variant="destructive"
                 onClick={handleDelete}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                disabled={isDeleting}
               >
                 {isDeleting ? 'Deleting...' : 'Yes, Delete Client'}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </CardContent>
-    </Card>
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   )
 }

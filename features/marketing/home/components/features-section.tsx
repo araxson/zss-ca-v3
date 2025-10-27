@@ -11,6 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card'
 
 const features = [
   {
@@ -53,9 +58,16 @@ export function FeaturesSection() {
           {features.map((feature) => (
             <Card key={feature.title} className="text-left">
               <CardHeader className="flex flex-row items-start gap-4">
-                <div className="flex size-12 items-center justify-center rounded-full bg-muted">
-                  <feature.icon className="size-6 text-primary" />
-                </div>
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <div className="flex size-12 cursor-pointer items-center justify-center rounded-full bg-muted">
+                      <feature.icon className="size-6 text-primary" aria-hidden="true" />
+                    </div>
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" className="max-w-xs text-sm">
+                    {feature.description}
+                  </HoverCardContent>
+                </HoverCard>
                 <CardTitle>{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>

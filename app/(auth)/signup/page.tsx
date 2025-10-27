@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 import { SignupForm } from '@/features/auth/components/signup-form'
 
 export const metadata: Metadata = {
@@ -25,7 +26,7 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<div className="flex justify-center p-8"><Spinner className="size-6" /></div>}>
             <SignupForm />
           </Suspense>
         </CardContent>

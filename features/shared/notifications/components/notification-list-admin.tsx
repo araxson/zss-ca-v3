@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,6 +28,13 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
 
 type NotificationListAdminProps = {
   notifications: NotificationWithProfile[]
@@ -51,7 +59,7 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
       }
 
       router.refresh()
-    } catch (err) {
+    } catch (_error) {
       setError('An unexpected error occurred')
       setDeletingId(null)
     }
@@ -84,9 +92,13 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
 
   if (notifications.length === 0) {
     return (
-      <Alert>
-        <AlertDescription>No notifications found.</AlertDescription>
-      </Alert>
+      <Empty className="border border-dashed">
+        <EmptyHeader>
+          <EmptyTitle>No notifications found</EmptyTitle>
+          <EmptyDescription>Send your first broadcast to populate this list.</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent />
+      </Empty>
     )
   }
 
@@ -98,8 +110,8 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
         </Alert>
       )}
 
-      <div className="rounded-md border">
-        <Table>
+      <ScrollArea className="rounded-md border">
+        <Table className="min-w-[960px]">
           <TableHeader>
             <TableRow>
               <TableHead>Type</TableHead>
@@ -155,11 +167,13 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button
+                        aria-label="Delete notification"
                         variant="ghost"
                         size="sm"
                         disabled={deletingId === notification.id}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
+                        <span className="sr-only">Delete</span>
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
@@ -172,11 +186,14 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleDelete(notification.id)}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          Delete
+                        <AlertDialogAction asChild>
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDelete(notification.id)}
+                            disabled={deletingId === notification.id}
+                          >
+                            Delete
+                          </Button>
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -186,7 +203,8 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
             ))}
           </TableBody>
         </Table>
-      </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </div>
   )
 }

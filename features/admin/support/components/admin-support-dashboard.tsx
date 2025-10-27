@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { TicketList } from '@/features/shared/support/components/ticket-list'
 import type { TicketWithProfile } from '@/features/shared/support/api/queries'
 
@@ -35,17 +36,20 @@ export function AdminSupportDashboard({ tickets }: AdminSupportDashboardProps) {
         </CardHeader>
       </Card>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Card key={stat.label} className="h-full">
-            <CardHeader className="pb-2">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardDescription>{stat.label}</CardDescription>
-              <CardTitle>{stat.value}</CardTitle>
+              <Badge variant={stat.value > 0 ? 'default' : 'secondary'}>
+                {stat.value}
+              </Badge>
             </CardHeader>
             <CardContent>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground">
                 Active in this queue
-              </div>
+              </p>
             </CardContent>
           </Card>
         ))}

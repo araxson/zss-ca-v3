@@ -26,6 +26,12 @@ import {
 } from '@/components/ui/input-group'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
+import {
+  FieldDescription,
+  FieldGroup,
+  FieldLegend,
+  FieldSet,
+} from '@/components/ui/field'
 import { signupSchema, type SignupInput } from '../schema'
 import { signupAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -102,167 +108,175 @@ export function SignupForm() {
           </Alert>
         )}
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    {loading ? (
-                      <Loader2 className="size-4 animate-spin" />
-                    ) : (
-                      <Mail className="size-4" />
-                    )}
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type="email"
-                    placeholder="you@example.com"
-                    {...field}
-                    disabled={loading}
-                  />
-                  {field.value && !loading && (
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        onClick={() => form.setValue('email', '')}
-                        aria-label="Clear email"
-                      >
-                        <X className="size-4" />
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  )}
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="companyName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Company Name (Optional)</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <Building2 className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type="text"
-                    placeholder="Your Company Inc."
-                    {...field}
-                    disabled={loading}
-                  />
-                  {field.value && !loading && (
-                    <InputGroupAddon align="inline-end">
-                      <InputGroupButton
-                        onClick={() => form.setValue('companyName', '')}
-                        aria-label="Clear company name"
-                      >
-                        <X className="size-4" />
-                      </InputGroupButton>
-                    </InputGroupAddon>
-                  )}
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <Lock className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    {...field}
-                    disabled={loading}
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
+        <FieldSet className="space-y-4">
+          <FieldLegend>Create your account</FieldLegend>
+          <FieldDescription>
+            Provide your contact details and choose a secure password to get started.
+          </FieldDescription>
+          <FieldGroup className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        {loading ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <Mail className="size-4" />
+                        )}
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type="email"
+                        placeholder="you@example.com"
+                        {...field}
+                        disabled={loading}
+                      />
+                      {field.value && !loading && (
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            onClick={() => form.setValue('email', '')}
+                            aria-label="Clear email"
+                          >
+                            <X className="size-4" />
+                          </InputGroupButton>
+                        </InputGroupAddon>
                       )}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
-              {field.value && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <FormDescription className={passwordStrength.color}>
-                      {passwordStrength.feedback}
-                    </FormDescription>
-                    <InputGroupText className="text-xs">
-                      {passwordStrength.score}/7
-                    </InputGroupText>
-                  </div>
-                  <Progress
-                    value={getPasswordStrengthPercentage(passwordStrength.score)}
-                    className="h-1"
-                  />
-                </div>
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            />
 
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <Lock className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    {...field}
-                    disabled={loading}
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      aria-label={
-                        showConfirmPassword ? 'Hide password' : 'Show password'
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="size-4" />
-                      ) : (
-                        <Eye className="size-4" />
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company Name (Optional)</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Building2 className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type="text"
+                        placeholder="Your Company Inc."
+                        {...field}
+                        disabled={loading}
+                      />
+                      {field.value && !loading && (
+                        <InputGroupAddon align="inline-end">
+                          <InputGroupButton
+                            onClick={() => form.setValue('companyName', '')}
+                            aria-label="Clear company name"
+                          >
+                            <X className="size-4" />
+                          </InputGroupButton>
+                        </InputGroupAddon>
                       )}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="••••••••"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormControl>
+                  {field.value && (
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <FormDescription className={passwordStrength.color}>
+                          {passwordStrength.feedback}
+                        </FormDescription>
+                        <InputGroupText className="text-xs">
+                          {passwordStrength.score}/7
+                        </InputGroupText>
+                      </div>
+                      <Progress
+                        value={getPasswordStrengthPercentage(passwordStrength.score)}
+                        className="h-1"
+                      />
+                    </div>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <InputGroup>
+                      <InputGroupAddon>
+                        <Lock className="size-4" />
+                      </InputGroupAddon>
+                      <InputGroupInput
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder="••••••••"
+                        {...field}
+                        disabled={loading}
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          aria-label={
+                            showConfirmPassword ? 'Hide password' : 'Show password'
+                          }
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="size-4" />
+                          ) : (
+                            <Eye className="size-4" />
+                          )}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </FieldGroup>
+        </FieldSet>
 
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? 'Creating account...' : 'Create account'}
