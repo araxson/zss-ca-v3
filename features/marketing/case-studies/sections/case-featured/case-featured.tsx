@@ -5,17 +5,17 @@ import {
   ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { caseFeaturedData } from './case-featured.data'
 
 export function CaseFeatured() {
   return (
     <section className="space-y-8">
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Featured engagement</h2>
-        <p className="text-muted-foreground">
-          {caseFeaturedData.client} · {caseFeaturedData.industry}
-        </p>
-      </div>
+      <SectionHeader
+        title="Featured engagement"
+        description={`${caseFeaturedData.client} · ${caseFeaturedData.industry}`}
+        align="center"
+      />
       <Item variant="outline" className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <ItemContent className="space-y-4 lg:w-1/2">
           <ItemTitle>Project snapshot</ItemTitle>

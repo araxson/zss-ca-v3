@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 import {
   Item,
+  ItemActions,
   ItemContent,
   ItemDescription,
   ItemHeader,
@@ -29,6 +30,16 @@ interface AnalyticsChartProps {
 }
 
 export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
+  const totals = analytics.reduce(
+    (acc, item) => {
+      acc.pageViews += item.page_views
+      acc.uniqueVisitors += item.unique_visitors
+      acc.conversions += item.conversions
+      return acc
+    },
+    { pageViews: 0, uniqueVisitors: 0, conversions: 0 }
+  )
+
   if (analytics.length === 0) {
     return (
       <Item variant="outline" className="h-full flex flex-col">
@@ -87,6 +98,22 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
           </Table>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
+        <Item className="mt-4 flex items-center justify-between border-0 px-0">
+          <ItemTitle className="text-sm font-medium text-muted-foreground">
+            Totals
+          </ItemTitle>
+          <ItemActions className="gap-2">
+            <span className="text-xs text-muted-foreground">
+              Page Views: {totals.pageViews.toLocaleString()}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              Unique Visitors: {totals.uniqueVisitors.toLocaleString()}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              Conversions: {totals.conversions.toLocaleString()}
+            </span>
+          </ItemActions>
+        </Item>
       </ItemContent>
     </Item>
   )

@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import {
   Empty,
@@ -22,6 +23,7 @@ interface ClientDetailCardProps {
 export function ClientDetailCard({ client }: ClientDetailCardProps) {
   const joinedDate = new Date(client.created_at)
   const subscription = client.subscription
+  const joinedRelative = formatDistanceToNow(joinedDate, { addSuffix: true })
 
   return (
     <ItemGroup className="grid gap-6 md:grid-cols-2">
@@ -42,7 +44,13 @@ export function ClientDetailCard({ client }: ClientDetailCardProps) {
           <Item variant="muted" size="sm" className="flex flex-col gap-1">
             <ItemTitle className="text-sm font-medium text-foreground">Email</ItemTitle>
             <ItemDescription className="text-sm text-muted-foreground">
-              {client.contact_email}
+              {client.contact_email ? (
+                <a className="hover:text-primary" href={`mailto:${client.contact_email}`}>
+                  {client.contact_email}
+                </a>
+              ) : (
+                'Not provided'
+              )}
             </ItemDescription>
           </Item>
           <Item variant="muted" size="sm" className="flex flex-col gap-1">
@@ -54,13 +62,22 @@ export function ClientDetailCard({ client }: ClientDetailCardProps) {
           <Item variant="muted" size="sm" className="flex flex-col gap-1">
             <ItemTitle className="text-sm font-medium text-foreground">Phone</ItemTitle>
             <ItemDescription className="text-sm text-muted-foreground">
-              {client.contact_phone || 'Not provided'}
+              {client.contact_phone ? (
+                <a className="hover:text-primary" href={`tel:${client.contact_phone}`}>
+                  {client.contact_phone}
+                </a>
+              ) : (
+                'Not provided'
+              )}
             </ItemDescription>
           </Item>
           <Item variant="muted" size="sm" className="flex flex-col gap-1">
             <ItemTitle className="text-sm font-medium text-foreground">Joined</ItemTitle>
             <ItemDescription className="text-sm text-muted-foreground">
               {joinedDate.toLocaleDateString()} at {joinedDate.toLocaleTimeString()}
+            </ItemDescription>
+            <ItemDescription className="text-xs text-muted-foreground">
+              {joinedRelative}
             </ItemDescription>
           </Item>
         </ItemGroup>

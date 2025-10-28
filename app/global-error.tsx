@@ -5,17 +5,18 @@ import { useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { CircleAlert } from 'lucide-react'
 
 interface GlobalErrorProps {
   error: Error & { digest?: string; stack?: string }
@@ -35,19 +36,22 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
     <html lang="en">
       <body className="bg-background text-foreground">
         <div className="flex min-h-screen items-center justify-center p-6">
-          <Card className="w-full max-w-xl">
-            <CardHeader className="space-y-3">
+          <Empty className="w-full max-w-xl border">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <CircleAlert className="h-6 w-6" aria-hidden="true" />
+              </EmptyMedia>
               <Badge variant="secondary" className="w-fit">
                 System alert
               </Badge>
-              <CardTitle>Critical error</CardTitle>
-              <CardDescription>
+              <EmptyTitle>Critical error</EmptyTitle>
+              <EmptyDescription>
                 A fatal error occurred. Try again or return home. Contact support if the
                 problem continues.
-              </CardDescription>
-            </CardHeader>
+              </EmptyDescription>
+            </EmptyHeader>
 
-            <CardContent className="space-y-4">
+            <EmptyContent className="w-full space-y-4">
               {isDevelopment && (
                 <Alert variant="destructive">
                   <AlertTitle>Error details (development only)</AlertTitle>
@@ -58,7 +62,7 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               {isDevelopment && stackTrace && (
                 <div className="space-y-2">
                   <Separator />
-                  <ScrollArea className="max-h-48 rounded-md border">
+                  <ScrollArea className="max-h-48 rounded-md border" data-slot="stacktrace">
                     <pre className="p-4 text-xs font-mono whitespace-pre-wrap">
                       {stackTrace}
                     </pre>
@@ -72,9 +76,8 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
                   <AlertDescription>{error.digest}</AlertDescription>
                 </Alert>
               )}
-            </CardContent>
 
-            <CardFooter className="flex-col gap-4">
+              <div className="flex flex-col gap-4">
               <ButtonGroup className="w-full" orientation="horizontal">
                 <Button onClick={reset} className="flex-1">
                   Try again
@@ -90,8 +93,9 @@ export default function GlobalError({ error, reset }: GlobalErrorProps) {
               >
                 Reload page
               </Button>
-            </CardFooter>
-          </Card>
+              </div>
+            </EmptyContent>
+          </Empty>
         </div>
       </body>
     </html>

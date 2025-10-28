@@ -41,9 +41,11 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { createSiteSchema, type CreateSiteInput } from '../schema'
 import { createSiteAction } from '../api/mutations'
 import type { Database } from '@/lib/types/database.types'
@@ -92,15 +94,12 @@ export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
   }
 
   return (
-    <div className="space-y-6 rounded-lg border p-6">
-      <Item variant="muted" className="flex flex-col gap-2">
-        <ItemContent className="space-y-1">
-          <ItemTitle>Create New Site</ItemTitle>
-          <ItemDescription>
-            Set up a new website project for a client
-          </ItemDescription>
-        </ItemContent>
-      </Item>
+    <ItemGroup className="space-y-6">
+      <SectionHeader
+        title="Create New Site"
+        description="Set up a new website project for a client"
+        align="start"
+      />
 
       {error && (
         <Alert variant="destructive">
@@ -109,9 +108,11 @@ export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
         </Alert>
       )}
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FieldSet className="space-y-4">
+      <Item variant="outline" className="p-6">
+        <ItemContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FieldSet className="space-y-4">
             <FieldLegend>Client assignment</FieldLegend>
             <FieldDescription>Select who this project belongs to and the service plan.</FieldDescription>
             <FieldGroup className="space-y-4">
@@ -185,7 +186,7 @@ export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
             </FieldGroup>
           </FieldSet>
 
-          <FieldSet className="space-y-4">
+              <FieldSet className="space-y-4">
             <FieldLegend>Project details</FieldLegend>
             <FieldDescription>Name the project and capture the brief before kickoff.</FieldDescription>
             <FieldGroup className="space-y-4">
@@ -235,22 +236,24 @@ export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
                 )}
               />
             </FieldGroup>
-          </FieldSet>
+              </FieldSet>
 
-          <ButtonGroup>
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? <Spinner /> : 'Create Site'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-            >
-              Cancel
-            </Button>
-          </ButtonGroup>
-        </form>
-      </Form>
-    </div>
+              <ButtonGroup>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? <Spinner /> : 'Create Site'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.back()}
+                >
+                  Cancel
+                </Button>
+              </ButtonGroup>
+            </form>
+          </Form>
+        </ItemContent>
+      </Item>
+    </ItemGroup>
   )
 }

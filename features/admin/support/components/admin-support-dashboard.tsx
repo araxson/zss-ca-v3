@@ -4,11 +4,11 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
-import { TicketList } from '@/features/shared/support/components/ticket-list'
-import type { TicketWithProfile } from '@/features/shared/support/api/queries'
+import { TicketList, type TicketWithProfile } from '@/features/shared/support'
 
 interface AdminSupportDashboardProps {
   tickets: TicketWithProfile[]
@@ -20,11 +20,31 @@ export function AdminSupportDashboard({ tickets }: AdminSupportDashboardProps) {
   const resolvedTickets = tickets.filter((t) => t.status === 'resolved')
   const closedTickets = tickets.filter((t) => t.status === 'closed')
 
+  const totalCount = tickets.length
+  const openRate = totalCount > 0 ? (openTickets.length / totalCount) * 100 : 0
+  const resolutionRate = totalCount > 0 ? (resolvedTickets.length / totalCount) * 100 : 0
+
   const stats = [
-    { label: 'Open', value: openTickets.length },
-    { label: 'In Progress', value: inProgressTickets.length },
-    { label: 'Resolved', value: resolvedTickets.length },
-    { label: 'Closed', value: closedTickets.length },
+    {
+      label: 'Open',
+      value: openTickets.length,
+      description: `${openRate.toFixed(0)}% of tickets need attention`,
+    },
+    {
+      label: 'In Progress',
+      value: inProgressTickets.length,
+      description: 'Actively being worked by support',
+    },
+    {
+      label: 'Resolved',
+      value: resolvedTickets.length,
+      description: `${resolutionRate.toFixed(0)}% resolved overall`,
+    },
+    {
+      label: 'Closed',
+      value: closedTickets.length,
+      description: 'Archived conversations',
+    },
   ]
 
   return (
@@ -36,7 +56,7 @@ export function AdminSupportDashboard({ tickets }: AdminSupportDashboardProps) {
         </ItemHeader>
       </Item>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ItemGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
           <Item key={stat.label} variant="outline" className="flex h-full flex-col">
             <ItemContent className="space-y-3">
@@ -47,14 +67,14 @@ export function AdminSupportDashboard({ tickets }: AdminSupportDashboardProps) {
                 </Badge>
               </div>
               <div className="text-2xl font-bold">{stat.value}</div>
-              <ItemDescription>Active in this queue</ItemDescription>
+              <ItemDescription>{stat.description}</ItemDescription>
             </ItemContent>
           </Item>
         ))}
-      </div>
+      </ItemGroup>
 
       <Tabs defaultValue="open">
-        <TabsList>
+        <TabsList aria-label="Support ticket filters">
           <TabsTrigger value="open">Open ({openTickets.length})</TabsTrigger>
           <TabsTrigger value="in_progress">
             In Progress ({inProgressTickets.length})

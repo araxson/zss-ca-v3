@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { MessageSquare } from 'lucide-react'
+import { SectionHeader } from '@/features/shared/components'
 import type { TicketWithProfile } from '../api/queries'
 
 interface TicketListProps {
@@ -58,7 +59,13 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
   }
 
   return (
-    <ItemGroup className="space-y-3">
+    <>
+      <SectionHeader
+        title="Support tickets"
+        description="View recent conversations with our team."
+        align="start"
+      />
+      <ItemGroup className="space-y-3">
           {tickets.map((ticket) => {
             const createdAt = new Date(ticket.created_at)
 
@@ -86,6 +93,7 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
           </Item>
         )
           })}
-    </ItemGroup>
+      </ItemGroup>
+    </>
   )
 }

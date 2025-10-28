@@ -38,6 +38,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
+import { notificationTypeOptions } from './bulk-notification-form-data'
 
 export function BulkNotificationForm() {
   const router = useRouter()
@@ -114,10 +115,11 @@ export function BulkNotificationForm() {
       )}
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 rounded-lg border p-6"
-        >
+        <Item variant="outline" className="p-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+          >
           <FieldSet className="space-y-4">
             <FieldLegend>Broadcast type</FieldLegend>
             <FieldGroup>
@@ -251,16 +253,9 @@ export function BulkNotificationForm() {
               Cancel
             </Button>
           </ButtonGroup>
-        </form>
+          </form>
+        </Item>
       </Form>
     </div>
   )
 }
-const notificationTypeOptions = [
-  { value: 'subscription', label: 'Subscription', description: 'Plan changes or subscription updates.' },
-  { value: 'billing', label: 'Billing', description: 'Payment reminders and invoice notices.' },
-  { value: 'support', label: 'Support', description: 'Ticket updates and support outreach.' },
-  { value: 'site_status', label: 'Site Status', description: 'Deployment and uptime alerts.' },
-  { value: 'system', label: 'System', description: 'Platform-wide announcements.' },
-  { value: 'onboarding', label: 'Onboarding', description: 'Guidance for new clients.' },
-] as const

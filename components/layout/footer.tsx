@@ -14,8 +14,8 @@ const footerNavigation = {
     { name: 'Get Started', href: ROUTES.SIGNUP },
   ],
   legal: [
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Privacy Policy', href: ROUTES.PRIVACY },
+    { name: 'Terms of Service', href: ROUTES.TERMS },
   ],
 }
 

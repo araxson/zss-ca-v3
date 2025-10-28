@@ -4,12 +4,6 @@ import { ROUTES } from '@/lib/constants/routes'
 import { createClient } from '@/lib/supabase/server'
 import { getClientSites } from '@/features/client/sites/api/queries'
 import { SiteCard } from '@/features/client/sites/components/site-card'
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
   Empty,
@@ -20,6 +14,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { Globe } from 'lucide-react'
+import { SectionHeader } from '@/features/shared/components'
 
 export default async function ClientSitesPage() {
   const supabase = await createClient()
@@ -35,12 +30,11 @@ export default async function ClientSitesPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>My Sites</CardTitle>
-          <CardDescription>View and manage your website deployments</CardDescription>
-        </CardHeader>
-      </Card>
+      <SectionHeader
+        title="My Sites"
+        description="View and manage your website deployments"
+        align="start"
+      />
 
       {sites.length === 0 ? (
         <Empty className="border border-dashed">

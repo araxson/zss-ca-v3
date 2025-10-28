@@ -8,12 +8,15 @@ import {
   ItemFooter,
   ItemGroup,
   ItemHeader,
+  ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
 import { Separator } from '@/components/ui/separator'
+import { SectionHeader } from '@/features/shared/components'
 import { ROUTES } from '@/lib/constants/routes'
 import { getPlansForPreview } from './api/queries'
 import { cn } from '@/lib/utils'
+import { Check } from 'lucide-react'
 
 type PlanFeature = {
   name: string
@@ -30,15 +33,12 @@ export async function PricingPreview() {
 
   return (
     <section className="w-full max-w-7xl mx-auto">
-      <div className="text-center space-y-4 mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-          Simple, Transparent Pricing
-        </h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Choose the plan that fits your business. All plans include hosting,
-          support, and maintenance.
-        </p>
-      </div>
+      <SectionHeader
+        title="Simple, Transparent Pricing"
+        description="Choose the plan that fits your business. All plans include hosting, support, and maintenance."
+        align="center"
+        className="mb-12"
+      />
       <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-3 mb-8">
         {plans.map((plan, index) => {
           const features = Array.isArray(plan.features)
@@ -88,17 +88,26 @@ export async function PricingPreview() {
                   </p>
                 </div>
                 <Separator />
-                <ul className="space-y-2">
+                <ItemGroup className="space-y-2">
                   {features
                     .filter((f) => f.included)
                     .slice(0, 5)
                     .map((feature) => (
-                      <li key={feature.name} className="flex items-start gap-2">
-                        <span className="text-primary mt-1">✓</span>
-                        <span className="text-sm">{feature.name}</span>
-                      </li>
+                      <Item
+                        key={feature.name}
+                        variant="muted"
+                        size="sm"
+                        className="items-start gap-3"
+                      >
+                        <ItemMedia variant="icon">
+                          <Check className="h-4 w-4 text-primary" aria-hidden="true" />
+                        </ItemMedia>
+                        <ItemContent>
+                          <ItemTitle>{feature.name}</ItemTitle>
+                        </ItemContent>
+                      </Item>
                     ))}
-                </ul>
+                </ItemGroup>
               </ItemContent>
               <ItemFooter>
                 <Button

@@ -32,6 +32,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
@@ -71,7 +72,7 @@ export function EditClientForm({ client }: EditClientFormProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <ItemGroup className="space-y-6">
       <Item variant="muted" className="flex flex-col gap-2">
         <ItemContent className="space-y-1">
           <ItemTitle>Edit Client Information</ItemTitle>
@@ -88,11 +89,10 @@ export function EditClientForm({ client }: EditClientFormProps) {
         </Alert>
       )}
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 rounded-lg border p-6"
-        >
+      <Item variant="outline" className="p-6">
+        <ItemContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FieldSet className="space-y-4">
             <FieldLegend>Contact information</FieldLegend>
             <FieldDescription>
@@ -178,6 +178,8 @@ export function EditClientForm({ client }: EditClientFormProps) {
           </Button>
         </form>
       </Form>
-    </div>
+        </ItemContent>
+      </Item>
+    </ItemGroup>
   )
 }

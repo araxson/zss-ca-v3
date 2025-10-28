@@ -13,6 +13,7 @@ import { DashboardSitesTab } from './dashboard-sites-tab'
 import { DashboardTicketsTab } from './dashboard-tickets-tab'
 import { DashboardAccountTab } from './dashboard-account-tab'
 import { getSiteStatusLabel } from './dashboard-site-helpers'
+import { SectionHeader } from '@/features/shared/components'
 
 type Profile = Database['public']['Tables']['profile']['Row']
 type Subscription = Database['public']['Tables']['subscription']['Row'] & {
@@ -65,12 +66,11 @@ export function DashboardOverview({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Welcome back{profile?.company_name ? `, ${profile.company_name}` : ''}
-        </h1>
-        <p className="text-muted-foreground">Here&apos;s an overview of your account</p>
-      </div>
+      <SectionHeader
+        title={`Welcome back${profile?.company_name ? `, ${profile.company_name}` : ''}`}
+        description="Here&apos;s an overview of your account"
+        align="start"
+      />
 
       <Separator />
 

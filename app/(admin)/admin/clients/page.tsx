@@ -1,8 +1,17 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
-import { getAllClients } from '@/features/admin/clients/api/queries'
-import { ClientsTable } from '@/features/admin/clients/components/clients-table'
+import { getAllClients, ClientsTable } from '@/features/admin/clients'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemTitle,
+} from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
+import { Users, BadgeCheck, UserMinus } from 'lucide-react'
+import { EmptyMedia } from '@/components/ui/empty'
 
 export default async function AdminClientsPage() {
   const supabase = await createClient()
@@ -32,25 +41,50 @@ export default async function AdminClientsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Clients</h1>
-        <p className="text-muted-foreground">Manage all client accounts</p>
-      </div>
+      <SectionHeader
+        title="Clients"
+        description="Manage all client accounts"
+        align="start"
+      />
 
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-card p-4 rounded-lg border">
-          <p className="text-sm text-muted-foreground">Total Clients</p>
-          <p className="text-2xl font-bold">{clients.length}</p>
-        </div>
-        <div className="bg-card p-4 rounded-lg border">
-          <p className="text-sm text-muted-foreground">Active Subscriptions</p>
-          <p className="text-2xl font-bold">{activeClients.length}</p>
-        </div>
-        <div className="bg-card p-4 rounded-lg border">
-          <p className="text-sm text-muted-foreground">No Subscription</p>
-          <p className="text-2xl font-bold">{inactiveClients.length}</p>
-        </div>
-      </div>
+      <ItemGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Item variant="outline" className="flex flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Total Clients</ItemTitle>
+              <EmptyMedia variant="icon">
+                <Users className="h-4 w-4" aria-hidden="true" />
+              </EmptyMedia>
+            </div>
+            <div className="text-2xl font-bold">{clients.length}</div>
+            <ItemDescription>Cumulative accounts in the workspace</ItemDescription>
+          </ItemContent>
+        </Item>
+        <Item variant="outline" className="flex flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <ItemTitle>Active Subscriptions</ItemTitle>
+              <EmptyMedia variant="icon">
+                <BadgeCheck className="h-4 w-4" aria-hidden="true" />
+              </EmptyMedia>
+            </div>
+            <div className="text-2xl font-bold">{activeClients.length}</div>
+            <ItemDescription>Clients with an active billing plan</ItemDescription>
+          </ItemContent>
+        </Item>
+        <Item variant="outline" className="flex flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <ItemTitle>No Subscription</ItemTitle>
+              <EmptyMedia variant="icon">
+                <UserMinus className="h-4 w-4" aria-hidden="true" />
+              </EmptyMedia>
+            </div>
+            <div className="text-2xl font-bold">{inactiveClients.length}</div>
+            <ItemDescription>Clients awaiting plan assignment</ItemDescription>
+          </ItemContent>
+        </Item>
+      </ItemGroup>
 
       <ClientsTable clients={clients} />
     </div>

@@ -34,5 +34,11 @@ export const updateTicketStatusSchema = z.object({
 })
 
 export type CreateTicketInput = z.infer<typeof createTicketSchema>
-export type ReplyToTicketInput = z.infer<typeof replyToTicketSchema>
+export type CreateReplyInput = z.infer<typeof replyToTicketSchema>
 export type UpdateTicketStatusInput = z.infer<typeof updateTicketStatusSchema>
+
+// Legacy export alias for compatibility
+export type ReplyToTicketInput = CreateReplyInput
+
+// Export schema with new name
+export { replyToTicketSchema as createReplySchema }

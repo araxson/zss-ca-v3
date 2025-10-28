@@ -45,6 +45,7 @@ import {
   ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { ROUTES } from '@/lib/constants/routes'
 
 type AnalyticsFormProps = {
@@ -99,14 +100,11 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
 
   return (
     <ItemGroup className="space-y-6">
-      <Item variant="muted" className="flex flex-col gap-2">
-        <ItemContent className="space-y-1">
-          <ItemTitle>Add Analytics Data</ItemTitle>
-          <ItemDescription>
-            Manually add analytics data for a client site
-          </ItemDescription>
-        </ItemContent>
-      </Item>
+      <SectionHeader
+        title="Add Analytics Data"
+        description="Manually add analytics data for a client site"
+        align="start"
+      />
 
       {error && (
         <Alert variant="destructive">

@@ -5,7 +5,8 @@ import { ROUTES } from '@/lib/constants/routes'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { getUserTickets } from '@/features/shared/support/api/queries'
-import { TicketList } from '@/features/shared/support/components/ticket-list'
+import { TicketList } from '@/features/shared/support'
+import { SectionHeader } from '@/features/shared/components'
 
 export default async function SupportPage() {
   const supabase = await createClient()
@@ -21,18 +22,19 @@ export default async function SupportPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Support Tickets</h1>
-          <p className="text-muted-foreground">View and manage your support requests</p>
-        </div>
-        <Button asChild>
-          <Link href="/client/support/new">
-            <Plus className="h-4 w-4 mr-2" />
-            New Ticket
-          </Link>
-        </Button>
-      </div>
+      <SectionHeader
+        title="Support Tickets"
+        description="View and manage your support requests"
+        align="start"
+        actions={
+          <Button asChild>
+            <Link href="/client/support/new">
+              <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+              New Ticket
+            </Link>
+          </Button>
+        }
+      />
 
       <TicketList tickets={tickets} basePath="/client/support" />
     </div>

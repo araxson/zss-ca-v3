@@ -44,6 +44,7 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { User } from 'lucide-react'
+import { notificationTypes } from './create-notification-form-data'
 
 type CreateNotificationFormProps = {
   clients: Array<{
@@ -160,12 +161,11 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="subscription">Subscription</SelectItem>
-                          <SelectItem value="billing">Billing</SelectItem>
-                          <SelectItem value="support">Support</SelectItem>
-                          <SelectItem value="site_status">Site Status</SelectItem>
-                          <SelectItem value="system">System</SelectItem>
-                          <SelectItem value="onboarding">Onboarding</SelectItem>
+                          {notificationTypes.map((type) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />

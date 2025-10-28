@@ -10,6 +10,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { ItemGroup } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { NotificationItem } from './notification-item'
 import { markAllNotificationsReadAction } from '../api/mutations'
 import type { Notification } from '../api/queries'
@@ -38,6 +39,11 @@ export function NotificationList({ notifications, hasUnread }: NotificationListP
 
   return (
     <div className="space-y-4">
+      <SectionHeader
+        title="Notifications"
+        description="Keep up with account updates, deployment statuses, and support responses."
+        align="start"
+      />
       {hasUnread && (
         <div className="flex justify-end">
           <ButtonGroup>

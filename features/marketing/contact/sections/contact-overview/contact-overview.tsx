@@ -9,6 +9,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { contactLocationIcon, contactOverviewData } from './contact-overview.data'
 
 export function ContactOverview() {
@@ -16,14 +17,13 @@ export function ContactOverview() {
 
   return (
     <section className="space-y-10">
-      <div className="space-y-4 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">{contactOverviewData.heading}</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          {contactOverviewData.subheading}
-        </p>
-      </div>
+      <SectionHeader
+        title={contactOverviewData.heading}
+        description={contactOverviewData.subheading}
+        align="center"
+      />
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <ItemGroup className="grid gap-6 md:grid-cols-2">
         <Item variant="outline" className="flex flex-col">
           <ItemContent className="space-y-4">
             <ItemTitle>Talk with our team</ItemTitle>
@@ -71,7 +71,7 @@ export function ContactOverview() {
             <ItemDescription>{contactOverviewData.office.hours}</ItemDescription>
           </ItemContent>
         </Item>
-      </div>
+      </ItemGroup>
     </section>
   )
 }

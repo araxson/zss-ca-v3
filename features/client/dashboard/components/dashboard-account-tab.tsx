@@ -1,11 +1,4 @@
 import Link from 'next/link'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import type { Database } from '@/lib/types/database.types'
@@ -17,6 +10,15 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { Bell, CreditCard, Globe, LifeBuoy } from 'lucide-react'
 
 type Profile = Database['public']['Tables']['profile']['Row'] | null
@@ -28,13 +30,18 @@ interface DashboardAccountTabProps {
 
 export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTabProps) {
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Account Information</CardTitle>
-          <CardDescription>Your profile details</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+    <ItemGroup className="space-y-6">
+      <SectionHeader
+        title="Account overview"
+        description="Review your profile and jump to frequently used tools."
+        align="start"
+      />
+      <Item variant="outline" className="flex flex-col gap-4 p-6">
+        <ItemHeader className="gap-1">
+          <ItemTitle>Account Information</ItemTitle>
+          <ItemDescription>Your profile details</ItemDescription>
+        </ItemHeader>
+        <ItemContent className="space-y-4">
           <dl className="space-y-2">
             <div className="flex items-center justify-between">
               <dt className="text-sm text-muted-foreground">Name</dt>
@@ -59,15 +66,15 @@ export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTab
           <Button asChild variant="outline" className="w-full">
             <Link href={ROUTES.CLIENT_PROFILE}>Edit Profile</Link>
           </Button>
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common tasks</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Item variant="outline" className="flex flex-col gap-4 p-6">
+        <ItemHeader className="gap-1">
+          <ItemTitle>Quick Actions</ItemTitle>
+          <ItemDescription>Common tasks</ItemDescription>
+        </ItemHeader>
+        <ItemContent>
           <Command
             aria-label="Client quick navigation"
             className="w-full rounded-md border"
@@ -108,8 +115,8 @@ export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTab
               </CommandGroup>
             </CommandList>
           </Command>
-        </CardContent>
-      </Card>
-    </>
+        </ItemContent>
+      </Item>
+    </ItemGroup>
   )
 }

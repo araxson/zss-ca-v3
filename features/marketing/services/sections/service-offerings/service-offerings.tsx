@@ -5,17 +5,17 @@ import {
   ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { serviceOfferingsData } from './service-offerings.data'
 
 export function ServiceOfferings() {
   return (
     <section className="space-y-8">
-      <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold tracking-tight">{serviceOfferingsData.heading}</h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          We own the full lifecycle so you have one partner for everything web.
-        </p>
-      </div>
+      <SectionHeader
+        title={serviceOfferingsData.heading}
+        description="We own the full lifecycle so you have one partner for everything web."
+        align="center"
+      />
       <ItemGroup className="grid gap-4 md:grid-cols-3">
         {serviceOfferingsData.cards.map((card) => (
           <Item key={card.id} variant="outline" className="flex flex-col">

@@ -7,6 +7,8 @@ export const ROUTES = {
   SERVICES: '/services',
   RESOURCES: '/resources',
   CONTACT: '/contact',
+  PRIVACY: '/privacy',
+  TERMS: '/terms',
 
   // Auth routes
   LOGIN: '/login',

@@ -1,367 +1,323 @@
-# CLAUDE.md
+Quick reference. **For comprehensive patterns, read `docs/rules/`**
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 **Never edit:** `components/ui/*`, `app/globals.css`, `lib/types/database.types.ts`
-> **CRITICAL:** Read `docs/ruls/*.md` before making ANY changes.
 
 ---
 
-## ⚡ Quick Reference
+## Essential Commands
 
-**What:** SaaS platform for Canadian web agency. Clients subscribe; agency builds/deploys Next.js sites.
-
-**Stack:** Next.js 16 • React 19 • Supabase • Stripe • TypeScript 5 (strict) • shadcn/ui (53 components) • Tailwind 4
-
-**Commands:**
 ```bash
-npm run dev          # Dev server (localhost:3000)
-npm run build        # Production build + type check (MUST PASS)
-npm run lint         # ESLint
-npx tsc --noEmit     # Type check only
+# Development
+npm dev              # Start dev server
+npm build            # Production build
+npm typecheck        # MUST pass before commits
+
+# Database
+npm db:types         # Generate types from Supabase
+
+# Validation
+npm lint:shadcn      # Check shadcn/ui compliance
 ```
 
 ---
 
-## 🔴 Critical Rules (Non-Negotiable)
+## Critical Rules
 
-### Architecture
-- **Pages = thin shells** (5-12 lines) → All logic in `features/`
-- **Barrel exports required** → Import from `features/[name]` NOT deep paths
-- **Server Components default** → Client Components only for interactivity
-- **Auth: `getUser()` ONLY** → Never use `getSession()`
-- **Auth checks in Server Components** → NEVER in `proxy.ts`
+### 1. NEVER Edit These Files
+- ❌ `lib/types/database.types.ts` - Auto-generated
+- ❌ `components/ui/*` - shadcn/ui primitives (import only)
+- ❌ `app/globals.css` - Locked
 
-### TypeScript
-- **NO `any` types** → Use `unknown` with type guards
-- **NO suppressions** → No `@ts-ignore` or `@ts-expect-error`
-- **Strict mode required** → `npm run build` must pass
-- **Generated DB types** → From `lib/types/database.types.ts`
-- **Infer from Zod** → `z.infer<typeof schema>` for forms
+### 2. NEVER Create Bulk Fix Scripts
+Always make targeted, specific changes.
 
-### UI (shadcn/ui)
-- **Use ONLY shadcn components** → 53 available (check MCP)
-- **NEVER edit** `components/ui/*` or `app/globals.css`
-- **Design tokens ONLY** → NO arbitrary colors (`bg-blue-500`)
-- **Complete compositions** → Use all slots (CardHeader → CardTitle, etc.)
-- **Plain text in slots** → NO custom classes on CardTitle/AlertDescription
-
-### Database
-- **Multi-tenancy required** → All queries filter by `user.id`
-- **Verify field names** → Profile uses `contact_email` NOT `email`
-- **RLS enforced** → All tables have Row Level Security
-- **Server actions return** → `{ success: true }` or `{ error: string }`
-
----
-
-## 📁 Project Structure
-
-```
-app/
-├── (marketing)/        # Public (/, /pricing, /about)
-├── (admin)/           # Admin portal (/admin/*)
-├── (client)/          # Client portal (/client/*)
-├── (auth)/            # Auth flows (/login, /signup, etc.)
-└── api/               # API routes (Stripe webhooks, etc.)
-
-features/              # Business logic (barrel exports)
-├── marketing/         # Home, pricing, about pages
-├── admin/            # Admin features
-├── client/           # Client features
-├── auth/             # Login, signup, password reset
-└── shared/           # Subscription, support, analytics
-
-lib/
-├── supabase/         # DB client (server.ts, client.ts)
-├── stripe/           # Payment integration
-├── types/            # database.types.ts (generated)
-├── config/           # Site, nav, SEO config
-└── constants/        # routes.ts (type-safe)
-
-components/
-├── ui/               # shadcn/ui (DO NOT EDIT - 53 components)
-├── layout/           # Header, footer
-└── providers/        # Theme provider
-
-proxy.ts              # Session refresh ONLY (Next.js 16)
-```
-
-### Marketing Feature Pattern
-
-```
-features/
-  marketing/page-name
-    sections/
-      [section-name]/
-        [section-name].tsx
-        [section-name].data.ts
-        [section-name].types.ts     ← section-specific types (optional)
-        index.ts                    ← export component + data
-    [page-name]-page.tsx
-    [page-name].seo.ts              ← SEO metadata
-    [page-name].types.ts            ← feature-wide types (optional)
-    index.ts                        ← export page + sections
-```
-
----
-
-## ⚠️ Common Gotchas
-
-### 1. Database Field Names
-```typescript
-// ❌ WRONG
-profile.email, profile.full_name, profile.phone
-
-// ✅ CORRECT
-profile.contact_email, profile.contact_name, profile.contact_phone
-```
-
-### 2. Stripe Customer ID
-```typescript
-// ❌ WRONG - Not in subscription table
-subscription.stripe_customer_id
-
-// ✅ CORRECT - In profile table
-profile.stripe_customer_id
-```
-
-### 3. Authentication
-```typescript
-// ❌ WRONG
-const { data: { session } } = await supabase.auth.getSession()
-
-// ✅ CORRECT
-const { data: { user } } = await supabase.auth.getUser()
-```
-
-### 4. Multi-Tenancy
-```typescript
-// ❌ WRONG - Security issue!
-const { data } = await supabase.from('subscription').select('*')
-
-// ✅ CORRECT
-const { data } = await supabase
-  .from('subscription')
-  .select('*')
-  .eq('profile_id', user.id)
-```
-
-### 5. Component Slots
+### 3. Pages Are Thin Shells (5-15 Lines)
 ```tsx
-// ❌ WRONG
-<CardTitle className="text-3xl font-bold">Title</CardTitle>
-
 // ✅ CORRECT
-<CardTitle>Title</CardTitle>
-```
+import { Suspense } from 'react'
+import { DashboardFeature } from '@/features/business/dashboard'
 
-### 6. Barrel Exports
-```typescript
-// ❌ WRONG
-import { getData } from '@/features/client/support/api/queries'
-
-// ✅ CORRECT
-import { getData } from '@/features/client/support'
-```
-
----
-
-## 🎯 Essential Patterns
-
-### Feature Module Structure
-```
-features/[name]/
-├── api/
-│   ├── queries.ts      # 'server-only' - data fetching
-│   └── mutations.ts    # 'use server' - actions
-├── components/         # 'use client' if needed
-├── schema.ts           # Zod validation
-└── index.ts            # ⭐ Barrel export (public API)
-```
-
-### Server Component (Default)
-```typescript
 export default async function Page() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) redirect(ROUTES.LOGIN)
-
-  const { data } = await supabase
-    .from('table')
-    .select('*')
-    .eq('profile_id', user.id)  // Multi-tenancy
-
-  return <View data={data} />
-}
-```
-
-### Server Action
-```typescript
-'use server'
-
-export async function createAction(input: Input) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) return { error: 'Unauthorized' }
-
-  const { error } = await supabase
-    .from('table')
-    .insert({ ...input, profile_id: user.id })
-
-  if (error) return { error: error.message }
-
-  revalidatePath('/path', 'page')
-  return { success: true }
-}
-```
-
-### Form Pattern
-```typescript
-'use client'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-
-// 1. Schema
-const schema = z.object({ name: z.string().min(1) })
-type FormData = z.infer<typeof schema>
-
-// 2. Component
-export function MyForm() {
-  const form = useForm<FormData>({
-    resolver: zodResolver(schema),
-  })
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(async (data) => {
-        const result = await serverAction(data)
-        if (result.error) form.setError('root', { message: result.error })
-      })}>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl><Input {...field} /></FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <Suspense fallback={null}>
+      <DashboardFeature />
+    </Suspense>
   )
 }
 ```
 
+### 4. Server Directives Required
+```ts
+import 'server-only'  // queries.ts
+'use server'          // mutations.ts
+'use client'          // client components
+```
+
+### 5. Always Use getUser() for Auth
+```ts
+const { data: { user } } = await supabase.auth.getUser()
+if (!user) throw new Error('Unauthorized')
+```
+
+### Pattern 1: Portal Features (admin, business, staff, customer)
+
+```
+features/{portal}/[feature]/
+├── api/
+│   ├── queries/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   ├── [domain].ts                 # Query functions (< 300 lines)
+│   │   └── helpers.ts                  # Query helpers (< 200 lines)
+│   ├── mutations/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   ├── [action].ts                 # Mutation functions (< 300 lines)
+│   │   └── helpers.ts                  # Mutation helpers (< 200 lines)
+│   ├── types.ts                        # API types (< 200 lines)
+│   ├── schema.ts                       # Zod schemas (< 250 lines)
+│   └── constants.ts                    # Constants (< 100 lines)
+├── components/
+│   ├── index.ts                         # Re-exports ALL components (< 50 lines)
+│   ├── [feature]-[component].tsx       # Components (< 200 lines)
+│   └── [component-name].tsx            # Components (< 200 lines)
+├── hooks/
+│   └── use-[hook-name].ts              # Hooks (< 150 lines)
+├── utils/
+│   └── [utility-name].ts               # Utils (< 150 lines)
+└── index.tsx                           # Feature export (< 50 lines)
+```
+
+**File Limits:**
+- Index files: < 50 lines
+- Components: < 200 lines
+- Query/Mutation files: < 300 lines
+- Helpers: < 200 lines
+- Hooks/Utils: < 150 lines
+- Types: < 200 lines
+- Schemas: < 250 lines
+- Constants: < 100 lines
+
 ---
 
-## 🔧 Development Workflows
+### Pattern 2: Marketing Features
 
-### Add New Feature
-1. Create `features/[portal]/[feature]/` structure
-2. Define Zod schema in `schema.ts`
-3. Create server action in `api/mutations.ts`
-4. Build form component in `components/`
-5. Export via `index.ts` barrel
-6. Import in page from single path
+```
+features/marketing/[page-name]/
+├── sections/
+│   └── [section-name]/
+│       ├── [section-name].tsx         # Section component (< 150 lines)
+│       ├── [section-name].data.ts     # Section data/content (< 200 lines)
+│       ├── [section-name].types.ts    # Section types (optional, < 100 lines)
+│       └── index.ts                   # Export component + data (< 20 lines)
+├── [page-name]-page.tsx               # Main page component (< 100 lines)
+├── [page-name].seo.ts                 # SEO metadata (< 50 lines)
+├── [page-name].types.ts               # Feature-wide types (optional, < 150 lines)
+└── index.ts                           # Export page + sections (< 30 lines)
+```
 
-### Database Migration
-1. Create `supabase/migrations/[timestamp]_[name].sql`
-2. Apply via Supabase dashboard or MCP
-3. Regenerate types: `mcp__supabase__generate_typescript_types()`
+**File Limits:**
+- Page files: < 100 lines
+- Section components: < 150 lines
+- Data files: < 200 lines
+- SEO files: < 50 lines
+- Index files: < 30 lines
 
-### Install shadcn Component
-```bash
-npx shadcn@latest add [component-name]
-# Or: mcp__shadcn__install_component({ component: 'name' })
+---
+
+### Pattern 3: Auth Features
+
+```
+features/shared/auth/
+├── api/
+│   ├── queries/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   └── [query].ts                  # Query functions (< 300 lines)
+│   ├── mutations/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   └── [action].ts                 # Mutation functions (< 300 lines)
+│   └── schema.ts                       # Auth schemas (< 250 lines)
+├── components/
+│   ├── login-form.tsx                  # Form component (< 200 lines)
+│   ├── signup-form.tsx                 # Form component (< 200 lines)
+│   └── [auth-component].tsx            # Auth component (< 200 lines)
+├── hooks/
+│   └── use-[auth-hook].ts              # Auth hooks (< 150 lines)
+└── index.tsx                           # Feature export (< 50 lines)
+```
+
+**File Limits:**
+- Index files: < 50 lines
+- Components: < 200 lines
+- Query/Mutation files: < 300 lines
+- Schema files: < 250 lines
+- Hooks: < 150 lines
+
+---
+
+### Pattern 4: Shared Features
+
+```
+features/shared/[feature]/
+├── api/
+│   ├── queries/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   └── [query].ts                  # Query functions (< 300 lines)
+│   ├── mutations/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   └── [action].ts                 # Mutation functions (< 300 lines)
+│   └── types.ts                        # Shared types (< 200 lines)
+├── components/
+│   └── [component].tsx                 # Shared component (< 200 lines)
+├── hooks/
+│   └── use-[hook].ts                   # Shared hooks (< 150 lines)
+└── index.tsx                           # Feature export (< 50 lines)
+```
+
+**File Limits:**
+- Index files: < 50 lines
+- Components: < 200 lines
+- Query/Mutation files: < 300 lines
+- Types: < 200 lines
+- Hooks: < 150 lines
+
+---
+
+## Database Pattern
+
+### Read from Views
+```ts
+import 'server-only'
+import { createClient } from '@/lib/supabase/server'
+
+export async function getData(userId: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  return supabase.from('view_name').select('*')  // ✅ View
+}
+```
+
+### Write to Schema Tables
+```ts
+'use server'
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
+
+export async function create(data: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
+
+  await supabase.schema('organization').from('salons').insert(data)
+  revalidatePath('/salons')
+}
+```
+---
+
+## Next.js 16 Patterns
+
+### Async Params
+```tsx
+export default async function Page({
+  params,
+  searchParams
+}: {
+  params: Promise<{ id: string }>
+  searchParams: Promise<{ query?: string }>
+}) {
+  const { id } = await params
+  const { query } = await searchParams
+  return <Feature id={id} query={query} />
+}
+```
+
+### Async Request APIs
+```ts
+const cookieStore = await cookies()
+const headersList = await headers()
 ```
 
 ---
 
-## 🚨 Pre-Commit Checklist
+## UI Patterns (shadcn/ui)
 
-**Run these commands (MUST return 0 results):**
-```bash
-# 1. Arbitrary colors
-rg "(bg|text|border)-(blue|red|green|gray|slate)-[0-9]+" --type tsx features/
+**Pattern:** shadcn/ui composite components MUST include all required subcomponents for proper semantics.
 
-# 2. Custom sizing on slots
-rg "(CardTitle|AlertDescription).*className.*(text-[0-9]|font-)" --type tsx features/
+**Why:** Subcomponents wire ARIA attributes; omitting them breaks accessibility and theming.
 
-# 3. Any types
-rg "\bany\b" --type ts --type tsx | grep -v "node_modules"
 
-# 4. Type suppressions
-rg "@ts-ignore|@ts-expect-error" --type ts --type tsx
+**Fix Pattern:**
+```tsx
+// ❌ WRONG - Missing required subcomponents
+<Dialog>
+  <DialogContent>
+    <p className="text-sm text-muted-foreground">Are you sure?</p>
+  </DialogContent>
+</Dialog>
 
-# 5. Build must pass
-npm run build
-```
-
----
-
-## 📚 Key Files to Know
-
-**Database Schema:**
-- 9 tables: `profile`, `plan`, `subscription`, `client_site`, `support_ticket`, `ticket_reply`, `notification`, `audit_log`, `site_analytics`
-- All have RLS policies
-- Critical fields: `profile.contact_email`, `profile.stripe_customer_id`, `ticket_reply.author_profile_id`
-
-**Auth Flow:**
-- `proxy.ts` → Session refresh ONLY (runs on every request)
-- `app/(client)/client/layout.tsx` → Auth checks + role verification
-- `app/(admin)/admin/layout.tsx` → Auth checks + role verification
-- `features/auth/api/mutations.ts` → Login/signup actions with role detection
-
-**Stripe:**
-- `lib/stripe/server.ts` → Server-side client
-- `app/api/stripe/webhook/route.ts` → Handle events
-- Customer IDs stored in `profile.stripe_customer_id`
-
-**Documentation:**
-- `docs/rules/ui-patterns.md` → shadcn/ui rules (CRITICAL)
-- `docs/rules/typescript-patterns.md` → TypeScript rules
-- `docs/shadcn-components/` → Component docs
+// ✅ CORRECT - Complete composition
+<Dialog>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirm Action</DialogTitle>
+      <DialogDescription>This action cannot be undone.</DialogDescription>
+    </DialogHeader>
+    {/* Dialog content */}
+  </DialogContent>
+</Dialog>
 
 ---
 
-## 🐛 Quick Troubleshooting
+## Pre-Commit Checklist
 
-**Build fails:**
-- Run `npx tsc --noEmit` to see type errors
-- Check for `any` types or missing imports
-- Verify all field names in queries
-
-**Auth issues:**
-- Ensure `proxy.ts` exists at root
-- Check using `getUser()` not `getSession()`
-- Verify role checks in layouts, not proxy
-
-**Type errors:**
-- Regenerate: `mcp__supabase__generate_typescript_types()`
-- Use `z.infer<typeof schema>` for form types
-
-**UI violations:**
-- Run detection commands above
-- Check `docs/rules/ui-patterns.md`
-- Use MCP: `mcp__shadcn__get_component_docs({ component: 'name' })`
+1. ✅ `npm typecheck` - Must pass
+2. ✅ Auth guards with `getUser()`
+3. ✅ Server directives present
+4. ✅ Pages < 15 lines
+5. ✅ No `any` types
+6. ✅ Revalidate paths after mutations
 
 ---
 
-## 🎯 MCP Tools Available
+## Comprehensive Documentation
 
-- **Supabase:** `list_tables`, `execute_sql`, `apply_migration`, `generate_typescript_types`, `get_advisors`
-- **shadcn:** `list_components`, `get_component_docs`, `install_component`
-- **GitHub:** Repository operations
-- **Stripe:** Search docs, create resources
-- **Context7:** Library documentation
+Read `docs/rules/` for detailed patterns:
+
+| File | Topic |
+|------|-------|
+| `architecture.md` | Naming, structure, file limits |
+| `architecture.md` | architecture patterns |
+| `architecture.md` | File splitting strategies |
+| `nextjs.md` | Next.js 16 patterns |
+| `react.md` | React hooks, Server Components |
+| `typescript.md` | Type safety, strict mode |
+| `supabase.md` | Auth, database, RLS |
+| `ui.md` | shadcn/ui patterns |
+| `forms.md` | React Hook Form + Zod |
+| `stripe.md` | Stripe rules |
 
 ---
 
-**Last Updated:** 2025-10-26
-**Next.js Version:** 16.0
-**TypeScript:** 5.9 (strict mode)
-**shadcn/ui:** 53 components installed
+## Available Agents
+
+Specialized agents in `.claude/agents/`:
+- `performance-fixer` - Performance bottlenecks
+- `security-fixer` - Security audit
+- `type-safety-fixer` - Type issues
+- `ui-pattern-enforcer` - shadcn/ui compliance
+- `architecture-fixer` - Architecture violations
+- `form-validation-fixer` - Form patterns
+- `accessibility-fixer` - A11y issues
+- `dead-code-fixer` - Unused code
+- `import-dependency-fixer` - Import cleanup
+
+---
+
+## Tech Stack
+
+- Next.js 16.0.0 + Turbopack
+- React 19.2.0
+- TypeScript 5.x (strict mode)
+- Supabase 2.47.15
+- npm
+

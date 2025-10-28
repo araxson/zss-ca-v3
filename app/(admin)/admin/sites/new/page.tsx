@@ -4,7 +4,9 @@ import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
-import { CreateSiteForm } from '@/features/admin/sites/components/create-site-form'
+import { CreateSiteForm } from '@/features/admin/sites'
+import { SectionHeader } from '@/features/shared/components'
+import { Item, ItemContent } from '@/components/ui/item'
 
 export default async function AdminCreateSitePage() {
   const supabase = await createClient()
@@ -44,19 +46,24 @@ export default async function AdminCreateSitePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Button asChild variant="ghost" size="icon">
-          <Link href="/admin/sites">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold">Create New Site</h1>
-          <p className="text-muted-foreground">Set up a new website project for a client</p>
-        </div>
-      </div>
+      <SectionHeader
+        title="Create New Site"
+        description="Set up a new website project for a client"
+        align="start"
+        leading={
+          <Button asChild variant="ghost" size="icon">
+            <Link href="/admin/sites">
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </Button>
+        }
+      />
 
-      <CreateSiteForm clients={clients || []} plans={plans || []} />
+      <Item variant="outline" className="p-6">
+        <ItemContent className="p-0">
+          <CreateSiteForm clients={clients || []} plans={plans || []} />
+        </ItemContent>
+      </Item>
     </div>
   )
 }

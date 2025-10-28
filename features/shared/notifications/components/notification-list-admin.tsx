@@ -38,6 +38,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
+import { SectionHeader } from '@/features/shared/components'
 
 type NotificationListAdminProps = {
   notifications: NotificationWithProfile[]
@@ -107,6 +108,11 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
 
   return (
     <div className="space-y-4">
+      <SectionHeader
+        title="Client notifications"
+        description="Review broadcasts and individual messages sent to clients."
+        align="start"
+      />
       {error && (
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>

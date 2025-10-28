@@ -42,6 +42,7 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item'
+import { commonTables } from './create-audit-log-form-data'
 
 type CreateAuditLogFormProps = {
   clients?: Array<{
@@ -50,16 +51,6 @@ type CreateAuditLogFormProps = {
     contact_email: string | null
   }>
 }
-
-const commonTables = [
-  'profile',
-  'client_site',
-  'subscription',
-  'plan',
-  'support_ticket',
-  'notification',
-  'site_analytics',
-]
 
 export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
   const router = useRouter()
@@ -146,10 +137,11 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
       )}
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 rounded-lg border p-6"
-        >
+        <Item variant="outline" className="p-6">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+          >
           <FieldSet className="space-y-4">
             <FieldLegend>Context</FieldLegend>
             <FieldGroup className="space-y-4">
@@ -298,7 +290,8 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
               Cancel
             </Button>
           </ButtonGroup>
-        </form>
+          </form>
+        </Item>
       </Form>
     </div>
   )

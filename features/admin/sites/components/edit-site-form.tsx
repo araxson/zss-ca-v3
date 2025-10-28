@@ -41,8 +41,10 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { updateSiteSchema, type UpdateSiteInput } from '../schema'
 import { updateSiteAction } from '../api/mutations'
 import type { Database } from '@/lib/types/database.types'
@@ -98,15 +100,12 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
   }
 
   return (
-    <div className="space-y-6 rounded-lg border p-6">
-      <Item variant="muted" className="flex flex-col gap-2">
-        <ItemContent className="space-y-1">
-          <ItemTitle>Edit Site Details</ItemTitle>
-          <ItemDescription>
-            Update site information and status
-          </ItemDescription>
-        </ItemContent>
-      </Item>
+    <ItemGroup className="space-y-6">
+      <SectionHeader
+        title="Edit Site Details"
+        description="Update site information and status"
+        align="start"
+      />
 
       {error && (
         <Alert variant="destructive">
@@ -115,9 +114,11 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
         </Alert>
       )}
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FieldSet className="space-y-4">
+      <Item variant="outline" className="p-6">
+        <ItemContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FieldSet className="space-y-4">
             <FieldLegend>Project status</FieldLegend>
             <FieldDescription>Keep the deployment record current for your team.</FieldDescription>
             <FieldGroup className="space-y-4">
@@ -179,7 +180,7 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
             </FieldGroup>
           </FieldSet>
 
-          <FieldSet className="space-y-4">
+              <FieldSet className="space-y-4">
             <FieldLegend>Deployment access</FieldLegend>
             <FieldDescription>
               Track where the site is hosted and any custom domain mappings.
@@ -273,13 +274,15 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
                 )}
               />
             </FieldGroup>
-          </FieldSet>
+              </FieldSet>
 
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
-          </Button>
-        </form>
-      </Form>
-    </div>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
+              </Button>
+            </form>
+          </Form>
+        </ItemContent>
+      </Item>
+    </ItemGroup>
   )
 }

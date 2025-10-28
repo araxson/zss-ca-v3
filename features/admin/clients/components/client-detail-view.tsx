@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   Breadcrumb,
@@ -90,9 +91,32 @@ export function ClientDetailView({ client }: ClientDetailViewProps) {
         </ItemMedia>
         <ItemContent>
           <ItemTitle>{client.contact_name || 'Client Details'}</ItemTitle>
-          <ItemDescription>{client.contact_email}</ItemDescription>
+          <ItemDescription>
+            {client.contact_email ? (
+              <a className="hover:text-primary" href={`mailto:${client.contact_email}`}>
+                {client.contact_email}
+              </a>
+            ) : (
+              'Email unavailable'
+            )}
+          </ItemDescription>
         </ItemContent>
         <ItemActions>
+          {client.subscription ? (
+            <Badge
+              variant={
+                client.subscription.status === 'active'
+                  ? 'default'
+                  : client.subscription.status === 'past_due'
+                    ? 'destructive'
+                    : 'secondary'
+              }
+            >
+              {client.subscription.status}
+            </Badge>
+          ) : (
+            <Badge variant="outline">No subscription</Badge>
+          )}
           <Button asChild variant="outline" size="sm">
             <Link href={ROUTES.ADMIN_CLIENTS}>
               <ArrowLeft className="mr-2 h-4 w-4" />

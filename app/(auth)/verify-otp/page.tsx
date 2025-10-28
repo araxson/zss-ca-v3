@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { Spinner } from '@/components/ui/spinner'
-import { OTPVerificationForm } from '@/features/auth/components/otp-verification-form'
+import { OTPVerificationForm } from '@/features/auth'
 
 export default function VerifyOTPPage() {
   return (

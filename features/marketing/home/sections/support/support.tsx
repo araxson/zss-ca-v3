@@ -8,17 +8,17 @@ import {
   ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { homeSupportData } from './support.data'
 
 export function HomeSupport() {
   return (
     <section className="space-y-8">
-      <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold tracking-tight">{homeSupportData.heading}</h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          {homeSupportData.subheading}
-        </p>
-      </div>
+      <SectionHeader
+        title={homeSupportData.heading}
+        description={homeSupportData.subheading}
+        align="center"
+      />
       <ItemGroup className="grid gap-4 md:grid-cols-3">
         {homeSupportData.highlights.map((highlight) => (
           <Item key={highlight.title} variant="outline" className="flex flex-col">

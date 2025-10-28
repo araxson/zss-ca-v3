@@ -2,13 +2,8 @@ import { redirect } from 'next/navigation'
 import { ROUTES } from '@/lib/constants/routes'
 import { getCurrentProfile } from '@/features/client/profile/api/queries'
 import { ProfileForm } from '@/features/client/profile/components/profile-form'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { SectionHeader } from '@/features/shared/components'
+import { Item, ItemContent } from '@/components/ui/item'
 
 export default async function ProfilePage() {
   const profile = await getCurrentProfile()
@@ -19,26 +14,22 @@ export default async function ProfilePage() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>Profile Settings</CardTitle>
-          <CardDescription>
-            Manage your account information and preferences
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <SectionHeader
+        title="Profile Settings"
+        description="Manage your account information and preferences"
+        align="start"
+      />
 
-      <Card className="h-full">
-        <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
-          <CardDescription>
-            Update your contact details and company information
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Item variant="outline" className="flex flex-col space-y-4 p-6">
+        <SectionHeader
+          title="Personal Information"
+          description="Update your contact details and company information"
+          align="start"
+        />
+        <ItemContent className="p-0">
           <ProfileForm profile={profile} />
-        </CardContent>
-      </Card>
+        </ItemContent>
+      </Item>
     </div>
   )
 }

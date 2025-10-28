@@ -2,13 +2,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
 import { getAllNotifications, getUnreadNotificationCount } from '@/features/shared/notifications/api/queries'
-import { NotificationList } from '@/features/shared/notifications/components/notification-list'
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { NotificationList } from '@/features/shared/notifications'
+import { SectionHeader } from '@/features/shared/components'
 
 export default async function AdminNotificationsPage() {
   const supabase = await createClient()
@@ -38,14 +33,11 @@ export default async function AdminNotificationsPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>Notifications</CardTitle>
-          <CardDescription>
-            Stay updated with important information and system events
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <SectionHeader
+        title="Notifications"
+        description="Stay updated with important information and system events"
+        align="start"
+      />
 
       <NotificationList notifications={notifications} hasUnread={unreadCount > 0} />
     </div>

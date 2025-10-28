@@ -1,5 +1,5 @@
 import { getAllTickets } from '@/features/shared/support/api/queries'
-import { AdminSupportDashboard } from '@/features/admin/support/components/admin-support-dashboard'
+import { AdminSupportDashboard } from '@/features/admin/support'
 
 export default async function AdminSupportPage() {
   const tickets = await getAllTickets()

@@ -6,9 +6,11 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, LifeBuoy } from 'lucide-react'
+import { ROUTES } from '@/lib/constants/routes'
 import type { Database } from '@/lib/types/database.types'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -57,45 +59,54 @@ function formatDate(dateString: string | null) {
 }
 
 export function SiteCard({ site }: SiteCardProps) {
+  const planSummary = site.plan
+    ? `${site.plan.name} • ${site.plan.page_limit ?? 'Unlimited'} pages`
+    : 'No plan assigned'
   return (
     <Item variant="outline" className="flex h-full flex-col">
       <ItemContent className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <ItemTitle>{site.site_name}</ItemTitle>
-            <ItemDescription>
-              {site.plan ? `${site.plan.name} Plan` : 'No plan assigned'}
-            </ItemDescription>
+            <ItemDescription>{planSummary}</ItemDescription>
           </div>
           <Badge variant={getStatusVariant(site.status)}>
             {formatStatus(site.status)}
           </Badge>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <div className="text-sm font-medium text-muted-foreground">Status</div>
-            <div className="text-sm">{formatStatus(site.status)}</div>
-          </div>
+        <ItemGroup className="grid grid-cols-2 gap-4">
+          <Item variant="muted" size="sm" className="flex flex-col">
+            <ItemContent className="space-y-0.5">
+              <ItemDescription>Status</ItemDescription>
+              <ItemTitle>{formatStatus(site.status)}</ItemTitle>
+            </ItemContent>
+          </Item>
 
-          <div>
-            <div className="text-sm font-medium text-muted-foreground">Created</div>
-            <div className="text-sm">{formatDate(site.created_at)}</div>
-          </div>
+          <Item variant="muted" size="sm" className="flex flex-col">
+            <ItemContent className="space-y-0.5">
+              <ItemDescription>Created</ItemDescription>
+              <ItemTitle>{formatDate(site.created_at)}</ItemTitle>
+            </ItemContent>
+          </Item>
 
-          {site.deployed_at && (
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Deployed</div>
-              <div className="text-sm">{formatDate(site.deployed_at)}</div>
-            </div>
-          )}
+          {site.deployed_at ? (
+            <Item variant="muted" size="sm" className="flex flex-col">
+              <ItemContent className="space-y-0.5">
+                <ItemDescription>Deployed</ItemDescription>
+                <ItemTitle>{formatDate(site.deployed_at)}</ItemTitle>
+              </ItemContent>
+            </Item>
+          ) : null}
 
-          {site.last_revision_at && (
-            <div>
-              <div className="text-sm font-medium text-muted-foreground">Last Revision</div>
-              <div className="text-sm">{formatDate(site.last_revision_at)}</div>
-            </div>
-          )}
-        </div>
+          {site.last_revision_at ? (
+            <Item variant="muted" size="sm" className="flex flex-col">
+              <ItemContent className="space-y-0.5">
+                <ItemDescription>Last Revision</ItemDescription>
+                <ItemTitle>{formatDate(site.last_revision_at)}</ItemTitle>
+              </ItemContent>
+            </Item>
+          ) : null}
+        </ItemGroup>
 
         {site.deployment_url && (
           <div className="flex gap-2">
@@ -108,6 +119,11 @@ export function SiteCard({ site }: SiteCardProps) {
                 <ExternalLink className="h-4 w-4 mr-2" />
                 View Live Site
               </a>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href={`${ROUTES.CLIENT_SUPPORT}?siteId=${site.id}`}>
+                <LifeBuoy className="mr-2 h-4 w-4" />Request update
+              </Link>
             </Button>
           </div>
         )}

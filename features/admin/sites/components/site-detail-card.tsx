@@ -6,7 +6,6 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
 import {
@@ -14,8 +13,10 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import type { Database } from '@/lib/types/database.types'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -69,15 +70,15 @@ function formatDate(dateString: string | null) {
 
 export function SiteDetailCard({ site }: SiteDetailCardProps) {
   return (
-    <div className="space-y-6">
-      <FieldSet className="h-full space-y-6 rounded-lg border p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-1">
-            <FieldLegend className="text-lg font-semibold text-foreground">
-              {site.site_name}
-            </FieldLegend>
-            <FieldDescription>Site information and deployment details</FieldDescription>
-          </div>
+    <ItemGroup className="space-y-6">
+      <Item variant="outline" className="p-6 space-y-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <SectionHeader
+            title={site.site_name}
+            description="Site information and deployment details"
+            align="start"
+            className="flex-1"
+          />
           <Badge variant={getStatusVariant(site.status)}>
             {formatStatus(site.status)}
           </Badge>
@@ -165,7 +166,7 @@ export function SiteDetailCard({ site }: SiteDetailCardProps) {
             </Field>
           )}
         </FieldGroup>
-      </FieldSet>
-    </div>
+      </Item>
+    </ItemGroup>
   )
 }

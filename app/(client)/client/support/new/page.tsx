@@ -1,13 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
-import { CreateTicketForm } from '@/features/shared/support/components/create-ticket-form'
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { CreateTicketForm } from '@/features/shared/support'
+import { SectionHeader } from '@/features/shared/components'
 
 export default async function NewSupportTicketPage() {
   const supabase = await createClient()
@@ -21,12 +16,11 @@ export default async function NewSupportTicketPage() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>Create Support Ticket</CardTitle>
-          <CardDescription>Submit a new support request</CardDescription>
-        </CardHeader>
-      </Card>
+      <SectionHeader
+        title="Create Support Ticket"
+        description="Submit a new support request"
+        align="start"
+      />
 
       <CreateTicketForm />
     </div>

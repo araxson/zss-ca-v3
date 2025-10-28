@@ -6,19 +6,18 @@ import {
   ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { testimonialsData } from './testimonials.data'
 
 export function Testimonials() {
   return (
     <section className="w-full max-w-7xl mx-auto">
-      <div className="text-center space-y-4 mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-          {testimonialsData.heading}
-        </h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          {testimonialsData.subheading}
-        </p>
-      </div>
+      <SectionHeader
+        title={testimonialsData.heading}
+        description={testimonialsData.subheading}
+        align="center"
+        className="mb-12"
+      />
       <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {testimonialsData.testimonials.map((testimonial) => (
           <Item key={testimonial.id} variant="outline" className="flex flex-col gap-4">

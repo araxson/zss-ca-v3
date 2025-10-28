@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -104,12 +105,19 @@ export function SitesTable({ sites }: SitesTableProps) {
             <TableHead>Plan</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Deployed URL</TableHead>
+            <TableHead>Updated</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sites.map((site) => (
-            <TableRow key={site.id}>
+          {sites.map((site) => {
+            const updatedAt = site.updated_at
+              ? new Date(site.updated_at)
+              : site.created_at
+                ? new Date(site.created_at)
+                : null
+            return (
+              <TableRow key={site.id}>
               <TableCell className="font-medium">{site.site_name}</TableCell>
               <TableCell>
                 <div className="flex flex-col">
@@ -117,13 +125,24 @@ export function SitesTable({ sites }: SitesTableProps) {
                     {site.profile.company_name || site.profile.contact_name}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    {site.profile.contact_email}
+                    {site.profile.contact_email ? (
+                      <a
+                        className="hover:text-primary"
+                        href={`mailto:${site.profile.contact_email}`}
+                      >
+                        {site.profile.contact_email}
+                      </a>
+                    ) : (
+                      'No email'
+                    )}
                   </div>
                 </div>
               </TableCell>
               <TableCell>
                 {site.plan ? (
-                  <div className="text-sm">{site.plan.name}</div>
+                  <Badge variant="outline" className="text-xs font-medium">
+                    {site.plan.name}
+                  </Badge>
                 ) : (
                   <div className="text-sm text-muted-foreground">No plan</div>
                 )}
@@ -146,6 +165,9 @@ export function SitesTable({ sites }: SitesTableProps) {
                 ) : (
                   <div className="text-sm text-muted-foreground">Not deployed</div>
                 )}
+              </TableCell>
+              <TableCell className="text-xs text-muted-foreground">
+                {updatedAt ? formatDistanceToNow(updatedAt, { addSuffix: true }) : '—'}
               </TableCell>
               <TableCell>
                 <DropdownMenu>
@@ -173,8 +195,9 @@ export function SitesTable({ sites }: SitesTableProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
-            </TableRow>
-          ))}
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
       <ScrollBar orientation="horizontal" />

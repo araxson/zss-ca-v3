@@ -6,42 +6,19 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { Lock, Eye, EyeOff, Mail } from 'lucide-react'
+import { Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from '@/components/ui/form'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupButton,
-  InputGroupText,
-} from '@/components/ui/input-group'
+import { Form, FormField, FormItem } from '@/components/ui/form'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Progress } from '@/components/ui/progress'
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
+import { FieldDescription, FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { updatePasswordAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
-import {
-  calculatePasswordStrength,
-  getPasswordStrengthPercentage,
-} from '@/lib/utils/password-strength'
+import { calculatePasswordStrength } from '@/lib/utils/password-strength'
+import { UpdatePasswordField } from './update-password-form-password-field'
+import { UpdatePasswordConfirmField } from './update-password-form-confirm-field'
 
-// Create the schema for the password update form
 const updatePasswordSchema = z
   .object({
     password: z
@@ -65,9 +42,7 @@ export function UpdatePasswordForm() {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState(
-    calculatePasswordStrength('')
-  )
+  const [passwordStrength, setPasswordStrength] = useState(calculatePasswordStrength(''))
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get('email')
@@ -110,7 +85,6 @@ export function UpdatePasswordForm() {
         toast.success('Password updated!', {
           description: result.message,
         })
-        // Redirect to login page
         router.push(ROUTES.LOGIN)
       }
     } catch (err) {
@@ -160,94 +134,20 @@ export function UpdatePasswordForm() {
                 </ItemDescription>
               </ItemContent>
             </Item>
-            <FormField
+
+            <UpdatePasswordField
               control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <Lock className="size-4" />
-                      </InputGroupAddon>
-                      <InputGroupInput
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Enter your new password"
-                        {...field}
-                        disabled={loading}
-                      />
-                      <InputGroupAddon align="inline-end">
-                        <InputGroupButton
-                          onClick={() => setShowPassword(!showPassword)}
-                          aria-label={showPassword ? 'Hide password' : 'Show password'}
-                        >
-                          {showPassword ? (
-                            <EyeOff className="size-4" />
-                          ) : (
-                            <Eye className="size-4" />
-                          )}
-                        </InputGroupButton>
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </FormControl>
-                  {field.value && (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <FormDescription className={passwordStrength.color}>
-                          {passwordStrength.feedback}
-                        </FormDescription>
-                        <InputGroupText className="text-xs">
-                          {passwordStrength.score}/7
-                        </InputGroupText>
-                      </div>
-                      <Progress
-                        value={getPasswordStrengthPercentage(passwordStrength.score)}
-                        className="h-1"
-                      />
-                    </div>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
+              loading={loading}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+              passwordStrength={passwordStrength}
             />
 
-            <FormField
+            <UpdatePasswordConfirmField
               control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        <Lock className="size-4" />
-                      </InputGroupAddon>
-                      <InputGroupInput
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Confirm your new password"
-                        {...field}
-                        disabled={loading}
-                      />
-                      <InputGroupAddon align="inline-end">
-                        <InputGroupButton
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          aria-label={
-                            showConfirmPassword ? 'Hide password' : 'Show password'
-                          }
-                        >
-                          {showConfirmPassword ? (
-                            <EyeOff className="size-4" />
-                          ) : (
-                            <Eye className="size-4" />
-                          )}
-                        </InputGroupButton>
-                      </InputGroupAddon>
-                    </InputGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              loading={loading}
+              showConfirmPassword={showConfirmPassword}
+              setShowConfirmPassword={setShowConfirmPassword}
             />
           </FieldGroup>
         </FieldSet>

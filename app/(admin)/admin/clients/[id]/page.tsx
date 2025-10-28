@@ -1,5 +1,4 @@
-import { getClientById } from '@/features/admin/clients/api/queries'
-import { ClientDetailView } from '@/features/admin/clients/components/client-detail-view'
+import { getClientById, ClientDetailView } from '@/features/admin/clients'
 
 interface PageProps {
   params: Promise<{ id: string }>

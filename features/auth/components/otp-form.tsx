@@ -6,39 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSeparator,
-  InputOTPSlot,
-} from '@/components/ui/input-otp'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from '@/components/ui/field'
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemHeader,
-  ItemMedia,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field'
+import { Item, ItemActions, ItemContent, ItemDescription, ItemHeader, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Loader2, Mail } from 'lucide-react'
 import { ROUTES } from '@/lib/constants/routes'
@@ -80,7 +53,6 @@ export function OTPForm({
     },
   })
 
-  // Resend timer
   React.useEffect(() => {
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000)
@@ -103,7 +75,6 @@ export function OTPForm({
         return
       }
 
-      // Redirect based on verification type
       if (verificationType === 'password_reset') {
         router.push(`${ROUTES.RESET_PASSWORD}?verified=true&email=${email}`)
       } else if (verificationType === 'email_confirmation') {
@@ -184,11 +155,7 @@ export function OTPForm({
                 <FormItem>
                   <FormLabel>One-Time Password</FormLabel>
                   <FormControl>
-                    <InputOTP
-                      maxLength={6}
-                      {...field}
-                      disabled={isLoading}
-                    >
+                    <InputOTP maxLength={6} {...field} disabled={isLoading}>
                       <InputOTPGroup>
                         <InputOTPSlot index={0} />
                         <InputOTPSlot index={1} />
@@ -211,11 +178,7 @@ export function OTPForm({
             />
 
             <div className="space-y-4">
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -245,12 +208,7 @@ export function OTPForm({
                     )}
                   </Button>
                 ) : null}
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={() => router.back()}
-                  className="text-sm"
-                >
+                <Button type="button" variant="link" onClick={() => router.back()} className="text-sm">
                   Go Back
                 </Button>
               </ButtonGroup>

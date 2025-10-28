@@ -26,9 +26,8 @@ import {
 import {
   Item,
   ItemContent,
-  ItemHeader,
-  ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { replyToTicketSchema, type ReplyToTicketInput } from '../schema'
 import { replyToTicketAction } from '../api/mutations'
 
@@ -62,9 +61,7 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
 
   return (
     <Item variant="outline" className="flex flex-col gap-4 p-6">
-      <ItemHeader>
-        <ItemTitle>Add Reply</ItemTitle>
-      </ItemHeader>
+      <SectionHeader title="Add Reply" align="start" />
       <ItemContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

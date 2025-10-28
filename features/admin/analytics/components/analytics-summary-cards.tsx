@@ -8,6 +8,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemGroup,
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
@@ -19,87 +20,60 @@ interface AnalyticsSummaryCardsProps {
 }
 
 export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsProps) {
+  const metrics = [
+    {
+      title: 'Total Page Views',
+      period: `Last ${days} days`,
+      value: summary.totalPageViews,
+      delta: 'Compared to prior period: +12%',
+      icon: Eye,
+    },
+    {
+      title: 'Unique Visitors',
+      period: `Last ${days} days`,
+      value: summary.totalUniqueVisitors,
+      delta: 'Returning visitor rate: 38%',
+      icon: Users,
+    },
+    {
+      title: 'Conversions',
+      period: `Last ${days} days`,
+      value: summary.totalConversions,
+      delta: 'Conversion rate: 4.6%',
+      icon: Target,
+    },
+    {
+      title: 'Avg. Daily Views',
+      period: 'Per day average',
+      value: summary.averagePageViews,
+      delta: 'Peak traffic on Wednesdays',
+      icon: TrendingUp,
+    },
+  ]
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <ItemTitle>Total Page Views</ItemTitle>
-              <ItemDescription>Last {days} days</ItemDescription>
+    <ItemGroup className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {metrics.map(({ title, period, value, delta, icon: Icon }) => (
+        <Item key={title} variant="outline" className="flex h-full flex-col">
+          <ItemContent className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <ItemTitle>{title}</ItemTitle>
+                <ItemDescription>{period}</ItemDescription>
+              </div>
+              <ItemMedia>
+                <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              </ItemMedia>
             </div>
-            <ItemMedia>
-              <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-            </ItemMedia>
-          </div>
-          <FieldGroup>
-            <FieldLabel className="text-2xl font-bold">{summary.totalPageViews.toLocaleString()}</FieldLabel>
-            <FieldDescription className="text-xs text-muted-foreground">
-              Compared to prior period: +12%
-            </FieldDescription>
-          </FieldGroup>
-        </ItemContent>
-      </Item>
-
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <ItemTitle>Unique Visitors</ItemTitle>
-              <ItemDescription>Last {days} days</ItemDescription>
-            </div>
-            <ItemMedia>
-              <Users className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-            </ItemMedia>
-          </div>
-          <FieldGroup>
-            <FieldLabel className="text-2xl font-bold">{summary.totalUniqueVisitors.toLocaleString()}</FieldLabel>
-            <FieldDescription className="text-xs text-muted-foreground">
-              Returning visitor rate: 38%
-            </FieldDescription>
-          </FieldGroup>
-        </ItemContent>
-      </Item>
-
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <ItemTitle>Conversions</ItemTitle>
-              <ItemDescription>Last {days} days</ItemDescription>
-            </div>
-            <ItemMedia>
-              <Target className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-            </ItemMedia>
-          </div>
-          <FieldGroup>
-            <FieldLabel className="text-2xl font-bold">{summary.totalConversions.toLocaleString()}</FieldLabel>
-            <FieldDescription className="text-xs text-muted-foreground">
-              Conversion rate: 4.6%
-            </FieldDescription>
-          </FieldGroup>
-        </ItemContent>
-      </Item>
-
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <ItemTitle>Avg. Daily Views</ItemTitle>
-              <ItemDescription>Per day average</ItemDescription>
-            </div>
-            <ItemMedia>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-            </ItemMedia>
-          </div>
-          <FieldGroup>
-            <FieldLabel className="text-2xl font-bold">{summary.averagePageViews.toLocaleString()}</FieldLabel>
-            <FieldDescription className="text-xs text-muted-foreground">
-              Peak traffic on Wednesdays
-            </FieldDescription>
-          </FieldGroup>
-        </ItemContent>
-      </Item>
-    </div>
+            <FieldGroup>
+              <FieldLabel className="text-2xl font-bold">{value.toLocaleString()}</FieldLabel>
+              <FieldDescription className="text-xs text-muted-foreground">
+                {delta}
+              </FieldDescription>
+            </FieldGroup>
+          </ItemContent>
+        </Item>
+      ))}
+    </ItemGroup>
   )
 }

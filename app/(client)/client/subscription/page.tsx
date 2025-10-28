@@ -4,14 +4,18 @@ import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { getCurrentSubscription } from '@/features/shared/subscription/api/queries'
-import { SubscriptionCard } from '@/features/shared/subscription/components/subscription-card'
+import { SubscriptionCard } from '@/features/shared/subscription'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { SectionHeader } from '@/features/shared/components'
+import { CreditCard } from 'lucide-react'
 
 export default async function SubscriptionPage() {
   const supabase = await createClient()
@@ -28,35 +32,39 @@ export default async function SubscriptionPage() {
   if (!subscription) {
     return (
       <div className="space-y-6">
-        <Card className="bg-card">
-          <CardHeader>
-            <CardTitle>Subscription</CardTitle>
-            <CardDescription>Manage your subscription plan</CardDescription>
-          </CardHeader>
-        </Card>
+        <SectionHeader
+          title="Subscription"
+          description="Manage your subscription plan"
+          align="start"
+        />
 
-        <Alert>
-          <AlertTitle>No Active Subscription</AlertTitle>
-          <AlertDescription>
-            You don&apos;t have an active subscription yet. Choose a plan to get started.
-          </AlertDescription>
-        </Alert>
-
-        <Button asChild>
-          <Link href="/pricing">View Plans</Link>
-        </Button>
+        <Empty className="border border-dashed">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <CreditCard className="h-6 w-6" aria-hidden="true" />
+            </EmptyMedia>
+            <EmptyTitle>No Active Subscription</EmptyTitle>
+            <EmptyDescription>
+              You don&apos;t have an active subscription yet. Choose a plan to get started.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button asChild>
+              <Link href="/pricing">View Plans</Link>
+            </Button>
+          </EmptyContent>
+        </Empty>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle>Subscription</CardTitle>
-          <CardDescription>Manage your subscription plan</CardDescription>
-        </CardHeader>
-      </Card>
+      <SectionHeader
+        title="Subscription"
+        description="Manage your subscription plan"
+        align="start"
+      />
 
       <SubscriptionCard subscription={subscription} />
     </div>

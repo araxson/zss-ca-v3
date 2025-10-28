@@ -37,53 +37,13 @@ import {
   ItemContent,
   ItemDescription,
   ItemMedia,
-  ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 import { createTicketSchema, type CreateTicketInput } from '../schema'
 import { createTicketAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
-
-const categoryOptions = [
-  {
-    value: 'technical',
-    label: 'Technical Issue',
-    description: 'Platform bug or outage affecting your site.',
-  },
-  {
-    value: 'content_change',
-    label: 'Content Change',
-    description: 'Updates to text, images, or layout requests.',
-  },
-  {
-    value: 'billing',
-    label: 'Billing Question',
-    description: 'Invoice questions or payment concerns.',
-  },
-  {
-    value: 'general_inquiry',
-    label: 'General Inquiry',
-    description: 'Anything else you want to discuss.',
-  },
-] as const
-
-const priorityOptions = [
-  {
-    value: 'low',
-    label: 'Low',
-    description: 'Minor requests or informational updates.',
-  },
-  {
-    value: 'medium',
-    label: 'Medium',
-    description: 'Important updates that impact timelines.',
-  },
-  {
-    value: 'high',
-    label: 'High',
-    description: 'Urgent issues blocking your site or launch.',
-  },
-] as const
+import { categoryOptions, priorityOptions } from './create-ticket-form-data'
 
 export function CreateTicketForm() {
   const router = useRouter()
@@ -116,12 +76,11 @@ export function CreateTicketForm() {
 
   return (
     <Item variant="outline" className="flex flex-col gap-4 p-6">
-      <ItemHeader>
-        <ItemTitle>Create Support Ticket</ItemTitle>
-        <ItemDescription>
-          We&apos;ll respond to your ticket as soon as possible
-        </ItemDescription>
-      </ItemHeader>
+      <SectionHeader
+        title="Create Support Ticket"
+        description="We&apos;ll respond to your ticket as soon as possible"
+        align="start"
+      />
       <ItemContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

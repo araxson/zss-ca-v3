@@ -2,7 +2,9 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
 import { getAuditLogs } from '@/features/shared/audit-log/api/queries'
-import { AuditLogTable } from '@/features/shared/audit-log/components/audit-log-table'
+import { AuditLogTable } from '@/features/shared/audit-log'
+import { SectionHeader } from '@/features/shared/components'
+import { Item, ItemContent } from '@/components/ui/item'
 
 export default async function AdminAuditLogsPage() {
   const supabase = await createClient()
@@ -29,14 +31,17 @@ export default async function AdminAuditLogsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Audit Logs</h1>
-        <p className="text-muted-foreground">
-          System-wide audit trail of all actions and changes
-        </p>
-      </div>
+      <SectionHeader
+        title="Audit Logs"
+        description="System-wide audit trail of all actions and changes"
+        align="start"
+      />
 
-      <AuditLogTable logs={logs} />
+      <Item variant="outline" className="p-6">
+        <ItemContent className="p-0">
+          <AuditLogTable logs={logs} />
+        </ItemContent>
+      </Item>
     </div>
   )
 }

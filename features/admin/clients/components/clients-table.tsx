@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import {
   Table,
@@ -81,11 +82,19 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                 <TableCell className="font-medium">
                   {client.contact_name || 'N/A'}
                 </TableCell>
-                <TableCell>{client.contact_email}</TableCell>
+                <TableCell>
+                  {client.contact_email ? (
+                    <a className="hover:text-primary" href={`mailto:${client.contact_email}`}>
+                      {client.contact_email}
+                    </a>
+                  ) : (
+                    'N/A'
+                  )}
+                </TableCell>
                 <TableCell>{client.company_name || 'N/A'}</TableCell>
                 <TableCell className="text-sm">
                   {client.subscription && client.subscription.plan ? (
-                    client.subscription.plan.name
+                    <Badge variant="outline">{client.subscription.plan.name}</Badge>
                   ) : (
                     <span className="text-muted-foreground">None</span>
                   )}
@@ -108,7 +117,10 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                   )}
                 </TableCell>
                 <TableCell className="text-sm text-muted-foreground">
-                  {joinedDate.toLocaleDateString()}
+                  <div className="flex flex-col">
+                    <span>{joinedDate.toLocaleDateString()}</span>
+                    <span className="text-xs">{formatDistanceToNow(joinedDate, { addSuffix: true })}</span>
+                  </div>
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>

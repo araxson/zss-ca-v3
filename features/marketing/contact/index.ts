@@ -10,3 +10,6 @@ export type {
 
 export { ContactSteps, contactStepsData } from './sections/contact-steps'
 export type { ContactStep, ContactStepsData } from './sections/contact-steps'
+
+export { ContactForm, contactFormData } from './sections/contact-form'
+export type { ContactFormData, ServiceOption } from './sections/contact-form'

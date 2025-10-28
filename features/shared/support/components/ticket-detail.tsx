@@ -85,46 +85,50 @@ export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }:
         </ItemActions>
       </Item>
 
-      <FieldSet className="space-y-4 rounded-lg border p-4">
-        <FieldLegend>Ticket details</FieldLegend>
-        <FieldGroup className="space-y-4">
-          <Field>
-            <FieldLabel>Category</FieldLabel>
-            <FieldDescription className="capitalize">
-              {ticket.category.replace('_', ' ')}
-            </FieldDescription>
-          </Field>
-          <Field>
-            <FieldLabel>Message</FieldLabel>
-            <p className="whitespace-pre-wrap text-sm leading-relaxed">
-              {ticket.message}
-            </p>
-          </Field>
-          {isAdmin && (
+      <Item variant="outline" className="p-4">
+        <FieldSet className="space-y-4">
+          <FieldLegend>Ticket details</FieldLegend>
+          <FieldGroup className="space-y-4">
             <Field>
-              <FieldLabel>Admin Controls</FieldLabel>
-              <UpdateStatusButton ticketId={ticket.id} currentStatus={ticket.status} />
+              <FieldLabel>Category</FieldLabel>
+              <FieldDescription className="capitalize">
+                {ticket.category.replace('_', ' ')}
+              </FieldDescription>
             </Field>
-          )}
-        </FieldGroup>
-      </FieldSet>
+            <Field>
+              <FieldLabel>Message</FieldLabel>
+              <p className="whitespace-pre-wrap text-sm leading-relaxed">
+                {ticket.message}
+              </p>
+            </Field>
+            {isAdmin && (
+              <Field>
+                <FieldLabel>Admin Controls</FieldLabel>
+                <UpdateStatusButton ticketId={ticket.id} currentStatus={ticket.status} />
+              </Field>
+            )}
+          </FieldGroup>
+        </FieldSet>
+      </Item>
 
       {ticket.replies.length > 0 && (
         <Collapsible defaultOpen className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
-              <h2 className="text-lg font-semibold">
+          <Item variant="default" className="items-center justify-between gap-2 border-0 p-0">
+            <ItemContent className="flex items-center gap-2">
+              <MessageSquare className="h-5 w-5" aria-hidden="true" />
+              <ItemTitle className="text-base font-semibold">
                 Replies ({ticket.replies.length})
-              </h2>
-            </div>
-            <CollapsibleTrigger asChild>
-              <Button variant="ghost" size="sm">
-                <ChevronDown className="h-4 w-4" />
-                <span className="sr-only">Toggle replies</span>
-              </Button>
-            </CollapsibleTrigger>
-          </div>
+              </ItemTitle>
+            </ItemContent>
+            <ItemActions>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                  <span className="sr-only">Toggle replies</span>
+                </Button>
+              </CollapsibleTrigger>
+            </ItemActions>
+          </Item>
           <CollapsibleContent className="space-y-4">
             {ticket.replies.map((reply) => {
               const replyCreatedAt = new Date(reply.created_at)

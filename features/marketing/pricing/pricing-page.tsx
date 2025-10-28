@@ -3,6 +3,7 @@ import { getActivePlans } from './api/queries'
 import { PricingHero } from './sections/pricing-hero'
 import { PricingPlans } from './sections/pricing-plans'
 import { ItemGroup } from '@/components/ui/item'
+import { SectionHeader } from '@/features/shared/components'
 
 export async function PricingPage() {
   const supabase = await createClient()
@@ -26,6 +27,11 @@ export async function PricingPage() {
 
   return (
     <ItemGroup className="container mx-auto flex flex-col gap-16 px-4 py-16 md:py-24">
+      <SectionHeader
+        title="Choose the subscription that fits"
+        description="Monthly and annual plans crafted for ongoing website production and support."
+        align="center"
+      />
       <PricingHero />
       <PricingPlans
         plans={plans}
