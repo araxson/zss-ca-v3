@@ -6,22 +6,10 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { bulkCreateNotificationSchema, type BulkCreateNotificationInput } from '../schema'
 import { bulkCreateNotificationAction } from '../api/mutations'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Users } from 'lucide-react'
 import { ROUTES } from '@/lib/constants/routes'
@@ -38,7 +26,9 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
-import { notificationTypeOptions } from './bulk-notification-form-data'
+import { BulkNotificationTypeField } from './bulk-notification-type-field'
+import { BulkNotificationContentFields } from './bulk-notification-content-fields'
+import { BulkNotificationFollowupFields } from './bulk-notification-followup-fields'
 
 export function BulkNotificationForm() {
   const router = useRouter()
@@ -92,7 +82,7 @@ export function BulkNotificationForm() {
         <ItemContent className="space-y-1">
           <div className="flex items-center gap-2">
             <ItemMedia>
-              <Users className="h-5 w-5" />
+              <Users className="size-5" />
             </ItemMedia>
             <ItemTitle>Send to All Clients</ItemTitle>
           </div>
@@ -123,75 +113,14 @@ export function BulkNotificationForm() {
           <FieldSet className="space-y-4">
             <FieldLegend>Broadcast type</FieldLegend>
             <FieldGroup>
-              <FormField
-                control={form.control}
-                name="notification_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        className="grid grid-cols-2 gap-3"
-                      >
-                        {notificationTypeOptions.map((option) => (
-                          <Label key={option.value} htmlFor={`type-${option.value}`} className="cursor-pointer">
-                            <Item variant="outline" size="sm" className="items-start gap-3">
-                              <ItemMedia>
-                                <RadioGroupItem value={option.value} id={`type-${option.value}`} />
-                              </ItemMedia>
-                              <ItemContent>
-                                <ItemTitle>{option.label}</ItemTitle>
-                                <ItemDescription>{option.description}</ItemDescription>
-                              </ItemContent>
-                            </Item>
-                          </Label>
-                        ))}
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <BulkNotificationTypeField control={form.control} />
             </FieldGroup>
           </FieldSet>
 
           <FieldSet className="space-y-4">
             <FieldLegend>Content</FieldLegend>
             <FieldGroup className="space-y-4">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Notification title" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="body"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Message (Optional)</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Notification message"
-                        {...field}
-                        value={field.value || ''}
-                      />
-                    </FormControl>
-                    <FormDescription>Additional details for the notification</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <BulkNotificationContentFields control={form.control} />
             </FieldGroup>
           </FieldSet>
 
@@ -199,44 +128,7 @@ export function BulkNotificationForm() {
             <FieldLegend>Follow-up</FieldLegend>
             <FieldDescription>Optionally include a link and expiration for this announcement.</FieldDescription>
             <FieldGroup className="grid gap-4 sm:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="action_url"
-                render={({ field }) => (
-                  <FormItem className="sm:col-span-2">
-                    <FormLabel>Action URL (Optional)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://example.com"
-                        {...field}
-                        value={field.value || ''}
-                      />
-                    </FormControl>
-                    <FormDescription>Link for users to take action</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="expires_at"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Expires At (Optional)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="datetime-local"
-                        {...field}
-                        value={field.value || ''}
-                      />
-                    </FormControl>
-                    <FormDescription>Notification will auto-hide after this date</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <BulkNotificationFollowupFields control={form.control} />
             </FieldGroup>
           </FieldSet>
 

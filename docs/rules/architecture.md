@@ -1,7 +1,4 @@
 # Architecture
-
-**Canonical naming patterns with enforced file size limits across all feature types**
-
 ---
 
 ## File Naming Rules
@@ -43,7 +40,7 @@
 
 ## Feature Structure Patterns
 
-### Pattern 1: Portal Features (admin, business, staff, customer)
+### Pattern 1: Portal Features (admin, client)
 
 ```
 features/{portal}/[feature]/

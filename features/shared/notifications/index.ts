@@ -1,19 +1,23 @@
-// Client-safe exports
 export {
+  BulkNotificationForm,
+  CreateNotificationForm,
   NotificationBell,
+  NotificationItem,
   NotificationList,
   NotificationListAdmin,
-  NotificationItem,
-  CreateNotificationForm,
-  BulkNotificationForm,
+  NotificationsFeature,
 } from './components'
-
 export {
   createNotificationSchema,
   bulkCreateNotificationSchema,
   type CreateNotificationInput,
   type BulkCreateNotificationInput,
 } from './schema'
-
-// Server-only types - safe to export as types
+export {
+  getUnreadNotifications,
+  getAllNotifications,
+  getUnreadNotificationCount,
+  getAllNotificationsAdmin,
+} from './api/queries'
+export { createNotificationAction, markNotificationReadAction, bulkCreateNotificationAction } from './api/mutations'
 export type { Notification, NotificationWithProfile } from './api/queries'

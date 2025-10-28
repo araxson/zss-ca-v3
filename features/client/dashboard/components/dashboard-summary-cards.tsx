@@ -1,12 +1,14 @@
+'use client'
+
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
-  ItemGroup,
+  ItemFooter,
+  ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
 import {
@@ -40,126 +42,126 @@ export function DashboardSummaryCards({
   const liveRate = sitesCount > 0 ? Math.round((activeSitesCount / Math.max(sitesCount, 1)) * 100) : 0
   const hasSubscription = Boolean(subscription)
   return (
-    <ItemGroup className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Item variant="outline" className="flex flex-col">
-        <ItemContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <ItemTitle>Subscription Plan</ItemTitle>
-            {hasSubscription && subscription && (
-              <Badge variant={subscription.status === 'active' ? 'default' : 'secondary'}>
-                {subscription.status}
-              </Badge>
-            )}
-          </div>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle>Subscription Plan</ItemTitle>
           {hasSubscription && subscription ? (
-            <div className="space-y-4">
-              <div>
-                <div className="text-2xl font-bold">{subscription.plan?.name}</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Renews on{' '}
-                  {subscription.current_period_end
-                    ? new Date(subscription.current_period_end).toLocaleDateString()
-                    : '—'}
-                </p>
-              </div>
-              <Button asChild variant="outline" className="w-full">
-                <Link href={ROUTES.CLIENT_SUBSCRIPTION}>Manage Subscription</Link>
-              </Button>
-            </div>
+            <Badge variant={subscription.status === 'active' ? 'default' : 'secondary'}>
+              {subscription.status}
+            </Badge>
+          ) : null}
+        </ItemHeader>
+        <ItemContent>
+          {hasSubscription && subscription ? (
+            <>
+              <ItemTitle>{subscription.plan?.name}</ItemTitle>
+              <ItemDescription>
+                Renews on{' '}
+                {subscription.current_period_end
+                  ? new Date(subscription.current_period_end).toLocaleDateString()
+                  : '—'}
+              </ItemDescription>
+            </>
           ) : (
-            <div className="space-y-4">
-              <div className="text-sm text-muted-foreground">
-                No active subscription
-              </div>
-              <Button asChild className="w-full">
-                <Link href={ROUTES.PRICING}>View Plans</Link>
-              </Button>
-            </div>
+            <ItemDescription>No active subscription</ItemDescription>
           )}
         </ItemContent>
-      </Item>
-
-      <Item variant="outline" className="flex flex-col">
-        <ItemContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <ItemTitle>Websites</ItemTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge variant="secondary">{sitesCount}</Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Total websites</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-          {sitesCount > 0 ? (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Live</span>
-                  <Badge variant="default">{activeSitesCount}</Badge>
-                </div>
-                {sitesInProgressCount > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">In Progress</span>
-                    <Badge variant="secondary">{sitesInProgressCount}</Badge>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-muted-foreground">Live ratio</span>
-                <Badge variant="outline" className="text-xs">
-                  {liveRate}%
-                </Badge>
-              </div>
-              <Button asChild variant="link" size="sm" className="px-0">
-                <Link href={ROUTES.CLIENT_SITES}>View all sites →</Link>
-              </Button>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="text-sm text-muted-foreground">No sites deployed yet</div>
-              {subscription && (
-                <p className="text-xs text-muted-foreground">
-                  Your site deployment will begin soon
-                </p>
-              )}
-            </div>
-          )}
-        </ItemContent>
-      </Item>
-
-      <Item variant="outline" className="flex flex-col">
-        <ItemContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <ItemTitle>Support</ItemTitle>
-            {openTicketsCount > 0 ? (
-              <Badge variant="destructive">{openTicketsCount}</Badge>
-            ) : (
-              <Badge variant="secondary">0</Badge>
-            )}
-          </div>
-          <div className="space-y-4">
-            <div>
-              <div className="text-2xl font-bold">{openTicketsCount}</div>
-              <p className="text-xs text-muted-foreground">
-                {openTicketsCount === 1 ? 'Open ticket' : 'Open tickets'}
-              </p>
-            </div>
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Latest activity</span>
-              <span>{openTicketsCount > 0 ? 'Follow up pending' : 'All caught up'}</span>
-            </div>
-            <Button asChild className="w-full">
-              <Link href={ROUTES.CLIENT_SUPPORT}>
-                {openTicketsCount > 0 ? 'View Tickets' : 'Create Ticket'}
-              </Link>
+        <ItemFooter>
+          {hasSubscription && subscription ? (
+            <Button asChild variant="outline">
+              <Link href={ROUTES.CLIENT_SUBSCRIPTION}>Manage Subscription</Link>
             </Button>
-          </div>
-        </ItemContent>
+          ) : (
+            <Button asChild>
+              <Link href={ROUTES.PRICING}>View Plans</Link>
+            </Button>
+          )}
+        </ItemFooter>
       </Item>
-    </ItemGroup>
+
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle>Websites</ItemTitle>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary">{sitesCount}</Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Total websites</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </ItemHeader>
+        <ItemContent>
+          {sitesCount > 0 ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Live</div>
+                  <div className="text-sm text-muted-foreground">Currently deployed</div>
+                </div>
+                <Badge variant="default">{activeSitesCount}</Badge>
+              </div>
+              {sitesInProgressCount > 0 && (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">In Progress</div>
+                    <div className="text-sm text-muted-foreground">Development underway</div>
+                  </div>
+                  <Badge variant="secondary">{sitesInProgressCount}</Badge>
+                </div>
+              )}
+              <div className="border-t pt-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-medium">Live ratio</div>
+                    <div className="text-sm text-muted-foreground">Share of active sites</div>
+                  </div>
+                  <Badge variant="outline">{liveRate}%</Badge>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <ItemDescription>
+              No sites deployed yet{subscription ? '. Your site deployment will begin soon.' : ''}
+            </ItemDescription>
+          )}
+        </ItemContent>
+        {sitesCount > 0 && (
+          <ItemFooter>
+            <Button asChild variant="link">
+              <Link href={ROUTES.CLIENT_SITES}>View all sites</Link>
+            </Button>
+          </ItemFooter>
+        )}
+      </Item>
+
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle>Support</ItemTitle>
+          <Badge variant={openTicketsCount > 0 ? 'destructive' : 'secondary'}>
+            {openTicketsCount > 0 ? openTicketsCount : 0}
+          </Badge>
+        </ItemHeader>
+        <ItemContent>
+          <ItemTitle>{openTicketsCount}</ItemTitle>
+          <ItemDescription>
+            {openTicketsCount === 1 ? 'Open ticket' : 'Open tickets'}
+          </ItemDescription>
+          <ItemDescription>
+            {openTicketsCount > 0 ? 'Follow up pending' : 'All caught up'}
+          </ItemDescription>
+        </ItemContent>
+        <ItemFooter>
+          <Button asChild>
+            <Link href={ROUTES.CLIENT_SUPPORT}>
+              {openTicketsCount > 0 ? 'View Tickets' : 'Create Ticket'}
+            </Link>
+          </Button>
+        </ItemFooter>
+      </Item>
+    </div>
   )
 }

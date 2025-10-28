@@ -6,22 +6,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupText,
-} from '@/components/ui/input-group'
-import { Textarea } from '@/components/ui/textarea'
+import { Form } from '@/components/ui/form'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -40,16 +25,12 @@ import {
   FieldLegend,
   FieldSet,
 } from '@/components/ui/field'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemHeader,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { deploySiteSchema, type DeploySiteInput } from '../schema'
 import { deploySiteAction } from '../api/mutations'
-import { Rocket, Link2 } from 'lucide-react'
+import { Rocket } from 'lucide-react'
+import { DeploySiteUrlField } from './deploy-site-url-field'
+import { DeploySiteNotesField } from './deploy-site-notes-field'
 
 interface DeploySiteFormProps {
   siteId: string
@@ -83,34 +64,34 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
 
   if (isLive) {
     return (
-      <Item variant="outline" className="h-full flex flex-col p-6">
-        <ItemHeader>
-          <ItemTitle>Site Already Live</ItemTitle>
-          <ItemDescription>
+      <Card>
+        <CardHeader>
+          <CardTitle>Site Already Live</CardTitle>
+          <CardDescription>
             This site has already been deployed. Use the edit form to update the deployment URL.
-          </ItemDescription>
-        </ItemHeader>
-        <ItemContent>
-          <div className="text-sm text-muted-foreground">
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">
             Update deployment details from the edit panel if you need to change URLs or notes.
-          </div>
-        </ItemContent>
-      </Item>
+          </p>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <Item variant="outline" className="h-full flex flex-col p-6">
-      <ItemHeader className="gap-2">
+    <Card>
+      <CardHeader>
         <div className="flex items-center gap-2">
-          <Rocket className="h-5 w-5" />
-          <ItemTitle>Deploy Site</ItemTitle>
+          <Rocket className="size-5" />
+          <CardTitle>Deploy Site</CardTitle>
         </div>
-        <ItemDescription>
+        <CardDescription>
           Deploy {siteName} and make it live for the client
-        </ItemDescription>
-      </ItemHeader>
-      <ItemContent>
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
         {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertTitle>Deployment failed</AlertTitle>
@@ -124,72 +105,21 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
               <FieldLegend>Deployment metadata</FieldLegend>
               <FieldDescription>Confirm the live URL and capture any launch notes.</FieldDescription>
               <FieldGroup className="space-y-4">
-                <Item variant="outline" size="sm">
-                  <ItemContent>
-                    <ItemTitle>{siteName}</ItemTitle>
-                    <ItemDescription>
-                      Provide the production URL and optional launch notes.
-                    </ItemDescription>
-                  </ItemContent>
-                </Item>
-                <FormField
-                  control={form.control}
-                  name="deployment_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Deployment URL</FormLabel>
-                      <FormControl>
-                        <InputGroup>
-                          <InputGroupInput
-                            {...field}
-                            placeholder="example.com"
-                            className="!pl-1"
-                            value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                            onChange={(e) => field.onChange(e.target.value)}
-                          />
-                          <InputGroupAddon>
-                            <InputGroupText>https://</InputGroupText>
-                          </InputGroupAddon>
-                          <InputGroupAddon align="inline-end">
-                            <Link2 className="size-4" />
-                          </InputGroupAddon>
-                        </InputGroup>
-                      </FormControl>
-                      <FormDescription>
-                        The live URL where the site is now accessible
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="deployment_notes"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Deployment Notes (Optional)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Any notes about the deployment..."
-                          className="min-h-20"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Internal notes about this deployment
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="rounded-md border bg-muted/30 p-4">
+                  <p className="text-sm font-medium">{siteName}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Provide the production URL and optional launch notes.
+                  </p>
+                </div>
+                <DeploySiteUrlField control={form.control} />
+                <DeploySiteNotesField control={form.control} />
               </FieldGroup>
             </FieldSet>
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button type="button" disabled={form.formState.isSubmitting}>
-                  <Rocket className="h-4 w-4 mr-2" />
+                  <Rocket className="mr-2 size-4" />
                   Deploy Site
                 </Button>
               </AlertDialogTrigger>
@@ -211,7 +141,7 @@ export function DeploySiteForm({ siteId, siteName, isLive }: DeploySiteFormProps
             </AlertDialog>
           </form>
         </Form>
-      </ItemContent>
-    </Item>
+      </CardContent>
+    </Card>
   )
 }

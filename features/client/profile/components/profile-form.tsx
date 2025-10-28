@@ -17,6 +17,7 @@ import { ProfileContactFields } from './profile-contact-fields'
 import { ProfileCompanyFields } from './profile-company-fields'
 import { ProfileAddressFields } from './profile-address-fields'
 import { ProfilePreferencesFields } from './profile-preferences-fields'
+import { AlertCircle, CheckCircle2 } from 'lucide-react'
 
 type Profile = Database['public']['Tables']['profile']['Row']
 
@@ -67,6 +68,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {error && (
           <Alert variant="destructive">
+            <AlertCircle className="size-4" aria-hidden="true" />
             <AlertTitle>Profile update failed</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
@@ -74,6 +76,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
 
         {success && (
           <Alert>
+            <CheckCircle2 className="size-4" aria-hidden="true" />
             <AlertTitle>Profile updated</AlertTitle>
             <AlertDescription>{success}</AlertDescription>
           </Alert>

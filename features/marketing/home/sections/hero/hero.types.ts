@@ -2,6 +2,7 @@ export interface HeroData {
   title: string
   description: string
   tagline: string
+  ctaAriaLabel: string
   cta: {
     primary: {
       label: string

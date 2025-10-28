@@ -7,6 +7,7 @@ export const featuresData: FeaturesData = {
   features: [
     {
       id: 'custom-design',
+      iconLabel: 'Custom design icon',
       title: 'Custom Design',
       description:
         'Unique, professional designs tailored to your brand and business goals.',
@@ -14,6 +15,7 @@ export const featuresData: FeaturesData = {
     },
     {
       id: 'responsive',
+      iconLabel: 'Responsive icon',
       title: 'Mobile-Responsive',
       description:
         'Beautiful, fast-loading websites that work perfectly on all devices.',
@@ -21,6 +23,7 @@ export const featuresData: FeaturesData = {
     },
     {
       id: 'seo',
+      iconLabel: 'SEO icon',
       title: 'SEO Optimized',
       description:
         'Built-in search engine optimization to help customers find you online.',
@@ -28,6 +31,7 @@ export const featuresData: FeaturesData = {
     },
     {
       id: 'hosting',
+      iconLabel: 'Hosting icon',
       title: 'Hosting Included',
       description:
         'Fast, secure hosting with automatic backups and 99.9% uptime guarantee.',
@@ -35,6 +39,7 @@ export const featuresData: FeaturesData = {
     },
     {
       id: 'support',
+      iconLabel: 'Support icon',
       title: 'Dedicated Support',
       description:
         'Direct access to our team for updates, changes, and technical assistance.',
@@ -42,6 +47,7 @@ export const featuresData: FeaturesData = {
     },
     {
       id: 'maintenance',
+      iconLabel: 'Maintenance icon',
       title: 'Ongoing Maintenance',
       description:
         'Regular updates, security patches, and performance optimization included.',

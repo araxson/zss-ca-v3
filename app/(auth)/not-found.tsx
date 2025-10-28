@@ -19,7 +19,7 @@ export default function AuthNotFound() {
       <Empty className="w-full max-w-md border">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <LockKeyhole className="h-6 w-6" aria-hidden="true" />
+            <LockKeyhole className="size-6" aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>404 - Authentication Page Not Found</EmptyTitle>
           <EmptyDescription>

@@ -19,8 +19,8 @@ export function AboutServices() {
         {aboutServicesData.items.map((item) => (
           <AccordionItem key={item.id} value={item.id}>
             <AccordionTrigger>{item.title}</AccordionTrigger>
-            <AccordionContent className="text-muted-foreground">
-              {item.description}
+            <AccordionContent>
+              <p className="text-muted-foreground">{item.description}</p>
             </AccordionContent>
           </AccordionItem>
         ))}

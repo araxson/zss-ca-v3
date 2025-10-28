@@ -5,6 +5,7 @@ export const ctaData: CtaData = {
   heading: 'Ready to Get Started?',
   description:
     'Join hundreds of Canadian small businesses that trust us with their online presence. Start your subscription today.',
+  ariaLabel: 'Home page call to action',
   cta: {
     primary: {
       label: 'View Pricing',

@@ -3,15 +3,7 @@
 import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemMedia,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckoutButton } from '@/features/shared/subscription'
 import { pricingPlansCopy } from './pricing-plans-copy'
 import type { PricingPlan } from './pricing-plans.types'
@@ -63,72 +55,61 @@ export function PricingPlanCard({
   const contactEmail = siteConfig.contact.email
 
   return (
-    <Item
-      key={plan.id}
-      variant="outline"
-      className={`flex flex-col ${isPopular ? 'border-primary' : ''}`}
-    >
-      <ItemContent className="space-y-4">
-        <div className="flex items-start justify-between">
-          <ItemTitle>{plan.name}</ItemTitle>
-          {isPopular && <Badge>{pricingPlansCopy.popularLabel}</Badge>}
-        </div>
-        {plan.description ? (
-          <ItemDescription>{plan.description}</ItemDescription>
-        ) : null}
-        <div className="space-y-1">
-          {monthlyRate > 0 ? (
-            <p className="flex items-baseline gap-1 text-3xl font-bold">
-              ${displayRate.toFixed(2)}
-              <span className="text-base font-medium text-muted-foreground">/mo</span>
-            </p>
-          ) : (
-            <p className="text-2xl font-bold text-foreground">
-              Contact for pricing
-            </p>
-          )}
-          {interval === 'yearly' && monthlyRate > 0 ? (
-            <ItemDescription className="text-xs text-muted-foreground">
-              ${(yearlyTotal).toFixed(2)} billed annually (20% savings)
-            </ItemDescription>
+    <Card>
+      <CardHeader>
+        <div className="space-y-3">
+          <div className="flex items-start justify-between gap-2">
+            <CardTitle>{plan.name}</CardTitle>
+            {isPopular && <Badge>{pricingPlansCopy.popularLabel}</Badge>}
+          </div>
+          {plan.description ? (
+            <CardDescription>{plan.description}</CardDescription>
           ) : null}
-          {monthlyRate > 0 ? (
-            <ItemDescription className="text-sm text-muted-foreground">
-              {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'} •{' '}
-              {plan.revision_limit ? `${plan.revision_limit} revisions/mo` : 'Unlimited revisions'}
-            </ItemDescription>
-          ) : null}
+          <div className="space-y-1">
+            {monthlyRate > 0 ? (
+              <p className="flex items-baseline gap-1 text-3xl font-bold">
+                ${displayRate.toFixed(2)}
+                <span className="text-base font-medium text-muted-foreground">/mo</span>
+              </p>
+            ) : (
+              <p className="text-2xl font-bold text-foreground">Contact for pricing</p>
+            )}
+            {interval === 'yearly' && monthlyRate > 0 ? (
+              <p className="text-xs text-muted-foreground">
+                ${yearlyTotal.toFixed(2)} billed annually (20% savings)
+              </p>
+            ) : null}
+            {monthlyRate > 0 ? (
+              <p className="text-sm text-muted-foreground">
+                {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'} •{' '}
+                {plan.revision_limit ? `${plan.revision_limit} revisions/mo` : 'Unlimited revisions'}
+              </p>
+            ) : null}
+          </div>
         </div>
+      </CardHeader>
+      <CardContent>
         {features.length > 0 ? (
-          <ItemGroup className="space-y-2" aria-label={`${plan.name} features`}>
+          <div className="space-y-3" aria-label={`${plan.name} features`}>
             {features
               .filter((feature) => feature.included)
               .map((feature) => (
-                <Item
-                  key={feature.name}
-                  variant="muted"
-                  size="sm"
-                  className="items-start gap-2"
-                >
-                  <ItemMedia variant="icon">
-                    <Check className="h-4 w-4 text-primary" aria-hidden />
-                  </ItemMedia>
-                  <ItemContent className="space-y-1">
-                    <ItemTitle className="text-sm font-medium text-foreground">
-                      {feature.name}
-                    </ItemTitle>
+                <div key={feature.name} className="flex items-start gap-3 rounded-md bg-muted/40 p-3">
+                  <span className="mt-1 text-primary" aria-hidden="true">
+                    <Check className="size-4" />
+                  </span>
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-foreground">{feature.name}</p>
                     {feature.description ? (
-                      <ItemDescription className="text-xs text-muted-foreground">
-                        {feature.description}
-                      </ItemDescription>
+                      <p className="text-xs text-muted-foreground">{feature.description}</p>
                     ) : null}
-                  </ItemContent>
-                </Item>
+                  </div>
+                </div>
               ))}
-          </ItemGroup>
+          </div>
         ) : null}
-      </ItemContent>
-      <ItemActions className="mt-auto">
+      </CardContent>
+      <CardFooter>
         {monthlyRate > 0 ? (
           <CheckoutButton
             planId={plan.id}
@@ -139,11 +120,13 @@ export function PricingPlanCard({
             variant={isPopular ? 'default' : 'outline'}
           />
         ) : (
-          <Button asChild variant={isPopular ? 'default' : 'outline'} className="w-full">
-            <a href={`mailto:${contactEmail}`}>Talk to sales</a>
+          <Button asChild variant={isPopular ? 'default' : 'outline'}>
+            <a className="block w-full" href={`mailto:${contactEmail}`}>
+              Talk to sales
+            </a>
           </Button>
         )}
-      </ItemActions>
-    </Item>
+      </CardFooter>
+    </Card>
   )
 }

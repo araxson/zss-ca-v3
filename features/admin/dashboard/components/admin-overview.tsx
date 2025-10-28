@@ -49,7 +49,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
       <AdminOverviewStats stats={stats} />
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
+        <TabsList aria-label="Admin dashboard sections">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="clients">Recent Clients</TabsTrigger>
           <TabsTrigger value="tickets">Recent Tickets</TabsTrigger>

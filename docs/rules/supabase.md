@@ -83,7 +83,6 @@ Client library version: Latest
 - **Supabase JS:** 2.47.15
 - **SSR Helper:** `@supabase/ssr` 0.6.1 (server, browser, middleware clients)
 - **Auth:** Supabase Auth (GoTrue) with cookie-based sessions
-- **Schemas:** `organization`, `catalog`, `scheduling`, `identity`, `communication`, `analytics`, `engagement`
 
 ---
 
@@ -242,7 +241,7 @@ type Appointment = Database['public']['Views']['appointments_view']['Row']
 
 const getSupabase = cache(async () => createClient())
 
-export async function listAppointments(businessId: string) {
+export async function listAppointments(clientId: string) {
   const supabase = await getSupabase()
   const {
     data: { user },
@@ -252,7 +251,7 @@ export async function listAppointments(businessId: string) {
   const { data, error } = await supabase
     .from('appointments_view')
     .select('*')
-    .eq('business_id', businessId)
+    .eq('client_id', clientId)
     .eq('user_id', user.id)
     .returns<Appointment[]>()
   if (error) throw error
@@ -287,12 +286,12 @@ export async function createAppointment(_: unknown, formData: FormData) {
   const { error } = await supabase
     .schema('scheduling')
     .from('appointments')
-    .insert({ ...payload, business_id: user.id })
+    .insert({ ...payload, client_id: user.id })
 
   if (error) return { error: error.message }
 
   updateTag(`appointments:${user.id}`)
-  revalidatePath('/business/appointments')
+  revalidatePath('/client/appointments')
   return { error: null }
 }
 ```
@@ -309,13 +308,13 @@ export async function createAppointment(_: unknown, formData: FormData) {
 
 - RLS is enabled everywhere. Every policy checks `auth.uid()` and tenant columns.
 - Never query schema tables directly in read paths; use views with embedded tenant filters.
-- Server Actions should always `.eq('business_id', user.id)` when mutating multi-tenant data.
+- Server Actions should always `.eq('client_id', user.id)` when mutating multi-tenant data.
 
 Example policy snippet:
 
 ```sql
 create policy "Users view appointments" on scheduling.appointments
-  for select using (business_id = auth.uid());
+  for select using (client_id = auth.uid());
 ```
 
 ---
@@ -347,7 +346,7 @@ import type { Database } from '@/lib/types/database.types'
 
 type Appointment = Database['public']['Views']['appointments_view']['Row']
 
-export function AppointmentsRealtime({ businessId }: { businessId: string }) {
+export function AppointmentsRealtime({ clientId }: { clientId: string }) {
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const supabase = createClient()
 
@@ -357,13 +356,13 @@ export function AppointmentsRealtime({ businessId }: { businessId: string }) {
     supabase
       .from('appointments_view')
       .select('*')
-      .eq('business_id', businessId)
+      .eq('client_id', clientId)
       .then(({ data }) => {
         if (mounted && data) setAppointments(data)
       })
 
     const channel = supabase
-      .channel(`appointments:${businessId}`)
+      .channel(`appointments:${clientId}`)
       .on('postgres_changes', { event: '*', schema: 'scheduling', table: 'appointments' }, (payload) => {
         setAppointments((current) => {
           switch (payload.eventType) {
@@ -384,7 +383,7 @@ export function AppointmentsRealtime({ businessId }: { businessId: string }) {
       mounted = false
       supabase.removeChannel(channel)
     }
-  }, [businessId, supabase])
+  }, [clientId, supabase])
 
   return <ul>{appointments.map((appt) => <li key={appt.id}>{appt.customer_name}</li>)}</ul>
 }

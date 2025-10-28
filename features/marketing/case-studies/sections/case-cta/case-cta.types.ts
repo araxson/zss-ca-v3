@@ -1,6 +1,7 @@
 export interface CaseCtaData {
   heading: string
   description: string
+  ariaLabel: string
   primary: {
     label: string
     href: string

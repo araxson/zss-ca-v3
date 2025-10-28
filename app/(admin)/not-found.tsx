@@ -24,7 +24,7 @@ export default function AdminNotFound() {
       <Empty className="w-full max-w-xl border">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <ShieldAlert className="h-6 w-6" aria-hidden="true" />
+            <ShieldAlert className="size-6" aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>404 - Admin Page Not Found</EmptyTitle>
           <EmptyDescription>

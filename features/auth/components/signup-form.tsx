@@ -6,26 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
-import { ClipboardList } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
-import { Form, FormField, FormItem } from '@/components/ui/form'
+import { Form } from '@/components/ui/form'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Card, CardContent } from '@/components/ui/card'
+import { Field, FieldDescription, FieldGroup } from '@/components/ui/field'
 import { signupSchema, type SignupInput } from '../schema'
 import { signupAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
@@ -40,9 +27,7 @@ export function SignupForm() {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState(
-    calculatePasswordStrength('')
-  )
+  const [passwordStrength, setPasswordStrength] = useState(calculatePasswordStrength(''))
   const router = useRouter()
   const searchParams = useSearchParams()
   const planId = searchParams.get('plan')
@@ -94,71 +79,86 @@ export function SignupForm() {
   }
 
   return (
-    <Item variant="outline" className="space-y-4 p-6">
-      <ItemContent className="space-y-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
+    <div className="flex flex-col gap-6">
+      <Card className="overflow-hidden border">
+        <CardContent className="grid p-0 md:grid-cols-2">
+          <div className="p-6 md:p-8">
+            <FieldGroup className="gap-6">
+              <div className="flex flex-col items-center gap-2 text-center">
+                <h1 className="text-2xl font-semibold">Create your account</h1>
+                <p className="text-muted-foreground text-sm text-balance">
+                  Provide your contact details and choose a secure password to get started.
+                </p>
+              </div>
 
-            <FieldSet className="space-y-4">
-              <FieldLegend>Create your account</FieldLegend>
-              <FieldDescription>
-                Provide your contact details and choose a secure password to get started.
-              </FieldDescription>
-              <FieldGroup className="space-y-4">
-                {planId ? (
-                  <Item variant="outline" size="sm">
-                    <ItemMedia>
-                      <ClipboardList className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                    </ItemMedia>
-                    <ItemContent>
-                      <ItemTitle>Selected Plan</ItemTitle>
-                      <ItemDescription>
-                        We&apos;ll prepare checkout for plan {planId}.
-                      </ItemDescription>
-                    </ItemContent>
-                  </Item>
-                ) : null}
+              {planId ? (
+                <Field>
+                  <FieldDescription>
+                    We&apos;ll prepare checkout for plan {planId} after verification.
+                  </FieldDescription>
+                </Field>
+              ) : null}
 
-                <SignupEmailField control={form.control} loading={loading} setValue={form.setValue} />
-                <SignupCompanyField control={form.control} loading={loading} setValue={form.setValue} />
-                <SignupPasswordField
-                  control={form.control}
-                  loading={loading}
-                  showPassword={showPassword}
-                  setShowPassword={setShowPassword}
-                  passwordStrength={passwordStrength}
-                />
-                <SignupConfirmPasswordField
-                  control={form.control}
-                  loading={loading}
-                  showConfirmPassword={showConfirmPassword}
-                  setShowConfirmPassword={setShowConfirmPassword}
-                />
-              </FieldGroup>
-            </FieldSet>
+              {error ? (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              ) : null}
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Spinner /> : 'Create account'}
-            </Button>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <FieldGroup className="gap-4">
+                    <SignupEmailField control={form.control} loading={loading} setValue={form.setValue} />
+                    <SignupCompanyField control={form.control} loading={loading} setValue={form.setValue} />
+                    <SignupPasswordField
+                      control={form.control}
+                      loading={loading}
+                      showPassword={showPassword}
+                      setShowPassword={setShowPassword}
+                      passwordStrength={passwordStrength}
+                    />
+                    <SignupConfirmPasswordField
+                      control={form.control}
+                      loading={loading}
+                      showConfirmPassword={showConfirmPassword}
+                      setShowConfirmPassword={setShowConfirmPassword}
+                    />
+                  </FieldGroup>
 
-            <FieldGroup className="items-center justify-center gap-2">
-              <Field orientation="horizontal" className="w-full items-center justify-center gap-2">
-                <FieldDescription>Already have an account?</FieldDescription>
-                <ButtonGroup>
-                  <Button asChild variant="link" size="sm">
-                    <Link href={ROUTES.LOGIN}>Sign in</Link>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? <Spinner /> : 'Create account'}
                   </Button>
-                </ButtonGroup>
-              </Field>
+
+                  <div className="flex items-center justify-center gap-2 text-sm">
+                    <span className="text-muted-foreground">Already have an account?</span>
+                    <ButtonGroup className="gap-0 [&>*:not(:first-child)]:-ml-px">
+                      <Button asChild variant="link" size="sm">
+                        <Link href={ROUTES.LOGIN}>Sign in</Link>
+                      </Button>
+                    </ButtonGroup>
+                  </div>
+                </form>
+              </Form>
             </FieldGroup>
-          </form>
-        </Form>
-      </ItemContent>
-    </Item>
+          </div>
+
+          <div className="bg-muted relative hidden min-h-[320px] md:flex items-center justify-center p-8 text-center">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-lg font-semibold">Tailored onboarding</h2>
+              <p className="text-muted-foreground text-sm text-balance">
+                Invite your team, track implementation milestones, and move from signup to launch without friction.
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <p className="text-center text-sm text-muted-foreground">
+        By creating an account you agree to our{' '}
+        <Link href={ROUTES.PRIVACY}>Privacy Policy</Link>{' '}
+        and{' '}
+        <Link href={ROUTES.TERMS}>Terms of Service</Link>.
+      </p>
+    </div>
   )
 }

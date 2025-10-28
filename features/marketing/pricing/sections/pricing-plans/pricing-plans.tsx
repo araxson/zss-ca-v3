@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { ItemGroup } from '@/components/ui/item'
 import type { PricingPlansProps } from './pricing-plans.types'
 import { BillingIntervalToggle, type BillingInterval } from './billing-interval-toggle'
 import { PricingPlanCard } from './pricing-plan-card'
@@ -16,7 +15,7 @@ export function PricingPlans({ plans, isAuthenticated, hasSubscription }: Pricin
   return (
     <section className="space-y-8">
       <BillingIntervalToggle value={interval} onChange={setInterval} />
-      <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         {plans.map((plan, index) => {
           const isPopular = index === 1
           return (
@@ -30,7 +29,7 @@ export function PricingPlans({ plans, isAuthenticated, hasSubscription }: Pricin
             />
           )
         })}
-      </ItemGroup>
+      </div>
     </section>
   )
 }

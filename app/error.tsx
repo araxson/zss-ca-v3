@@ -32,7 +32,7 @@ export default function Error({ error, reset }: ErrorProps) {
       <Empty className="w-full max-w-md border">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <CircleAlert className="h-6 w-6" aria-hidden="true" />
+            <CircleAlert className="size-6" aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>Something went wrong</EmptyTitle>
           <EmptyDescription>

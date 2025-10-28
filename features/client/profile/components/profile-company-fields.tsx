@@ -2,13 +2,7 @@
 
 import { Building2, Globe } from 'lucide-react'
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import {
   InputGroup,
   InputGroupAddon,
@@ -16,6 +10,7 @@ import {
   InputGroupText,
 } from '@/components/ui/input-group'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
+import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 interface ProfileCompanyFieldsProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any
@@ -31,15 +26,16 @@ export function ProfileCompanyFields({ form }: ProfileCompanyFieldsProps) {
           name="company_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company Name</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <Building2 className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput {...field} placeholder="Acme Inc." />
-                </InputGroup>
-              </FormControl>
+              <FormFieldLayout label="Company Name">
+                <FormControl>
+                  <InputGroup>
+                    <InputGroupInput {...field} placeholder="Acme Inc." />
+                    <InputGroupAddon align="inline-start" aria-hidden="true">
+                      <Building2 className="size-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </FormControl>
+              </FormFieldLayout>
               <FormMessage />
             </FormItem>
           )}
@@ -50,24 +46,25 @@ export function ProfileCompanyFields({ form }: ProfileCompanyFieldsProps) {
           name="company_website"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Company Website</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupInput
-                    {...field}
-                    placeholder="example.com"
-                    className="!pl-1"
-                    value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  />
-                  <InputGroupAddon>
-                    <InputGroupText>https://</InputGroupText>
-                  </InputGroupAddon>
-                  <InputGroupAddon align="inline-end">
-                    <Globe className="size-4" />
-                  </InputGroupAddon>
-                </InputGroup>
-              </FormControl>
+              <FormFieldLayout label="Company Website">
+                <FormControl>
+                  <InputGroup>
+                    <InputGroupAddon>
+                      <InputGroupText>https://</InputGroupText>
+                    </InputGroupAddon>
+                    <InputGroupInput
+                      {...field}
+                      placeholder="example.com"
+                      className="!pl-0.5"
+                      value={field.value?.replace(/^https?:\/\//i, '') || ''}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
+                    <InputGroupAddon align="inline-end" aria-hidden="true">
+                      <Globe className="size-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </FormControl>
+              </FormFieldLayout>
               <FormMessage />
             </FormItem>
           )}

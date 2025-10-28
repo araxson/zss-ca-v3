@@ -5,7 +5,7 @@ Version: 16.x
 
 ## App Router Patterns
 - Organize SaaS surfaces with route groups like `app/(portals)/...` to keep URLs clean while scoping layouts per audience segment; nested groups can mount sibling layouts that share primitives without polluting URLs.
-- Dynamic segments (e.g., `app/(portals)/customers/[id]/page.tsx`) receive params via the `params` prop; pair `generateStaticParams` with `dynamicParams = false` to tightly control crawlable slugs, and interpolate paths directly (`<Link href={`/customers/${id}`}>`) to satisfy App Router link validation.
+- Dynamic segments (e.g., `app/(portals)/client/[id]/page.tsx`) receive params via the `params` prop; pair `generateStaticParams` with `dynamicParams = false` to tightly control crawlable slugs, and interpolate paths directly (`<Link href={`/client/${id}`}>`) to satisfy App Router link validation.
 - Parallel routes (`@modal`, `@analytics`) are mandatory for concurrent UI regions. As of 16, **every slot requires a `default.tsx`**; return `null` for no-op fallbacks or call `notFound()` for guardrails. Missing defaults now fail the build.
 - Intercepting routes like `app/@modal/(.)login/page.tsx` keep canonical pages while letting in-app navigations render as overlays. Add a catch-all `(...)*` null page inside the slot to ensure the modal closes on unrelated navigations.
 - Auth boundary now lives in `proxy.ts` (16 renamed `middleware.ts` for Node runtime interception). Rename the file and exported function to `proxy`, keep matchers restricted to `['/((?!api|_next/static|_next/image|.*\\.png$).*)']`, and leave Edge-only cases on legacy middleware until you opt into the new name.
@@ -24,7 +24,7 @@ Version: 16.x
 
 ## Server Actions
 - Export mutations with `'use server'`, bind them directly to `<form action={createCustomer}>`, or import them into client components for imperative `onClick` flows.
-- Post-mutation refresh paths with `revalidatePath('/portals/customers')` or data domains with `revalidateTag('customer:123', 'max')`; in 16 include a cache profile (`'max'`, `'force-no-store'`) or switch to `updateTag(tag)` when you want synchronous reads.
+- Post-mutation refresh paths with `revalidatePath('/portals/client')` or data domains with `revalidateTag('client:123', 'max')`; in 16 include a cache profile (`'max'`, `'force-no-store'`) or switch to `updateTag(tag)` when you want synchronous reads.
 - Use the new `refresh()` Server Action helper when you only need to refetch uncached regions (e.g., live counters) without invalidating cached shells—pair it with `router.refresh()` for full refetches.
 - Return serializable payloads (`{ message, fieldErrors }`) so React 19 hooks (`useFormState`, `useActionState`) can render inline errors. Combine with `aria-live="polite"` containers for accessibility.
 - Validate on the server (Zod or domain logic) before executing side effects; immediately short-circuit with structured errors to preserve progressive enhancement.
@@ -133,7 +133,7 @@ Version: 16.x
 ### Static & Dynamic Segments
 
 - **Static:** `app/(marketing)/about/page.tsx` → `/about`
-- **Dynamic:** `app/(business)/appointments/[businessId]/page.tsx`
+- **Dynamic:** `app/(client)/projects/[clientId]/page.tsx`
 - **Optional Catch-all:** `app/docs/[[...slug]]/page.tsx` handles `/docs`, `/docs/a`, etc.
 - **Parallel Slots:**
   ```
@@ -207,19 +207,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 ### Segment Layout with Params (Next.js 16)
 
 ```tsx
-// app/(business)/[businessId]/layout.tsx
-export default async function BusinessLayout({
+// app/(client)/[clientId]/layout.tsx
+export default async function ClientLayout({
   children,
   params,
 }: {
   children: React.ReactNode
-  params: Promise<{ businessId: string }>
+  params: Promise<{ clientId: string }>
 }) {
   // ✅ Next.js 16: Must await params
-  const { businessId } = await params
+  const { clientId } = await params
 
   return (
-    <section data-business={businessId}>{children}</section>
+    <section data-client={clientId}>{children}</section>
   )
 }
 ```
@@ -316,21 +316,21 @@ export default function Default() {
 
 ```ts
 import type { Metadata } from 'next'
-import { getBusinessName } from '@/features/business/metadata'
+import { getClientName } from '@/features/client/metadata'
 
 export async function generateMetadata({
   params
 }: {
-  params: Promise<{ businessId: string }>
+  params: Promise<{ clientId: string }>
 }): Promise<Metadata> {
   // ✅ Next.js 16: Must await params
-  const { businessId } = await params
-  const name = await getBusinessName(businessId)
+  const { clientId } = await params
+  const name = await getClientName(clientId)
 
   return {
-    title: name ? `${name} · Appointments` : 'Appointments',
+    title: name ? `${name} · Projects` : 'Projects',
     openGraph: {
-      title: `${name ?? 'Business'} · Appointments`,
+      title: `${name ?? 'Client'} · Projects`,
       type: 'website',
     },
   }
@@ -424,7 +424,7 @@ export async function updateName(_: { message: string; value: string }, formData
 | `fetch(url)` | Cached until route invalidation (`force-cache`). |
 | `fetch(url, { cache: 'no-store' })` | Always dynamic (SSR each request). |
 | `fetch(url, { next: { revalidate: 300 } })` | Static with background regeneration every 5 minutes. |
-| `fetch(url, { next: { tags: ['customers'] } })` | Cache keyed by tag; revalidate via `revalidateTag('customers', 'max')`. |
+| `fetch(url, { next: { tags: ['clients'] } })` | Cache keyed by tag; revalidate via `revalidateTag('clients', 'max')`. |
 
 ### Parallel Fetching (Next.js 16)
 
@@ -525,10 +525,10 @@ export default nextConfig
 ```ts
 // ✅ GOOD - Descriptive, hierarchical tags
 'appointments'                    // All appointments
-`appointments:${businessId}`      // Business-specific appointments
+`appointments:${clientId}`        // Client-specific appointments
 `appointment:${appointmentId}`    // Single appointment
-'user-profile'                    // All user profiles
-`user-profile:${userId}`          // Specific user profile
+'client-profile'                  // All client profiles
+`client-profile:${clientId}`      // Specific client profile
 
 // ❌ BAD - Vague or overly generic tags
 'data'                            // Too generic
@@ -552,10 +552,10 @@ export async function createAppointment(data: AppointmentInput) {
 
   // User must see their new appointment immediately
   updateTag('appointments')
-  updateTag(`appointments:${data.businessId}`)
+  updateTag(`appointments:${data.clientId}`)
   updateTag(`appointment:${appointment.id}`)
 
-  redirect(`/appointments/${appointment.id}`)
+  redirect(`/client/appointments/${appointment.id}`)
 }
 
 // ✅ revalidateTag - Eventual consistency (background refresh)
@@ -608,7 +608,7 @@ export async function createAppointment(input: unknown) {
   const { data, error } = await supabase
     .schema('scheduling')
     .from('appointments')
-    .insert({ ...payload, business_id: user.id })
+    .insert({ ...payload, client_id: user.id })
     .select()
     .single()
 
@@ -620,18 +620,18 @@ export async function createAppointment(input: unknown) {
   // 2. Update collection caches (immediate)
   updateTag('appointments')
   updateTag(`appointments:${user.id}`)
-  updateTag(`business:${user.id}:dashboard`)
+  updateTag(`client:${user.id}:dashboard`)
 
   // 3. Update related caches (background)
   // ✅ Next.js 16: Requires cache profile
-  revalidateTag(`staff:${data.staff_id}:schedule`, 'max')
-  revalidateTag(`customer:${data.customer_id}:bookings`, 'max')
+  revalidateTag(`team-member:${data.team_member_id}:schedule`, 'max')
+  revalidateTag(`client:${data.client_id}:appointments`, 'max')
 
   // 4. Optional: Invalidate entire route (use sparingly)
   // ✅ Next.js 16: Requires type parameter
-  // revalidatePath('/business/appointments', 'layout')
+  // revalidatePath('/client/appointments', 'layout')
 
-  redirect(`/business/appointments/${data.id}`)
+  redirect(`/client/appointments/${data.id}`)
 }
 
 export async function updateAppointmentStatus(id: string, status: string) {
@@ -644,7 +644,7 @@ export async function updateAppointmentStatus(id: string, status: string) {
     .from('appointments')
     .update({ status })
     .eq('id', id)
-    .eq('business_id', user.id)
+    .eq('client_id', user.id)
 
   if (error) throw error
 
@@ -665,7 +665,7 @@ export async function deleteAppointment(id: string) {
     .from('appointments')
     .delete()
     .eq('id', id)
-    .eq('business_id', user.id)
+    .eq('client_id', user.id)
 
   if (error) throw error
 
@@ -676,8 +676,8 @@ export async function deleteAppointment(id: string) {
 
   // Redirect after delete
   // ✅ Next.js 16: Requires type parameter
-  revalidatePath('/business/appointments', 'layout')
-  redirect('/business/appointments')
+  revalidatePath('/client/appointments', 'layout')
+  redirect('/client/appointments')
 }
 ```
 
@@ -935,22 +935,22 @@ rg "getServerSideProps|getStaticProps|getInitialProps" --type ts --type tsx app
 ### Dynamic Page with Async Params (Next.js 16)
 
 ```tsx
-// app/(business)/appointments/[appointmentId]/page.tsx
+// app/(client)/projects/[projectId]/page.tsx
 import { Suspense } from 'react'
-import { AppointmentDetail } from '@/features/business/appointments'
+import { ProjectDetail } from '@/features/client/projects'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default async function Page({
   params
 }: {
-  params: Promise<{ appointmentId: string }>
+  params: Promise<{ projectId: string }>
 }) {
   // ✅ Next.js 16: Must await params
-  const { appointmentId } = await params
+  const { projectId } = await params
 
   return (
     <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-      <AppointmentDetail appointmentId={appointmentId} />
+      <ProjectDetail projectId={projectId} />
     </Suspense>
   )
 }

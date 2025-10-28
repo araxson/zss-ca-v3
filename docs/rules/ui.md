@@ -5,9 +5,10 @@
 - **Accountability**: Only use generic fallback when no better match exists, document why
 - **Examples**: Stats → Chart components; Navigation → Tabs/Accordion; Actions → Alert/Dialog; Lists → Table/DataTable
 
-### Rule 1: NO Custom Styles - shadcn Components ONLY
-- Use ONLY shadcn/ui primitives from the 54+ available components
-- Custom styling is FORBIDDEN
+### Rule 1: Default to shadcn/ui Primitives
+- Start with shadcn/ui components and their documented variants before inventing custom markup.
+- Adapt appearance via the surfaces the docs call out (`className`, `variant`, `size`, CSS variables) instead of bespoke component rewrites.
+- Keep utility classes purposeful and minimal; if you reach for heavy overrides revisit the component choice.
 - If unsure whether a component exists, check using `mcp__shadcn__list_components()` or `mcp__shadcn__get_component_docs()`
 
 ### Rule 2: NO Unnecessary Wrappers
@@ -33,40 +34,121 @@
 ### Rule 6: NEVER Edit components/ui/*.tsx
 - Never modify shadcn component source files in `components/ui/`
 
+### Rule 7: Mirror Documented Slot Styling
 
+**Golden Rule:** Follow the official shadcn docs. If a slot is shown unstyled, keep it unstyled. If the docs demonstrate a className or prop on that slot, mirror the same pattern and rationale.
 
-
-**Pattern:** shadcn/ui composite components MUST include all required subcomponents for proper semantics.
-
-**Why:** Subcomponents wire ARIA attributes; omitting them breaks accessibility and theming.
-
-
-**Fix Pattern:**
+#### 7.1 Default: Leave Structural Slots Unstyled
 ```tsx
-// ❌ WRONG - Missing required subcomponents
-<Dialog>
-  <DialogContent>
-    <p className="text-sm text-muted-foreground">Are you sure?</p>
-  </DialogContent>
-</Dialog>
+// ❌ WRONG - Custom styling on slots
+<CardTitle className="text-2xl font-bold">Title</CardTitle>
+<CardHeader className="p-8">Content</CardHeader>
+<DialogTitle className="text-lg">Dialog</DialogTitle>
+<AlertDialogDescription className="text-sm">Description</AlertDialogDescription>
 
-// ✅ CORRECT - Complete composition
+// ✅ CORRECT - Use slots as-is
+<CardTitle>Title</CardTitle>
+<CardHeader>Content</CardHeader>
+<DialogTitle>Dialog</DialogTitle>
+<AlertDialogDescription>Description</AlertDialogDescription>
+```
+
+Use titles, descriptions, headers, and footers exactly as composed unless a doc example shows a specific override.
+
+#### 7.2 Documented Exceptions You Should Apply
+```tsx
+// ✅ CardFooter may carry layout classes (see card.md)
+<CardFooter className="flex-col gap-2">
+  <Button type="submit" className="w-full">
+    Login
+  </Button>
+  <Button variant="outline" className="w-full">
+    Login with Google
+  </Button>
+</CardFooter>
+
+// ✅ ItemTitle can use utilities like line clamp (see item.md & spinner.md)
+<ItemTitle className="line-clamp-1">Processing payment...</ItemTitle>
+```
+
+If the component docs showcase an override, copy that pattern verbatim (utility choice, placement, reasoning) instead of inventing a new approach.
+
+#### 7.3 Style Containers and Layout Surfaces
+```tsx
+// ✅ CORRECT - Style the wrapper, not the slots
+<Card className="border-2 shadow-lg">
+  <CardHeader>
+    <CardTitle>Title</CardTitle>
+    <CardDescription>Description</CardDescription>
+  </CardHeader>
+  <CardContent className="flex gap-4">
+    {/* Content styling here is OK */}
+    <Button>Action</Button>
+  </CardContent>
+</Card>
+
+// ✅ CORRECT - Style Dialog, not DialogTitle
 <Dialog>
-  <DialogContent>
+  <DialogContent className="max-w-2xl">
     <DialogHeader>
-      <DialogTitle>Confirm Action</DialogTitle>
-      <DialogDescription>This action cannot be undone.</DialogDescription>
+      <DialogTitle>Title</DialogTitle>
+      <DialogDescription>Description</DialogDescription>
     </DialogHeader>
-    {/* Dialog content */}
   </DialogContent>
 </Dialog>
+```
+
+**Where you CAN add className (when the docs do):**
+- Main component (e.g., `Card`, `Dialog`, `Alert`, `Button`)
+- Documented layout slots (`CardContent`, `CardFooter`, `ItemContent`, etc.)
+- Layout wrappers inside content areas (e.g., `<div className="flex gap-4">` inside `CardContent`)
+
+#### 7.4 Preserve Documented Composition
+```tsx
+// ✅ CORRECT - Follow documented patterns exactly
+<AlertDialog>
+  <AlertDialogTrigger>Open</AlertDialogTrigger>
+  <AlertDialogContent>
+    <AlertDialogHeader>
+      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+      <AlertDialogDescription>
+        This action cannot be undone.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction>Continue</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+
+// ❌ WRONG - Breaking documented structure
+<AlertDialog>
+  <AlertDialogContent>
+    <AlertDialogTitle className="text-xl">Title</AlertDialogTitle>
+    {/* Missing AlertDialogHeader wrapper */}
+  </AlertDialogContent>
+</AlertDialog>
+```
+
+#### 7.5 Validation
+```bash
+# Check shadcn/ui compliance before commits
+pnpm lint:shadcn
+```
+
+#### 7.6 Quick Reference
+| Component Pattern | Common Surfaces to Style | Handle With Care |
+|-------------------|--------------------------|------------------|
+| `<Card>` | `Card`, `CardContent`, `CardFooter` (layout utilities) | `CardTitle`, `CardDescription` unless docs show an override |
+| `<Dialog>` | `Dialog`, `DialogContent` | `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter` |
+| `<Item>` | `Item`, `ItemContent`, `ItemTitle` (line clamp, alignment) | `ItemMedia` structure and ordering |
+| `<Alert>` | `Alert` | `AlertTitle`, `AlertDescription` |
+
+**Summary:** Let the docs be the source of truth. Style the same surfaces they style, keep structural slots pristine unless an example proves otherwise, and prefer semantic composition over ad-hoc overrides.
 
 
-
-
-
-
-## October 2025 - New Components
+## October 2025 - New Shadcn Components (use these)
 
 For this round of components, I looked at what we build every day, the boring stuff we rebuild over and over, and made reusable abstractions you can actually use.
 
@@ -1833,6 +1915,3 @@ export function EmptyInputGroup() {
   )
 }
 
-```
-
-That's it. Seven new components. Works with all your libraries. Ready for your projects.

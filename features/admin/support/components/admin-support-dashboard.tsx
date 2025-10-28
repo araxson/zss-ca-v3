@@ -58,7 +58,12 @@ export function AdminSupportDashboard({ tickets }: AdminSupportDashboardProps) {
 
       <ItemGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Item key={stat.label} variant="outline" className="flex h-full flex-col">
+          <Item
+            key={stat.label}
+            variant="outline"
+            className="flex h-full flex-col"
+            aria-label={`${stat.label} tickets summary`}
+          >
             <ItemContent className="space-y-3">
               <div className="flex items-center justify-between">
                 <ItemTitle>{stat.label}</ItemTitle>

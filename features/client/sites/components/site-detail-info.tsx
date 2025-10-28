@@ -1,5 +1,6 @@
 import {
   Item,
+  ItemHeader,
   ItemContent,
   ItemDescription,
   ItemTitle,
@@ -12,9 +13,11 @@ import {
 } from '@/components/ui/accordion'
 import {
   Field,
+  FieldContent,
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldTitle,
 } from '@/components/ui/field'
 import type { Database } from '@/lib/types/database.types'
 
@@ -28,11 +31,11 @@ interface SiteDetailInfoProps {
 export function SiteDetailInfo({ status, plan }: SiteDetailInfoProps) {
   return (
     <Item variant="outline" className="flex flex-col">
+      <ItemHeader className="flex-col items-start gap-1">
+        <ItemTitle>Additional Information</ItemTitle>
+        <ItemDescription>More details about your website</ItemDescription>
+      </ItemHeader>
       <ItemContent className="space-y-4">
-        <div className="space-y-1">
-          <ItemTitle>Additional Information</ItemTitle>
-          <ItemDescription>More details about your website</ItemDescription>
-        </div>
         <Accordion type="single" collapsible defaultValue="status">
           <AccordionItem value="status">
             <AccordionTrigger>Status Information</AccordionTrigger>
@@ -88,20 +91,24 @@ export function SiteDetailInfo({ status, plan }: SiteDetailInfoProps) {
                 <FieldGroup className="space-y-3">
                   <Field>
                     <FieldLabel>Plan Name</FieldLabel>
-                    <FieldDescription>{plan.name}</FieldDescription>
+                    <FieldContent>
+                      <FieldTitle>{plan.name}</FieldTitle>
+                    </FieldContent>
                   </Field>
                   {plan.page_limit && (
                     <Field>
                       <FieldLabel>Page Limit</FieldLabel>
-                      <FieldDescription>{plan.page_limit} pages</FieldDescription>
+                      <FieldContent>
+                        <FieldTitle>{plan.page_limit} pages</FieldTitle>
+                      </FieldContent>
                     </Field>
                   )}
                   {plan.revision_limit && (
                     <Field>
                       <FieldLabel>Monthly Revisions</FieldLabel>
-                      <FieldDescription>
-                        {plan.revision_limit} revisions
-                      </FieldDescription>
+                      <FieldContent>
+                        <FieldTitle>{plan.revision_limit} revisions</FieldTitle>
+                      </FieldContent>
                     </Field>
                   )}
                 </FieldGroup>

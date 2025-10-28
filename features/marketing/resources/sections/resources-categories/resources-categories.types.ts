@@ -1,5 +1,6 @@
 export interface ResourceCategory {
   id: string
+  eyebrow?: string
   name: string
   description: string
 }

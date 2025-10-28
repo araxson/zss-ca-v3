@@ -1,13 +1,6 @@
 import { cn } from '@/lib/utils'
 import type { ReactNode } from 'react'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemActions,
-  ItemHeader,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Item } from '@/components/ui/item'
 
 interface SectionHeaderProps {
   title: string
@@ -35,14 +28,14 @@ export function SectionHeader({
   return (
     <Item
       className={cn(
-        'border-0 bg-transparent shadow-none',
+        'border-0 bg-transparent shadow-none flex-col gap-4',
         isCenter ? 'items-center text-center' : 'items-start text-left',
         className,
       )}
     >
-      <ItemHeader
+      <div
         className={cn(
-          'w-full gap-4',
+          'flex w-full gap-4',
           isCenter ? 'flex-col items-center' : 'flex-col sm:flex-row sm:items-center sm:justify-between',
         )}
       >
@@ -80,34 +73,37 @@ export function SectionHeader({
                   {kicker}
                 </span>
               ) : (
-                <ItemDescription className="text-xs font-semibold uppercase tracking-wide text-primary">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
                   {kicker}
-                </ItemDescription>
+                </p>
               )
             ) : null}
-            <ItemTitle className="text-3xl font-bold tracking-tight sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
               {title}
-            </ItemTitle>
+            </h2>
             {description ? (
-              <ItemContent className="max-w-2xl">
-                <ItemDescription className="text-base sm:text-lg text-muted-foreground">
-                  {description}
-                </ItemDescription>
-              </ItemContent>
+              <p
+                className={cn(
+                  'text-muted-foreground text-base sm:text-lg',
+                  isCenter ? 'max-w-2xl text-balance' : 'max-w-2xl',
+                )}
+              >
+                {description}
+              </p>
             ) : null}
           </div>
         </div>
         {actions ? (
-          <ItemActions
+          <div
             className={cn(
-              'w-full',
+              'flex w-full',
               isCenter ? 'justify-center' : 'sm:w-auto sm:justify-end',
             )}
           >
             {actions}
-          </ItemActions>
+          </div>
         ) : null}
-      </ItemHeader>
+      </div>
     </Item>
   )
 }

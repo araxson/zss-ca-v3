@@ -15,7 +15,7 @@ import {
   ItemActions,
   ItemContent,
   ItemDescription,
-  ItemGroup,
+  ItemFooter,
   ItemTitle,
 } from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
@@ -39,88 +39,87 @@ export function AdminOverviewStats({ stats }: AdminOverviewStatsProps) {
     : 0
 
   return (
-    <ItemGroup className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <ItemTitle>Total Clients</ItemTitle>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Badge variant="secondary">{stats.totalClients}</Badge>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Registered client accounts</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-          <div className="text-2xl font-bold">{stats.totalClients}</div>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <Item variant="outline" aria-label="Total clients metric">
+        <ItemContent>
+          <ItemTitle>Total Clients</ItemTitle>
           <ItemDescription>
             {stats.activeSubscriptions} active subscriptions
           </ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary">{stats.totalClients}</Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Registered client accounts</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </ItemActions>
+        <ItemFooter>
           <Progress value={subscriptionRate} />
-          <ItemDescription>
+          <ItemDescription className="mt-2">
             {subscriptionRate.toFixed(1)}% subscription rate
           </ItemDescription>
-        </ItemContent>
+        </ItemFooter>
       </Item>
 
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <ItemTitle>Active Subscriptions</ItemTitle>
-            <Badge variant="default">{stats.activeSubscriptions}</Badge>
-          </div>
-          <div className="text-2xl font-bold">{stats.activeSubscriptions}</div>
+      <Item variant="outline" aria-label="Active subscriptions metric">
+        <ItemContent>
+          <ItemTitle>Active Subscriptions</ItemTitle>
           <ItemDescription>Paying clients</ItemDescription>
         </ItemContent>
-        <ItemActions className="justify-end">
-          <Button asChild variant="link" size="sm" className="px-0">
-            <Link href={ROUTES.ADMIN_CLIENTS}>View all clients →</Link>
-          </Button>
+        <ItemActions>
+          <Badge variant="default">{stats.activeSubscriptions}</Badge>
         </ItemActions>
+        <ItemFooter>
+          <Button asChild variant="link" size="sm">
+            <Link href={ROUTES.ADMIN_CLIENTS}>View all clients</Link>
+          </Button>
+        </ItemFooter>
       </Item>
 
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <ItemTitle>Live Sites</ItemTitle>
-            <Badge variant="default">{stats.liveSites}</Badge>
-          </div>
-          <div className="text-2xl font-bold">{stats.liveSites}</div>
+      <Item variant="outline" aria-label="Live sites metric">
+        <ItemContent>
+          <ItemTitle>Live Sites</ItemTitle>
           <ItemDescription>Deployed websites</ItemDescription>
+        </ItemContent>
+        <ItemActions>
+          <Badge variant="default">{stats.liveSites}</Badge>
+        </ItemActions>
+        <ItemFooter>
           <Progress value={liveRate} />
-          <ItemDescription>
+          <ItemDescription className="mt-2">
             {liveRate.toFixed(1)}% deployment rate
           </ItemDescription>
-        </ItemContent>
+        </ItemFooter>
       </Item>
 
-      <Item variant="outline" className="flex h-full flex-col">
-        <ItemContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <ItemTitle>Open Tickets</ItemTitle>
-            <Badge variant={stats.openTickets > 0 ? 'destructive' : 'secondary'}>
-              {stats.openTickets > 0 ? stats.openTickets : 0}
-            </Badge>
-          </div>
-          <div className="text-2xl font-bold">{stats.openTickets}</div>
+      <Item variant="outline" aria-label="Open tickets metric">
+        <ItemContent>
+          <ItemTitle>Open Tickets</ItemTitle>
           <ItemDescription>Needs attention</ItemDescription>
         </ItemContent>
         <ItemActions>
+          <Badge variant={stats.openTickets > 0 ? 'destructive' : 'secondary'}>
+            {stats.openTickets > 0 ? stats.openTickets : 0}
+          </Badge>
+        </ItemActions>
+        <ItemFooter>
           <Button
             asChild
             variant={stats.openTickets > 0 ? 'default' : 'outline'}
             size="sm"
-            className="w-full"
           >
             <Link href={ROUTES.ADMIN_SUPPORT}>
               {stats.openTickets > 0 ? 'View Tickets' : 'All Tickets'}
             </Link>
           </Button>
-        </ItemActions>
+        </ItemFooter>
       </Item>
-    </ItemGroup>
+    </div>
   )
 }

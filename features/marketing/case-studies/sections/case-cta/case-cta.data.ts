@@ -4,6 +4,7 @@ import type { CaseCtaData } from './case-cta.types'
 export const caseCtaData: CaseCtaData = {
   heading: 'Imagine what we can build together',
   description: 'Book a strategy session to roadmap your launch or browse our subscription plans to get started right away.',
+  ariaLabel: 'Case studies actions',
   primary: {
     label: 'Start a project',
     href: ROUTES.CONTACT,

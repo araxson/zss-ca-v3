@@ -4,6 +4,7 @@ export interface ResourceItem {
   description: string
   type: 'Guide' | 'Template' | 'Benchmark';
   link: string
+  linkLabel?: string
 }
 
 export interface ResourcesListData {

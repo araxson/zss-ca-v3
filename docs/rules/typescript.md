@@ -144,12 +144,12 @@ export type AppointmentUpdate = Database['scheduling']['Tables']['appointments']
 ### Typed Queries
 
 ```ts
-export async function getAppointments(businessId: string) {
+export async function getAppointments(clientId: string) {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('appointments_view')
     .select('*')
-    .eq('business_id', businessId)
+    .eq('client_id', clientId)
     .returns<AppointmentRow[]>()  // ✅ Explicit type
 
   if (error) throw error

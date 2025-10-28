@@ -31,7 +31,7 @@ export default function MarketingError({ error, reset }: ErrorProps) {
       <Empty className="w-full max-w-xl border">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <CircleAlert className="h-6 w-6" aria-hidden="true" />
+            <CircleAlert className="size-6" aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>Oops! Something went wrong</EmptyTitle>
           <EmptyDescription>

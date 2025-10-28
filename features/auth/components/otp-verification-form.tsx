@@ -91,7 +91,7 @@ export function OTPVerificationForm() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <ButtonGroup className="justify-center">
+          <ButtonGroup className="justify-center gap-0 [&>*:not(:first-child)]:-ml-px">
             <Button size="sm" onClick={() => router.push(ROUTES.RESET_PASSWORD)}>
               Request new code
             </Button>

@@ -6,47 +6,16 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { createAnalyticsSchema, type CreateAnalyticsInput } from '../schema'
 import { createAnalyticsAction } from '../api/mutations'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from '@/components/ui/input-group'
+import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from '@/features/shared/components'
 import { ROUTES } from '@/lib/constants/routes'
+import { AnalyticsFormSelectionFields } from './analytics-form-selection-fields'
+import { AnalyticsFormMetricsFields } from './analytics-form-metrics-fields'
 
 type AnalyticsFormProps = {
   sites: Array<{
@@ -99,7 +68,7 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
   }
 
   return (
-    <ItemGroup className="space-y-6">
+    <div className="space-y-6">
       <SectionHeader
         title="Add Analytics Data"
         description="Manually add analytics data for a client site"
@@ -113,158 +82,30 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
         </Alert>
       )}
 
-      <Item variant="outline" className="p-6">
-        <ItemContent>
+      <Card>
+        <CardContent className="space-y-6 p-6">
           <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6"
-            >
-          <FieldSet className="space-y-4">
-            <FieldLegend>Site selection</FieldLegend>
-            <FieldDescription>
-              Choose the site and date for the metrics you&apos;re recording.
-            </FieldDescription>
-            <FieldGroup className="space-y-4">
-              <FormField
-                control={form.control}
-                name="client_site_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Site</FormLabel>
-                    <FormControl>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a site" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {sites.map((site) => (
-                            <SelectItem key={site.id} value={site.id}>
-                              {site.site_name} ({site.profile.contact_name || site.profile.contact_email})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <AnalyticsFormSelectionFields control={form.control} sites={sites} />
+              <AnalyticsFormMetricsFields control={form.control} />
 
-              <FormField
-                control={form.control}
-                name="metric_date"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                    <FormDescription>Date for these analytics metrics</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </FieldGroup>
-          </FieldSet>
-
-          <FieldSet className="space-y-4">
-            <FieldLegend>Performance metrics</FieldLegend>
-            <FieldDescription>
-              Record the key performance indicators for this day.
-            </FieldDescription>
-            <FieldGroup className="grid gap-4 md:grid-cols-3">
-              <FormField
-                control={form.control}
-                name="page_views"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Page Views</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <span className="text-xs font-medium uppercase">PV</span>
-                        </InputGroupAddon>
-                        <InputGroupInput
-                          type="number"
-                          min="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="unique_visitors"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Unique Visitors</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <span className="text-xs font-medium uppercase">UV</span>
-                        </InputGroupAddon>
-                        <InputGroupInput
-                          type="number"
-                          min="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="conversions"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Conversions</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <span className="text-xs font-medium uppercase">CV</span>
-                        </InputGroupAddon>
-                        <InputGroupInput
-                          type="number"
-                          min="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseInt(e.target.value, 10) || 0)}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </FieldGroup>
-          </FieldSet>
-
-          <ButtonGroup>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? <Spinner /> : 'Add Analytics Data'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-          </ButtonGroup>
-        </form>
-      </Form>
-    </ItemContent>
-  </Item>
-</ItemGroup>
+              <ButtonGroup>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? <Spinner /> : 'Add Analytics Data'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.back()}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+              </ButtonGroup>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

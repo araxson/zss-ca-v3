@@ -4,49 +4,16 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Globe, Link2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupText,
-} from '@/components/ui/input-group'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
+import { Form } from '@/components/ui/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemTitle,
-} from '@/components/ui/item'
-import { SectionHeader } from '@/features/shared/components'
+import { Card, CardContent } from '@/components/ui/card'
 import { updateSiteSchema, type UpdateSiteInput } from '../schema'
 import { updateSiteAction } from '../api/mutations'
+import { EditSiteStatusFields } from './edit-site-status-fields'
+import { EditSiteDeploymentFields } from './edit-site-deployment-fields'
 import type { Database } from '@/lib/types/database.types'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -54,23 +21,6 @@ type ClientSite = Database['public']['Tables']['client_site']['Row']
 interface EditSiteFormProps {
   site: ClientSite
   siteId: string
-}
-
-const siteStatuses: Array<Database['public']['Enums']['site_status']> = [
-  'pending',
-  'in_production',
-  'awaiting_client_content',
-  'ready_for_review',
-  'live',
-  'paused',
-  'archived',
-]
-
-function formatStatusLabel(status: string) {
-  return status
-    .split('_')
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ')
 }
 
 export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
@@ -100,189 +50,32 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
   }
 
   return (
-    <ItemGroup className="space-y-6">
-      <SectionHeader
-        title="Edit Site Details"
-        description="Update site information and status"
-        align="start"
-      />
-
+    <>
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" aria-live="assertive">
           <AlertTitle>Unable to save site</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
-      <Item variant="outline" className="p-6">
-        <ItemContent>
+      <Card>
+        <CardContent className="space-y-6 p-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FieldSet className="space-y-4">
-            <FieldLegend>Project status</FieldLegend>
-            <FieldDescription>Keep the deployment record current for your team.</FieldDescription>
-            <FieldGroup className="space-y-4">
-              <Item variant="outline" size="sm">
-                <ItemContent>
-                  <ItemTitle>{site.site_name}</ItemTitle>
-                  <ItemDescription>
-                    Currently marked as {formatStatusLabel(site.status)}
-                  </ItemDescription>
-                </ItemContent>
-              </Item>
-
-              <FormField
-                control={form.control}
-                name="site_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Site Name</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupAddon>
-                          <Globe className="size-4" />
-                        </InputGroupAddon>
-                        <InputGroupInput {...field} />
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <FormControl>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {siteStatuses.map((status) => (
-                            <SelectItem key={status} value={status}>
-                              {formatStatusLabel(status)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormDescription>
-                      Current project status
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </FieldGroup>
-          </FieldSet>
-
-              <FieldSet className="space-y-4">
-            <FieldLegend>Deployment access</FieldLegend>
-            <FieldDescription>
-              Track where the site is hosted and any custom domain mappings.
-            </FieldDescription>
-            <FieldGroup className="space-y-4">
-              <FormField
-                control={form.control}
-                name="deployment_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Deployment URL</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupInput
-                          {...field}
-                          placeholder="example.com"
-                          className="!pl-1"
-                          value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                          onChange={(event) => field.onChange(event.target.value)}
-                        />
-                        <InputGroupAddon>
-                          <InputGroupText>https://</InputGroupText>
-                        </InputGroupAddon>
-                        <InputGroupAddon align="inline-end">
-                          <Link2 className="size-4" />
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormDescription>
-                      The live URL where the site is deployed
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="custom_domain"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Custom Domain</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupInput
-                          {...field}
-                          placeholder="example.com"
-                          className="!pl-1"
-                          value={field.value?.replace(/^https?:\/\//i, '') || ''}
-                          onChange={(event) => field.onChange(event.target.value)}
-                        />
-                        <InputGroupAddon>
-                          <InputGroupText>https://</InputGroupText>
-                        </InputGroupAddon>
-                        <InputGroupAddon align="inline-end">
-                          <Globe className="size-4" />
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </FormControl>
-                    <FormDescription>
-                      Custom domain if different from deployment URL
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </FieldGroup>
-          </FieldSet>
-
-          <FieldSet className="space-y-4">
-            <FieldLegend>Handoff notes</FieldLegend>
-            <FieldDescription>
-              Capture deployment notes, upgrade tasks, or pending follow-ups.
-            </FieldDescription>
-            <FieldGroup className="space-y-4">
-              <FormField
-                control={form.control}
-                name="deployment_notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Add context for the next deployment or client communication..."
-                        className="min-h-32"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </FieldGroup>
-              </FieldSet>
-
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
-              </Button>
+              <EditSiteStatusFields form={form} siteName={site.site_name} currentStatus={site.status} />
+              <EditSiteDeploymentFields form={form} />
+              <ButtonGroup>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
+                </Button>
+                <Button type="button" variant="outline" onClick={() => router.back()} disabled={form.formState.isSubmitting}>
+                  Cancel
+                </Button>
+              </ButtonGroup>
             </form>
           </Form>
-        </ItemContent>
-      </Item>
-    </ItemGroup>
+        </CardContent>
+      </Card>
+    </>
   )
 }

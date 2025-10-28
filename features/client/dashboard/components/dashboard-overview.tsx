@@ -14,6 +14,7 @@ import { DashboardTicketsTab } from './dashboard-tickets-tab'
 import { DashboardAccountTab } from './dashboard-account-tab'
 import { getSiteStatusLabel } from './dashboard-site-helpers'
 import { SectionHeader } from '@/features/shared/components'
+import { AlertCircle } from 'lucide-react'
 
 type Profile = Database['public']['Tables']['profile']['Row']
 type Subscription = Database['public']['Tables']['subscription']['Row'] & {
@@ -68,24 +69,27 @@ export function DashboardOverview({
     <div className="space-y-6">
       <SectionHeader
         title={`Welcome back${profile?.company_name ? `, ${profile.company_name}` : ''}`}
-        description="Here&apos;s an overview of your account"
+        description="Here's an overview of your account"
         align="start"
       />
 
       <Separator />
 
       {!subscription && (
-        <Alert>
-          <AlertTitle>No active subscription</AlertTitle>
-          <AlertDescription>
-            Subscribe to a plan to get started with your website.
-          </AlertDescription>
-          <div className="mt-4 flex justify-start sm:justify-end">
+        <div className="space-y-3">
+          <Alert>
+            <AlertCircle className="size-4" aria-hidden="true" />
+            <AlertTitle>No active subscription</AlertTitle>
+            <AlertDescription>
+              Subscribe to a plan to get started with your website.
+            </AlertDescription>
+          </Alert>
+          <div className="flex justify-start sm:justify-end">
             <Button asChild>
               <Link href={ROUTES.PRICING}>View Plans</Link>
             </Button>
           </div>
-        </Alert>
+        </div>
       )}
 
       <DashboardSummaryCards

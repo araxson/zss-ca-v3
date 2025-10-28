@@ -31,6 +31,7 @@ export const contactOverviewData: ContactOverviewData = {
     hours: 'Office hours: Monday–Friday, 9am–5pm MT',
   },
   cta: {
+    ariaLabel: 'Book a discovery call via email',
     label: 'Book a discovery call',
     href: `mailto:${contact.email}`,
   },

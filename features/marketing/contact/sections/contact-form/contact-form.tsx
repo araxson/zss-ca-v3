@@ -4,14 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -26,6 +19,8 @@ import { SectionHeader } from '@/features/shared/components'
 import { contactFormSchema, type ContactFormInput } from '../../api/schema'
 import { submitContactForm } from '../../api/mutations'
 import { contactFormData } from './contact-form.data'
+import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
+import { Spinner } from '@/components/ui/spinner'
 
 export function ContactForm() {
   const [isSuccess, setIsSuccess] = useState(false)
@@ -78,10 +73,11 @@ export function ContactForm() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Full Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John Doe" {...field} />
-                    </FormControl>
+                    <FormFieldLayout label="Full Name">
+                      <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                      </FormControl>
+                    </FormFieldLayout>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -92,10 +88,11 @@ export function ContactForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="john@example.com" {...field} />
-                    </FormControl>
+                    <FormFieldLayout label="Email">
+                      <FormControl>
+                        <Input type="email" placeholder="john@example.com" {...field} />
+                      </FormControl>
+                    </FormFieldLayout>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -106,10 +103,11 @@ export function ContactForm() {
                 name="companyName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Company Name (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Acme Inc." {...field} />
-                    </FormControl>
+                    <FormFieldLayout label="Company Name (Optional)">
+                      <FormControl>
+                        <Input placeholder="Acme Inc." {...field} />
+                      </FormControl>
+                    </FormFieldLayout>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -120,10 +118,11 @@ export function ContactForm() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone (Optional)</FormLabel>
-                    <FormControl>
-                      <Input type="tel" placeholder="+1 (555) 123-4567" {...field} />
-                    </FormControl>
+                    <FormFieldLayout label="Phone (Optional)">
+                      <FormControl>
+                        <Input type="tel" placeholder="+1 (555) 123-4567" {...field} />
+                      </FormControl>
+                    </FormFieldLayout>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -135,21 +134,22 @@ export function ContactForm() {
               name="serviceInterest"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Service Interest</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a service" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {contactFormData.serviceOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormFieldLayout label="Service Interest">
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a service" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {contactFormData.serviceOptions.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormFieldLayout>
                   <FormMessage />
                 </FormItem>
               )}
@@ -160,14 +160,15 @@ export function ContactForm() {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Message</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Tell us about your project..."
-                      rows={6}
-                      {...field}
-                    />
-                  </FormControl>
+                  <FormFieldLayout label="Message">
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell us about your project..."
+                        rows={6}
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormFieldLayout>
                   <FormMessage />
                 </FormItem>
               )}
@@ -180,7 +181,14 @@ export function ContactForm() {
             )}
 
             <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? 'Sending...' : contactFormData.submitLabel}
+              {form.formState.isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Spinner className="size-4" />
+                  Sending
+                </span>
+              ) : (
+                contactFormData.submitLabel
+              )}
             </Button>
           </form>
         </Form>

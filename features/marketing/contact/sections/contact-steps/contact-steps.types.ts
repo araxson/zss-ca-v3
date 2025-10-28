@@ -1,5 +1,6 @@
 export interface ContactStep {
   id: number
+  label: string
   title: string
   description: string
 }

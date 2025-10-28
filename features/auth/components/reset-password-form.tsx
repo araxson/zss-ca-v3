@@ -10,14 +10,7 @@ import { Mail, X, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import {
   InputGroup,
   InputGroupAddon,
@@ -35,6 +28,7 @@ import {
 import { resetPasswordSchema, type ResetPasswordInput } from '../schema'
 import { resetPasswordAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
+import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 
 export function ResetPasswordForm() {
   const [error, setError] = useState<string | null>(null)
@@ -96,34 +90,35 @@ export function ResetPasswordForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <InputGroup>
-                      <InputGroupAddon>
-                        {loading ? (
-                          <Loader2 className="size-4 animate-spin" />
-                        ) : (
-                          <Mail className="size-4" />
-                        )}
-                      </InputGroupAddon>
-                      <InputGroupInput
-                        type="email"
-                        placeholder="you@example.com"
-                        {...field}
-                        disabled={loading}
-                      />
-                      {field.value && !loading && (
-                        <InputGroupAddon align="inline-end">
-                          <InputGroupButton
-                            onClick={() => form.setValue('email', '')}
-                            aria-label="Clear email"
-                          >
-                            <X className="size-4" />
-                          </InputGroupButton>
+                  <FormFieldLayout label="Email">
+                    <FormControl>
+                      <InputGroup>
+                        <InputGroupAddon>
+                          {loading ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            <Mail className="size-4" />
+                          )}
                         </InputGroupAddon>
-                      )}
-                    </InputGroup>
-                  </FormControl>
+                        <InputGroupInput
+                          type="email"
+                          placeholder="you@example.com"
+                          {...field}
+                          disabled={loading}
+                        />
+                        {field.value && !loading && (
+                          <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                              onClick={() => form.setValue('email', '')}
+                              aria-label="Clear email"
+                            >
+                              <X className="size-4" />
+                            </InputGroupButton>
+                          </InputGroupAddon>
+                        )}
+                      </InputGroup>
+                    </FormControl>
+                  </FormFieldLayout>
                   <FormMessage />
                 </FormItem>
               )}

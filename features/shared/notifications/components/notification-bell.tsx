@@ -23,11 +23,11 @@ export function NotificationBell({ unreadCount, href }: NotificationBellProps) {
         <TooltipTrigger asChild>
           <Button variant="ghost" size="icon" asChild className="relative">
             <Link href={href} aria-label={`View notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}>
-              <Bell className="h-5 w-5" />
+              <Bell className="size-4" />
               {unreadCount > 0 && (
                 <Badge
                   variant="destructive"
-                  className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center p-0 text-xs"
+                  className="absolute -top-1 -right-1 flex size-5 items-center justify-center p-0 text-xs"
                 >
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </Badge>

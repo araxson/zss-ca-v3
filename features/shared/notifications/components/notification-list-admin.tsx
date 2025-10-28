@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Trash2, User, Calendar, Tag } from 'lucide-react'
+import { Bell } from 'lucide-react'
 import type { NotificationWithProfile } from '../api/queries'
 import { deleteNotificationAction } from '../api/mutations'
 import {
@@ -14,31 +14,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
-import { Badge } from '@/components/ui/badge'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Spinner } from '@/components/ui/spinner'
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
+  EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
 import { SectionHeader } from '@/features/shared/components'
+import { NotificationTableRow } from './notification-table-row'
 
 type NotificationListAdminProps = {
   notifications: NotificationWithProfile[]
@@ -98,6 +85,9 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
     return (
       <Empty className="border border-dashed">
         <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Bell />
+          </EmptyMedia>
           <EmptyTitle>No notifications found</EmptyTitle>
           <EmptyDescription>Send your first broadcast to populate this list.</EmptyDescription>
         </EmptyHeader>
@@ -119,7 +109,7 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
         </Alert>
       )}
 
-      <ScrollArea className="rounded-md border">
+      <ScrollArea className="rounded-md border" aria-label="Client notifications table">
         <Table className="min-w-[960px]">
           <TableCaption>Latest notifications sent to clients with status tracking.</TableCaption>
           <TableHeader>
@@ -134,86 +124,14 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
           </TableHeader>
           <TableBody>
             {notifications.map((notification) => (
-              <TableRow key={notification.id}>
-                <TableCell>
-                  <Badge variant={getTypeBadgeVariant(notification.notification_type)}>
-                    <Tag className="mr-1 h-3 w-3" />
-                    {notification.notification_type}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-col gap-1">
-                    <span className="font-medium">{notification.title}</span>
-                    {notification.body && (
-                      <span className="text-sm text-muted-foreground line-clamp-1">
-                        {notification.body}
-                      </span>
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">
-                      {notification.profile.contact_name ||
-                        notification.profile.contact_email}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    {formatDate(notification.created_at)}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  {notification.read_at ? (
-                    <Badge variant="outline">Read</Badge>
-                  ) : (
-                    <Badge>Unread</Badge>
-                  )}
-                </TableCell>
-                <TableCell className="text-right">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        aria-label="Delete notification"
-                        variant="ghost"
-                        size="sm"
-                        disabled={deletingId === notification.id}
-                      >
-                        <Trash2 className="h-4 w-4" aria-hidden="true" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
-                    </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Delete Notification</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            Are you sure you want to delete this notification? This action
-                            cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <ButtonGroup>
-                            <AlertDialogCancel asChild>
-                              <Button variant="outline">Cancel</Button>
-                            </AlertDialogCancel>
-                            <AlertDialogAction asChild>
-                              <Button
-                                variant="destructive"
-                                onClick={() => handleDelete(notification.id)}
-                                disabled={deletingId === notification.id}
-                              >
-                                {deletingId === notification.id ? <Spinner /> : 'Delete'}
-                              </Button>
-                            </AlertDialogAction>
-                          </ButtonGroup>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                </TableCell>
-              </TableRow>
+              <NotificationTableRow
+                key={notification.id}
+                notification={notification}
+                deletingId={deletingId}
+                onDelete={handleDelete}
+                formatDate={formatDate}
+                getTypeBadgeVariant={getTypeBadgeVariant}
+              />
             ))}
           </TableBody>
         </Table>

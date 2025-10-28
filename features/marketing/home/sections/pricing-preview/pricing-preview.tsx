@@ -1,22 +1,12 @@
 import Link from 'next/link'
+import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemFooter,
-  ItemGroup,
-  ItemHeader,
-  ItemMedia,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { SectionHeader } from '@/features/shared/components'
 import { ROUTES } from '@/lib/constants/routes'
 import { getPlansForPreview } from './api/queries'
-import { cn } from '@/lib/utils'
-import { Check } from 'lucide-react'
 
 type PlanFeature = {
   name: string
@@ -32,96 +22,83 @@ export async function PricingPreview() {
   }
 
   return (
-    <section className="w-full max-w-7xl mx-auto">
+    <section className="mx-auto w-full max-w-7xl space-y-12">
       <SectionHeader
         title="Simple, Transparent Pricing"
         description="Choose the plan that fits your business. All plans include hosting, support, and maintenance."
         align="center"
-        className="mb-12"
       />
-      <ItemGroup className="grid grid-cols-1 gap-6 md:grid-cols-3 mb-8">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {plans.map((plan, index) => {
           const features = Array.isArray(plan.features)
             ? (plan.features as PlanFeature[])
             : []
-          const isPopular = index === 1 // Mark second plan (Business) as popular
+          const isPopular = index === 1
 
           return (
-            <Item
-              key={plan.id}
-              variant="outline"
-              className={cn(
-                'flex flex-col',
-                isPopular && 'border-primary shadow-lg'
-              )}
-            >
-              <ItemHeader className="gap-2">
-                <div className="flex items-center justify-between">
-                  <ItemTitle>{plan.name}</ItemTitle>
+            <Card key={plan.id}>
+              <CardHeader>
+                <div className="flex items-center justify-between gap-2">
+                  <CardTitle>{plan.name}</CardTitle>
                   {isPopular && <Badge variant="default">Popular</Badge>}
                 </div>
-                <ItemDescription>{plan.description}</ItemDescription>
-              </ItemHeader>
-              <ItemContent className="space-y-4">
-                <div>
-                  {plan.priceMonthly ? (
-                    <>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-4xl font-bold">
-                          ${plan.priceMonthly}
-                        </span>
-                        <span className="text-muted-foreground">/month</span>
-                      </div>
-                      {plan.priceYearly && (
-                        <p className="text-sm text-muted-foreground mt-1">
-                          or ${plan.priceYearly}/year
-                        </p>
-                      )}
-                    </>
-                  ) : (
-                    <div className="text-2xl font-bold">Contact for pricing</div>
-                  )}
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
-                    {plan.revision_limit &&
-                      ` • ${plan.revision_limit} revisions/mo`}
-                  </p>
+                <CardDescription>{plan.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    {plan.priceMonthly ? (
+                      <>
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-4xl font-bold">${plan.priceMonthly}</span>
+                          <span className="text-muted-foreground">/month</span>
+                        </div>
+                        {plan.priceYearly && (
+                          <p className="text-sm text-muted-foreground">
+                            or ${plan.priceYearly}/year
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <div className="text-2xl font-bold">Contact for pricing</div>
+                    )}
+                    <p className="text-sm text-muted-foreground">
+                      {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
+                      {plan.revision_limit ? ` • ${plan.revision_limit} revisions/mo` : ''}
+                    </p>
+                  </div>
+                  <Separator />
+                  <div className="space-y-2">
+                    {features
+                      .filter((feature) => feature.included)
+                      .slice(0, 5)
+                      .map((feature) => (
+                        <div key={feature.name} className="flex items-start gap-3">
+                          <span className="mt-1 text-primary" aria-hidden="true">
+                            <Check className="size-4" />
+                          </span>
+                          <div>
+                            <p className="text-sm font-medium text-foreground">{feature.name}</p>
+                            {feature.description ? (
+                              <p className="text-sm text-muted-foreground">{feature.description}</p>
+                            ) : null}
+                          </div>
+                        </div>
+                      ))}
+                  </div>
                 </div>
-                <Separator />
-                <ItemGroup className="space-y-2">
-                  {features
-                    .filter((f) => f.included)
-                    .slice(0, 5)
-                    .map((feature) => (
-                      <Item
-                        key={feature.name}
-                        variant="muted"
-                        size="sm"
-                        className="items-start gap-3"
-                      >
-                        <ItemMedia variant="icon">
-                          <Check className="h-4 w-4 text-primary" aria-hidden="true" />
-                        </ItemMedia>
-                        <ItemContent>
-                          <ItemTitle>{feature.name}</ItemTitle>
-                        </ItemContent>
-                      </Item>
-                    ))}
-                </ItemGroup>
-              </ItemContent>
-              <ItemFooter>
-                <Button
-                  asChild
-                  className="w-full"
-                  variant={isPopular ? 'default' : 'outline'}
-                >
-                  <Link href={ROUTES.PRICING}>Get Started</Link>
+              </CardContent>
+              <CardFooter>
+                <Button asChild variant={isPopular ? 'default' : 'outline'}>
+                  <Link className="block w-full" href={ROUTES.PRICING}>
+                    Get Started
+                  </Link>
                 </Button>
-              </ItemFooter>
-            </Item>
+              </CardFooter>
+            </Card>
           )
         })}
-      </ItemGroup>
+      </div>
       <div className="text-center">
         <Button asChild variant="outline" size="lg">
           <Link href={ROUTES.PRICING}>View All Plans</Link>

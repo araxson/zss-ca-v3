@@ -1,4 +1,5 @@
 export interface HomeSupportHighlight {
+  eyebrow?: string
   title: string
   description: string
 }
@@ -8,6 +9,7 @@ export interface HomeSupportData {
   subheading: string
   highlights: HomeSupportHighlight[]
   cta: {
+    ariaLabel?: string
     label: string
     href: string
   }

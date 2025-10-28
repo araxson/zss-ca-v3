@@ -1,6 +1,4 @@
 'use client'
-
-import { ItemGroup } from '@/components/ui/item'
 import { GrowthTrendChart } from './growth-trend-chart'
 import { SubscriptionDistributionChart } from './subscription-distribution-chart'
 import { SiteStatusChart } from './site-status-chart'
@@ -19,22 +17,22 @@ interface AdminOverviewChartsProps {
 export function AdminOverviewCharts({ stats }: AdminOverviewChartsProps) {
   return (
     <>
-      <ItemGroup className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2" aria-label="Growth and subscription charts">
         <GrowthTrendChart
           totalClients={stats.totalClients}
           activeSubscriptions={stats.activeSubscriptions}
         />
         <SubscriptionDistributionChart planDistribution={stats.planDistribution} />
-      </ItemGroup>
+      </div>
 
-      <ItemGroup className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2" aria-label="Site status and platform metrics charts">
         <SiteStatusChart statusDistribution={stats.statusDistribution} />
         <PlatformMetrics
           totalClients={stats.totalClients}
           activeSubscriptions={stats.activeSubscriptions}
           liveSites={stats.liveSites}
         />
-      </ItemGroup>
+      </div>
     </>
   )
 }

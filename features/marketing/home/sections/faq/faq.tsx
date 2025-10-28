@@ -19,11 +19,11 @@ export function Faq() {
       <Accordion type="single" collapsible className="w-full">
         {faqData.items.map((item) => (
           <AccordionItem key={item.id} value={item.id}>
-            <AccordionTrigger className="text-left">
-              {item.question}
+            <AccordionTrigger>
+              <span className="text-left">{item.question}</span>
             </AccordionTrigger>
-            <AccordionContent className="text-muted-foreground">
-              {item.answer}
+            <AccordionContent>
+              <p className="text-muted-foreground">{item.answer}</p>
             </AccordionContent>
           </AccordionItem>
         ))}

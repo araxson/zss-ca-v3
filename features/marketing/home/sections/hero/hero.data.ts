@@ -6,6 +6,7 @@ export const heroData: HeroData = {
   description:
     'Subscribe to a website plan designed for your business. We build, deploy, and maintain your site—so you can focus on growing.',
   tagline: 'Predictable pricing. Professional results.',
+  ctaAriaLabel: 'Hero actions',
   cta: {
     primary: {
       label: 'View Pricing',

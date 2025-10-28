@@ -18,6 +18,7 @@ export interface ContactOverviewData {
   channels: ContactChannel[]
   office: ContactOfficeDetails
   cta: {
+    ariaLabel?: string
     label: string
     href: string
   }

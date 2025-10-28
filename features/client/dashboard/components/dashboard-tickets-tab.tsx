@@ -1,47 +1,26 @@
+'use client'
+
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyTitle,
-} from '@/components/ui/empty'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
+  ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
 import type { Database } from '@/lib/types/database.types'
 import { ROUTES } from '@/lib/constants/routes'
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import { Bar, BarChart, XAxis, YAxis } from 'recharts'
+import { DashboardTicketsStats } from './dashboard-tickets-stats'
+import { DashboardTicketsTable } from './dashboard-tickets-table'
 
 type SupportTicket = Database['public']['Tables']['support_ticket']['Row']
 
@@ -56,6 +35,33 @@ export function DashboardTicketsTab({
   ticketChartData,
   openTicketsCount,
 }: DashboardTicketsTabProps) {
+  const [query, setQuery] = useState('')
+
+  const trimmedQuery = query.trim().toLowerCase()
+  const filteredTickets = useMemo(() => {
+    if (!trimmedQuery) return tickets
+    return tickets.filter((ticket) => {
+      const values = [ticket.subject, ticket.status, ticket.priority]
+      return values.some((value) => value.toLowerCase().includes(trimmedQuery))
+    })
+  }, [tickets, trimmedQuery])
+  const hasQuery = trimmedQuery.length > 0
+  const ticketsToRender = hasQuery ? filteredTickets : tickets
+  const chartDataToRender = useMemo(() => {
+    if (!hasQuery) return ticketChartData
+    const grouped = filteredTickets.reduce<Record<string, number>>((acc, ticket) => {
+      const label = ticket.status.replace('_', ' ')
+      acc[label] = (acc[label] ?? 0) + 1
+      return acc
+    }, {})
+    return Object.entries(grouped).map(([name, count]) => ({ name, count }))
+  }, [filteredTickets, hasQuery, ticketChartData])
+  const filteredOpenTicketsCount = useMemo(
+    () => filteredTickets.filter((ticket) => ticket.status === 'open').length,
+    [filteredTickets],
+  )
+  const hasResults = ticketsToRender.length > 0
+
   if (tickets.length === 0) {
     return (
       <Empty>
@@ -74,146 +80,120 @@ export function DashboardTicketsTab({
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Ticket Status</CardTitle>
-            <CardDescription>Distribution of your tickets by status</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {ticketChartData.length > 0 ? (
-              <ChartContainer
-                config={{
-                  count: {
-                    label: 'Tickets',
-                    color: 'hsl(var(--chart-3))',
-                  },
-                }}
-                className="h-52"
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={ticketChartData}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <ChartTooltip />
-                    <Bar dataKey="count" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            ) : (
-              <Empty className="h-52">
-                <EmptyHeader>
-                  <EmptyTitle>No ticket data</EmptyTitle>
-                  <EmptyDescription>Ticket statistics will appear here</EmptyDescription>
-                </EmptyHeader>
-              </Empty>
-            )}
-          </CardContent>
-        </Card>
+      <FieldGroup>
+        <Field orientation="responsive">
+          <FieldLabel htmlFor="client-ticket-search">Search tickets</FieldLabel>
+          <FieldContent>
+            <InputGroup>
+              <InputGroupInput
+                id="client-ticket-search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search by subject, status, or priority"
+                aria-label="Search support tickets"
+              />
+              <InputGroupAddon align="inline-start" aria-hidden="true">
+                <Search className="size-4" />
+              </InputGroupAddon>
+              <InputGroupAddon align="inline-end">
+                <InputGroupText aria-live="polite">
+                  {ticketsToRender.length} results
+                </InputGroupText>
+                {hasQuery ? (
+                  <InputGroupButton
+                    type="button"
+                    onClick={() => setQuery('')}
+                    aria-label="Clear search"
+                  >
+                    <X className="size-4" />
+                  </InputGroupButton>
+                ) : null}
+              </InputGroupAddon>
+            </InputGroup>
+            <FieldDescription>
+              Filter your support history. Charts and summaries update with your search.
+            </FieldDescription>
+          </FieldContent>
+        </Field>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Support Summary</CardTitle>
-            <CardDescription>Your support request overview</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Item>
+        <ButtonGroup aria-label="Support actions">
+          <Button asChild>
+            <Link href={ROUTES.CLIENT_SUPPORT}>Manage Tickets</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href={ROUTES.CLIENT_SUPPORT_NEW}>Create Ticket</Link>
+          </Button>
+        </ButtonGroup>
+      </FieldGroup>
+
+      {hasResults ? (
+        <>
+          <div className="grid gap-4 md:grid-cols-2">
+            <Item variant="outline">
+              <ItemHeader>
+                <ItemTitle>Ticket Status</ItemTitle>
+                <ItemDescription>Distribution of your tickets by status</ItemDescription>
+              </ItemHeader>
               <ItemContent>
-                <ItemTitle>Total Tickets</ItemTitle>
-                <ItemDescription>All support requests</ItemDescription>
+                {chartDataToRender.length > 0 ? (
+                  <ChartContainer
+                    config={{
+                      count: {
+                        label: 'Tickets',
+                        color: 'hsl(var(--chart-3))',
+                      },
+                    }}
+                    className="min-h-[208px]"
+                  >
+                    <BarChart data={chartDataToRender}>
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <Bar dataKey="count" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ChartContainer>
+                ) : (
+                  <Empty className="h-52">
+                    <EmptyHeader>
+                      <EmptyTitle>No ticket data</EmptyTitle>
+                      <EmptyDescription>Ticket statistics will appear here</EmptyDescription>
+                    </EmptyHeader>
+                  </Empty>
+                )}
               </ItemContent>
-              <ItemActions>
-                <Badge variant="secondary" className="text-lg px-3 py-1">
-                  {tickets.length}
-                </Badge>
-              </ItemActions>
             </Item>
-            <Separator />
-            <Item>
-              <ItemContent>
-                <ItemTitle>Open Tickets</ItemTitle>
-                <ItemDescription>Awaiting response</ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Badge
-                  variant={openTicketsCount > 0 ? 'destructive' : 'secondary'}
-                  className="text-lg px-3 py-1"
-                >
-                  {openTicketsCount}
-                </Badge>
-              </ItemActions>
-            </Item>
-            <Separator />
-            <Button asChild className="w-full">
-              <Link href={ROUTES.CLIENT_SUPPORT}>View All Tickets</Link>
+
+            <DashboardTicketsStats
+              totalTickets={ticketsToRender.length}
+              openTicketsCount={hasQuery ? filteredOpenTicketsCount : openTicketsCount}
+            />
+          </div>
+
+          <Item variant="outline">
+            <ItemHeader>
+              <ItemTitle>Recent Support Tickets</ItemTitle>
+              <ItemDescription>Your latest support requests</ItemDescription>
+            </ItemHeader>
+            <ItemContent>
+              <DashboardTicketsTable tickets={ticketsToRender} />
+            </ItemContent>
+          </Item>
+        </>
+      ) : (
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>No matching tickets</EmptyTitle>
+            <EmptyDescription>
+              Adjust your search terms or clear the filter to view your support requests
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button type="button" variant="outline" onClick={() => setQuery('')}>
+              Clear filter
             </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Support Tickets</CardTitle>
-          <CardDescription>Your latest support requests</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-[400px]">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Subject</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Priority</TableHead>
-                  <TableHead>Created</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tickets.map((ticket) => (
-                  <TableRow key={ticket.id}>
-                    <TableCell className="font-medium">
-                      <Link
-                        href={`${ROUTES.CLIENT_SUPPORT}/${ticket.id}`}
-                        className="hover:underline"
-                      >
-                        {ticket.subject}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          ticket.status === 'open'
-                            ? 'destructive'
-                            : ticket.status === 'in_progress'
-                              ? 'default'
-                              : 'secondary'
-                        }
-                      >
-                        {ticket.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          ticket.priority === 'urgent'
-                            ? 'destructive'
-                            : ticket.priority === 'high'
-                              ? 'default'
-                              : 'secondary'
-                        }
-                      >
-                        {ticket.priority}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {new Date(ticket.created_at).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
-        </CardContent>
-      </Card>
+          </EmptyContent>
+        </Empty>
+      )}
     </>
   )
 }

@@ -1,10 +1,12 @@
 import { formatDistanceToNow } from 'date-fns'
+import { ScrollText } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import {
   Empty,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
+  EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
 import {
@@ -62,6 +64,9 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
     return (
       <Empty className="border border-dashed">
         <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <ScrollText />
+          </EmptyMedia>
           <EmptyTitle>No audit activity yet</EmptyTitle>
           <EmptyDescription>Actions will appear here once the team starts making changes.</EmptyDescription>
         </EmptyHeader>
@@ -79,7 +84,7 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
         </ItemDescription>
       </ItemHeader>
       <ItemContent className="p-0">
-        <ScrollArea className="rounded-md">
+        <ScrollArea className="rounded-md border" aria-label="Audit log table">
           <Table>
             <TableCaption>Chronological record of admin actions across the platform.</TableCaption>
             <TableHeader>
@@ -128,8 +133,12 @@ export function AuditLogTable({ logs }: AuditLogTableProps) {
                   {log.change_summary && typeof log.change_summary === 'object' && (
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <Eye className="h-4 w-4 mr-2" />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          aria-label={`View change summary for action ${log.action}`}
+                        >
+                          <Eye className="mr-2 size-4" />
                           View Details
                         </Button>
                       </PopoverTrigger>

@@ -93,7 +93,12 @@ export function SiteDetailCard({ site }: SiteDetailCardProps) {
               </ItemContent>
               <ItemActions>
                 <Button asChild variant="link" size="sm">
-                  <Link href={`/admin/clients/${site.profile.id}`}>Open client</Link>
+                  <Link
+                    href={`/admin/clients/${site.profile.id}`}
+                    aria-label={`Open client record for ${site.profile.contact_name || site.profile.company_name || 'client'}`}
+                  >
+                    Open client
+                  </Link>
                 </Button>
               </ItemActions>
             </Item>
@@ -139,6 +144,7 @@ export function SiteDetailCard({ site }: SiteDetailCardProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-primary hover:underline"
+                  aria-label={`Open deployment for ${site.site_name}`}
                 >
                   {site.deployment_url}
                 </a>

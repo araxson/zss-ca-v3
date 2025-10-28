@@ -35,7 +35,7 @@ Always make targeted, specific changes.
 ```tsx
 // ✅ CORRECT
 import { Suspense } from 'react'
-import { DashboardFeature } from '@/features/business/dashboard'
+import { DashboardFeature } from '@/features/client/dashboard'
 
 export default async function Page() {
   return (
@@ -59,7 +59,7 @@ const { data: { user } } = await supabase.auth.getUser()
 if (!user) throw new Error('Unauthorized')
 ```
 
-### Pattern 1: Portal Features (admin, business, staff, customer)
+### Pattern 1: Portal Features (admin, client)
 
 ```
 features/{portal}/[feature]/
@@ -320,4 +320,3 @@ Specialized agents in `.claude/agents/`:
 - TypeScript 5.x (strict mode)
 - Supabase 2.47.15
 - npm
-

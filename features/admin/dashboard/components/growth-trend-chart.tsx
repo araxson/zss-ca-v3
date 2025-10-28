@@ -1,13 +1,13 @@
 'use client'
 
-import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
 import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemHeader,
-  ItemTitle,
-} from '@/components/ui/item'
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
 import {
   AreaChart,
   Area,
@@ -33,12 +33,12 @@ export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTr
   ]
 
   return (
-    <Item variant="outline" className="flex h-full flex-col">
-      <ItemHeader className="gap-1">
-        <ItemTitle>Growth Trend</ItemTitle>
-        <ItemDescription>Client and subscription growth over time</ItemDescription>
-      </ItemHeader>
-      <ItemContent>
+    <Card aria-label="Growth trends chart">
+      <CardHeader>
+        <CardTitle>Growth Trend</CardTitle>
+        <CardDescription>Client and subscription growth over time</CardDescription>
+      </CardHeader>
+      <CardContent>
         <ChartContainer
           config={{
             clients: {
@@ -56,12 +56,12 @@ export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTr
             <AreaChart data={trendData}>
               <defs>
                 <linearGradient id="colorClients" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorSubscriptions" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis dataKey="month" />
@@ -83,7 +83,7 @@ export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTr
             </AreaChart>
           </ResponsiveContainer>
         </ChartContainer>
-      </ItemContent>
-    </Item>
+      </CardContent>
+    </Card>
   )
 }

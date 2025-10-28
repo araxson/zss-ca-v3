@@ -74,7 +74,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
               <div className="space-y-2">
                 <Item variant="outline" size="sm">
                   <ItemMedia>
-                    <Check className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Check className="size-4 text-muted-foreground" aria-hidden="true" />
                   </ItemMedia>
                   <ItemContent>
                     <ItemTitle>
@@ -85,7 +85,7 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
                 </Item>
                 <Item variant="outline" size="sm">
                   <ItemMedia>
-                    <Check className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <Check className="size-4 text-muted-foreground" aria-hidden="true" />
                   </ItemMedia>
                   <ItemContent>
                     <ItemTitle>

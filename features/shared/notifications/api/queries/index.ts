@@ -5,4 +5,4 @@ export {
   getAllNotificationsAdmin,
   type Notification,
   type NotificationWithProfile,
-} from '../queries'
+} from './notifications'

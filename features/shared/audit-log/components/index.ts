@@ -1,2 +1,5 @@
 export { AuditLogTable } from './audit-log-table'
 export { CreateAuditLogForm } from './create-audit-log-form'
+export { CreateAuditLogFormContextFields } from './create-audit-log-form-context-fields'
+export { CreateAuditLogFormResourceFields } from './create-audit-log-form-resource-fields'
+export { CreateAuditLogFormAdvancedSection } from './create-audit-log-form-advanced-section'

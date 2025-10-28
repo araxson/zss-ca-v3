@@ -66,8 +66,12 @@ export function DeleteClientButton({ clientId, clientName }: DeleteClientButtonP
         <HoverCard>
           <HoverCardTrigger asChild>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" disabled={isDeleting}>
-                <Trash2 className="mr-2 h-4 w-4" />
+              <Button
+                variant="destructive"
+                disabled={isDeleting}
+                aria-label={`Delete ${clientName}`}
+              >
+                <Trash2 className="mr-2 size-4" />
                 Delete Client
               </Button>
             </AlertDialogTrigger>

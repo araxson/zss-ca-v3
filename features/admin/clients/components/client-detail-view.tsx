@@ -50,7 +50,7 @@ export function ClientDetailView({ client }: ClientDetailViewProps) {
         <EmptyContent className="flex justify-center">
           <Button asChild>
             <Link href={ROUTES.ADMIN_CLIENTS}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="mr-2 size-4" />
               Back to clients
             </Link>
           </Button>
@@ -93,7 +93,11 @@ export function ClientDetailView({ client }: ClientDetailViewProps) {
           <ItemTitle>{client.contact_name || 'Client Details'}</ItemTitle>
           <ItemDescription>
             {client.contact_email ? (
-              <a className="hover:text-primary" href={`mailto:${client.contact_email}`}>
+              <a
+                className="hover:text-primary"
+                href={`mailto:${client.contact_email}`}
+                aria-label={`Email ${client.contact_name || client.company_name || 'client'}`}
+              >
                 {client.contact_email}
               </a>
             ) : (
@@ -119,7 +123,7 @@ export function ClientDetailView({ client }: ClientDetailViewProps) {
           )}
           <Button asChild variant="outline" size="sm">
             <Link href={ROUTES.ADMIN_CLIENTS}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="mr-2 size-4" />
               Back
             </Link>
           </Button>

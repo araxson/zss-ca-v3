@@ -1,4 +1,6 @@
 export { SiteCard } from './site-card'
 export { SiteDetail } from './site-detail'
+export { SiteDetailFeature } from './site-detail-feature'
 export { SiteDetailOverview } from './site-detail-overview'
 export { SiteDetailInfo } from './site-detail-info'
+export { SitesListFeature } from './sites-list-feature'

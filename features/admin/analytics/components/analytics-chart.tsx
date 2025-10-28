@@ -1,10 +1,8 @@
 import { format } from 'date-fns'
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
-  ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
 import {
@@ -42,11 +40,11 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
 
   if (analytics.length === 0) {
     return (
-      <Item variant="outline" className="h-full flex flex-col">
-        <ItemHeader>
+      <Item variant="outline">
+        <ItemContent>
           <ItemTitle>Analytics Data</ItemTitle>
           <ItemDescription>No analytics data available yet</ItemDescription>
-        </ItemHeader>
+        </ItemContent>
         <ItemContent>
           <Empty className="h-48">
             <EmptyHeader>
@@ -62,15 +60,15 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
   }
 
   return (
-    <Item variant="outline" className="h-full flex flex-col">
-      <ItemHeader>
+    <Item variant="outline">
+      <ItemContent>
         <ItemTitle>Daily Metrics</ItemTitle>
         <ItemDescription>
           Detailed breakdown of site performance over time
         </ItemDescription>
-      </ItemHeader>
+      </ItemContent>
       <ItemContent>
-        <ScrollArea className="h-96 rounded-md border">
+        <ScrollArea className="h-96 rounded-md border" aria-label="Daily analytics metrics table">
           <Table className="min-w-[500px]">
             <TableCaption>Daily engagement metrics for client sites.</TableCaption>
             <TableHeader>
@@ -98,11 +96,9 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
           </Table>
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
-        <Item className="mt-4 flex items-center justify-between border-0 px-0">
-          <ItemTitle className="text-sm font-medium text-muted-foreground">
-            Totals
-          </ItemTitle>
-          <ItemActions className="gap-2">
+        <div className="mt-4 flex items-center justify-between text-muted-foreground">
+          <span className="text-sm font-medium">Totals</span>
+          <div className="flex gap-4">
             <span className="text-xs text-muted-foreground">
               Page Views: {totals.pageViews.toLocaleString()}
             </span>
@@ -112,8 +108,8 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
             <span className="text-xs text-muted-foreground">
               Conversions: {totals.conversions.toLocaleString()}
             </span>
-          </ItemActions>
-        </Item>
+          </div>
+        </div>
       </ItemContent>
     </Item>
   )

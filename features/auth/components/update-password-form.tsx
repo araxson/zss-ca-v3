@@ -9,7 +9,7 @@ import { z } from 'zod'
 import { Mail } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
-import { Form, FormField, FormItem } from '@/components/ui/form'
+import { Form } from '@/components/ui/form'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { FieldDescription, FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
@@ -125,7 +125,7 @@ export function UpdatePasswordForm() {
           <FieldGroup className="space-y-4">
             <Item variant="outline" size="sm">
               <ItemMedia>
-                <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                <Mail className="size-4 text-muted-foreground" aria-hidden="true" />
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>{email}</ItemTitle>

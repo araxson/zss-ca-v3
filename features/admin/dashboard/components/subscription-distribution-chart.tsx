@@ -1,19 +1,19 @@
 'use client'
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
 import {
   Empty,
+  EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-  EmptyDescription,
 } from '@/components/ui/empty'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemHeader,
-  ItemTitle,
-} from '@/components/ui/item'
 import {
   PieChart,
   Pie,
@@ -40,12 +40,12 @@ export function SubscriptionDistributionChart({ planDistribution }: Subscription
   }))
 
   return (
-    <Item variant="outline" className="flex h-full flex-col">
-      <ItemHeader className="gap-1">
-        <ItemTitle>Subscription Distribution</ItemTitle>
-        <ItemDescription>Active subscriptions by plan</ItemDescription>
-      </ItemHeader>
-      <ItemContent>
+    <Card aria-label="Subscription distribution chart">
+      <CardHeader>
+        <CardTitle>Subscription Distribution</CardTitle>
+        <CardDescription>Active subscriptions by plan</CardDescription>
+      </CardHeader>
+      <CardContent>
         {planChartData.length > 0 ? (
           <ChartContainer
             config={{
@@ -84,7 +84,7 @@ export function SubscriptionDistributionChart({ planDistribution }: Subscription
             </EmptyHeader>
           </Empty>
         )}
-      </ItemContent>
-    </Item>
+      </CardContent>
+    </Card>
   )
 }

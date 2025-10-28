@@ -1,20 +1,19 @@
 'use client'
 
 import * as React from 'react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Button } from '@/components/ui/button'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSet } from '@/components/ui/field'
-import { Item, ItemActions, ItemContent, ItemDescription, ItemHeader, ItemMedia, ItemTitle } from '@/components/ui/item'
-import { ButtonGroup } from '@/components/ui/button-group'
-import { Loader2, Mail } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { FieldDescription, FieldGroup } from '@/components/ui/field'
 import { ROUTES } from '@/lib/constants/routes'
+import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
+import { OTPFormHeader } from './otp-form-header'
+import { OTPFormActions } from './otp-form-actions'
 
 const otpSchema = z.object({
   otp: z.string().min(6, {
@@ -37,9 +36,8 @@ export function OTPForm({
   onVerify,
   onResend,
   title = 'Enter Verification Code',
-  description = 'We\'ve sent a 6-digit verification code to your email.',
+  description = "We've sent a 6-digit verification code to your email.",
 }: OTPFormProps) {
-  const router = useRouter()
   const [isLoading, setIsLoading] = React.useState(false)
   const [isResending, setIsResending] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
@@ -57,9 +55,9 @@ export function OTPForm({
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000)
       return () => clearTimeout(timer)
-    } else {
-      setCanResend(true)
     }
+
+    setCanResend(true)
   }, [resendTimer])
 
   async function onSubmit(data: z.infer<typeof otpSchema>) {
@@ -73,14 +71,6 @@ export function OTPForm({
         setError(result.message || 'Invalid verification code')
         form.reset()
         return
-      }
-
-      if (verificationType === 'password_reset') {
-        router.push(`${ROUTES.RESET_PASSWORD}?verified=true&email=${email}`)
-      } else if (verificationType === 'email_confirmation') {
-        router.push(ROUTES.CLIENT_DASHBOARD)
-      } else {
-        router.push(ROUTES.CLIENT_DASHBOARD)
       }
     } catch (_err) {
       setError('An error occurred. Please try again.')
@@ -109,119 +99,84 @@ export function OTPForm({
   }
 
   return (
-    <Item variant="outline" className="w-full max-w-md mx-auto flex flex-col gap-4 p-6">
-      <ItemHeader className="space-y-1">
-        <ItemTitle>{title}</ItemTitle>
-        <ItemDescription>{description}</ItemDescription>
-      </ItemHeader>
-      <ItemContent>
-        <FieldSet className="mb-6 space-y-3">
-          <FieldGroup>
-            <Field>
-              <FieldLabel>Verification email</FieldLabel>
-              <Item variant="outline" size="sm">
-                <ItemMedia>
-                  <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                </ItemMedia>
-                <ItemContent>
-                  <ItemTitle>{email}</ItemTitle>
-                  <ItemDescription>
-                    {verificationType.replace('_', ' ')}
-                  </ItemDescription>
-                </ItemContent>
-                <ItemActions>
-                  <Badge variant="secondary">{verificationType.replace('_', ' ')}</Badge>
-                </ItemActions>
-              </Item>
-              <FieldDescription>
-                Enter the code we sent to this address to continue.
-              </FieldDescription>
-            </Field>
-          </FieldGroup>
-        </FieldSet>
-
-        {error && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="otp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>One-Time Password</FormLabel>
-                  <FormControl>
-                    <InputOTP maxLength={6} {...field} disabled={isLoading}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                      </InputOTPGroup>
-                      <InputOTPSeparator />
-                      <InputOTPGroup>
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  </FormControl>
-                  <FormDescription>
-                    Please enter the 6-digit code sent to your email
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+    <div className="flex flex-col gap-6">
+      <Card className="overflow-hidden border">
+        <CardContent className="grid p-0 md:grid-cols-2">
+          <div className="flex flex-col gap-6 p-6 md:p-8">
+            <OTPFormHeader
+              title={title}
+              description={description}
+              email={email}
+              verificationType={verificationType}
             />
 
-            <div className="space-y-4">
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  'Verify Code'
-                )}
-              </Button>
+            {error ? (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            ) : null}
 
-              <ButtonGroup className="justify-center">
-                {onResend ? (
-                  <Button
-                    type="button"
-                    variant="link"
-                    onClick={handleResend}
-                    disabled={!canResend || isResending}
-                    className="text-sm"
-                  >
-                    {isResending ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Resending...
-                      </>
-                    ) : (
-                      'Resend Code'
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <FieldGroup className="gap-4">
+                  <FormField
+                    control={form.control}
+                    name="otp"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormFieldLayout
+                          label="One-Time Password"
+                          description="Enter the 6-digit code sent to your email"
+                        >
+                          <FormControl>
+                            <InputOTP maxLength={6} disabled={isLoading} {...field}>
+                              <InputOTPGroup>
+                                <InputOTPSlot index={0} />
+                                <InputOTPSlot index={1} />
+                                <InputOTPSlot index={2} />
+                              </InputOTPGroup>
+                              <InputOTPSeparator />
+                              <InputOTPGroup>
+                                <InputOTPSlot index={3} />
+                                <InputOTPSlot index={4} />
+                                <InputOTPSlot index={5} />
+                              </InputOTPGroup>
+                            </InputOTP>
+                          </FormControl>
+                        </FormFieldLayout>
+                        <FormMessage />
+                      </FormItem>
                     )}
-                  </Button>
-                ) : null}
-                <Button type="button" variant="link" onClick={() => router.back()} className="text-sm">
-                  Go Back
-                </Button>
-              </ButtonGroup>
+                  />
+                </FieldGroup>
 
-              {onResend && !canResend ? (
-                <p className="text-center text-sm text-muted-foreground">
-                  Resend code in {resendTimer} seconds
-                </p>
-              ) : null}
+                <OTPFormActions
+                  isLoading={isLoading}
+                  isResending={isResending}
+                  canResend={canResend}
+                  resendTimer={resendTimer}
+                  onResend={onResend ? handleResend : undefined}
+                />
+              </form>
+            </Form>
+          </div>
+
+          <div className="bg-muted relative hidden min-h-[320px] md:flex items-center justify-center p-8 text-center">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-lg font-semibold">Secure verification</h2>
+              <p className="text-muted-foreground text-sm text-balance">
+                Protect access to your sites and tickets with a quick one-time code delivered to your inbox.
+              </p>
             </div>
-          </form>
-        </Form>
-      </ItemContent>
-    </Item>
+          </div>
+        </CardContent>
+      </Card>
+
+      <p className="text-center text-sm text-muted-foreground">
+        By continuing you agree to our{' '}
+        <Link href={ROUTES.PRIVACY}>Privacy Policy</Link>{' '}and{' '}
+        <Link href={ROUTES.TERMS}>Terms of Service</Link>.
+      </p>
+    </div>
   )
 }

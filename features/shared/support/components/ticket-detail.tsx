@@ -61,6 +61,13 @@ function getPriorityVariant(priority: string) {
   }
 }
 
+function formatCategoryLabel(category: string) {
+  return category
+    .split('_')
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ')
+}
+
 export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }: TicketDetailProps) {
   const createdAt = new Date(ticket.created_at)
   const canReply = ticket.status !== 'closed'
@@ -91,9 +98,7 @@ export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }:
           <FieldGroup className="space-y-4">
             <Field>
               <FieldLabel>Category</FieldLabel>
-              <FieldDescription className="capitalize">
-                {ticket.category.replace('_', ' ')}
-              </FieldDescription>
+              <FieldDescription>{formatCategoryLabel(ticket.category)}</FieldDescription>
             </Field>
             <Field>
               <FieldLabel>Message</FieldLabel>
@@ -115,15 +120,13 @@ export function TicketDetail({ ticket, currentUserId: _currentUserId, isAdmin }:
         <Collapsible defaultOpen className="space-y-4">
           <Item variant="default" className="items-center justify-between gap-2 border-0 p-0">
             <ItemContent className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" aria-hidden="true" />
-              <ItemTitle className="text-base font-semibold">
-                Replies ({ticket.replies.length})
-              </ItemTitle>
+              <MessageSquare className="size-5" aria-hidden="true" />
+              <ItemTitle>Replies ({ticket.replies.length})</ItemTitle>
             </ItemContent>
             <ItemActions>
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <ChevronDown className="h-4 w-4" aria-hidden="true" />
+                <Button variant="ghost" size="sm" aria-label="Toggle replies">
+                  <ChevronDown className="size-4" aria-hidden="true" />
                   <span className="sr-only">Toggle replies</span>
                 </Button>
               </CollapsibleTrigger>

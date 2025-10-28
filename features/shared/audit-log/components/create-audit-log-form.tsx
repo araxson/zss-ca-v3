@@ -6,43 +6,15 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { createAuditLogSchema, type CreateAuditLogInput } from '../schema'
 import { createAuditLogAction } from '../api/mutations'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { ChevronDown } from 'lucide-react'
-import {
-  FieldDescription,
-  FieldGroup,
-  FieldLegend,
-  FieldSet,
-} from '@/components/ui/field'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from '@/components/ui/item'
-import { commonTables } from './create-audit-log-form-data'
+import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
+import { CreateAuditLogFormContextFields } from './create-audit-log-form-context-fields'
+import { CreateAuditLogFormResourceFields } from './create-audit-log-form-resource-fields'
+import { CreateAuditLogFormAdvancedSection } from './create-audit-log-form-advanced-section'
 
 type CreateAuditLogFormProps = {
   clients?: Array<{
@@ -77,7 +49,6 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
     setIsSubmitting(true)
 
     try {
-      // Parse change_summary JSON
       let parsedSummary = {}
       try {
         parsedSummary = JSON.parse(changeSummary)
@@ -103,7 +74,6 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
       setChangeSummary('{}')
       setIsSubmitting(false)
 
-      // Redirect after 2 seconds
       setTimeout(() => {
         router.refresh()
       }, 1500)
@@ -138,158 +108,29 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
 
       <Form {...form}>
         <Item variant="outline" className="p-6">
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6"
-          >
-          <FieldSet className="space-y-4">
-            <FieldLegend>Context</FieldLegend>
-            <FieldGroup className="space-y-4">
-              {clients.length > 0 && (
-                <FormField
-                  control={form.control}
-                  name="profile_id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Related User (Optional)</FormLabel>
-                      <Select
-                        onValueChange={(value) => field.onChange(value === 'none' ? null : value)}
-                        value={field.value ?? 'none'}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a user (optional)" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {clients.map((client) => (
-                            <SelectItem key={client.id} value={client.id}>
-                              {client.contact_name || client.contact_email}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <CreateAuditLogFormContextFields control={form.control} clients={clients} />
+            <CreateAuditLogFormResourceFields control={form.control} />
+            <CreateAuditLogFormAdvancedSection
+              isOpen={isAdvancedOpen}
+              onOpenChange={setIsAdvancedOpen}
+              changeSummary={changeSummary}
+              onChangeSummaryChange={setChangeSummary}
+            />
 
-              <FormField
-                control={form.control}
-                name="action"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Action</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., manual_update, external_import" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Describe the action taken (e.g., manual_update, data_correction)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </FieldGroup>
-          </FieldSet>
-
-          <FieldSet className="space-y-4">
-            <FieldLegend>Target resource</FieldLegend>
-            <FieldGroup className="space-y-4">
-              <FormField
-                control={form.control}
-                name="resource_table"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Resource Table</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select table" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {commonTables.map((table) => (
-                          <SelectItem key={table} value={table}>
-                            {table}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>The database table affected</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="resource_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Resource ID (Optional)</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="UUID or record ID"
-                        {...field}
-                        value={field.value || ''}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      The specific record ID that was modified
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </FieldGroup>
-          </FieldSet>
-
-          <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
-            <CollapsibleTrigger asChild>
+            <ButtonGroup>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? <Spinner /> : 'Create Audit Log'}
+              </Button>
               <Button
                 type="button"
                 variant="outline"
-                className="w-full justify-between"
+                onClick={() => router.back()}
+                disabled={isSubmitting}
               >
-                <span>Advanced: Change Summary (Optional)</span>
-                <ChevronDown
-                  className={`h-4 w-4 transition-transform ${
-                    isAdvancedOpen ? 'rotate-180' : ''
-                  }`}
-                />
+                Cancel
               </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-2 pt-4">
-              <FormLabel>Change Summary (JSON)</FormLabel>
-              <Textarea
-                value={changeSummary}
-                onChange={(e) => setChangeSummary(e.target.value)}
-                placeholder='{"before": {...}, "after": {...}, "reason": "..."}'
-                rows={6}
-                className="font-mono text-sm"
-              />
-              <FormDescription>
-                JSON object describing what changed (before/after values, reason, etc.)
-              </FormDescription>
-            </CollapsibleContent>
-          </Collapsible>
-
-          <ButtonGroup>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? <Spinner /> : 'Create Audit Log'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-          </ButtonGroup>
+            </ButtonGroup>
           </form>
         </Item>
       </Form>

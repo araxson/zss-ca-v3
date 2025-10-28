@@ -2,13 +2,7 @@
 
 import { MapPin } from 'lucide-react'
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   InputGroup,
@@ -16,6 +10,7 @@ import {
   InputGroupInput,
 } from '@/components/ui/input-group'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
+import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 interface ProfileAddressFieldsProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: any
@@ -31,15 +26,16 @@ export function ProfileAddressFields({ form }: ProfileAddressFieldsProps) {
           name="address_line1"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Address Line 1</FormLabel>
-              <FormControl>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <MapPin className="size-4" />
-                  </InputGroupAddon>
-                  <InputGroupInput {...field} placeholder="123 Main St" />
-                </InputGroup>
-              </FormControl>
+              <FormFieldLayout label="Address Line 1">
+                <FormControl>
+                  <InputGroup>
+                    <InputGroupInput {...field} placeholder="123 Main St" />
+                    <InputGroupAddon align="inline-start" aria-hidden="true">
+                      <MapPin className="size-4" />
+                    </InputGroupAddon>
+                  </InputGroup>
+                </FormControl>
+              </FormFieldLayout>
               <FormMessage />
             </FormItem>
           )}
@@ -50,10 +46,11 @@ export function ProfileAddressFields({ form }: ProfileAddressFieldsProps) {
           name="address_line2"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Address Line 2</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Suite 100" />
-              </FormControl>
+              <FormFieldLayout label="Address Line 2">
+                <FormControl>
+                  <Input {...field} placeholder="Suite 100" />
+                </FormControl>
+              </FormFieldLayout>
               <FormMessage />
             </FormItem>
           )}
@@ -65,10 +62,11 @@ export function ProfileAddressFields({ form }: ProfileAddressFieldsProps) {
             name="city"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>City</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Toronto" />
-                </FormControl>
+                <FormFieldLayout label="City">
+                  <FormControl>
+                    <Input {...field} placeholder="Toronto" />
+                  </FormControl>
+                </FormFieldLayout>
                 <FormMessage />
               </FormItem>
             )}
@@ -79,10 +77,11 @@ export function ProfileAddressFields({ form }: ProfileAddressFieldsProps) {
             name="region"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Province/State</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="ON" />
-                </FormControl>
+                <FormFieldLayout label="Province/State">
+                  <FormControl>
+                    <Input {...field} placeholder="ON" />
+                  </FormControl>
+                </FormFieldLayout>
                 <FormMessage />
               </FormItem>
             )}
@@ -95,10 +94,11 @@ export function ProfileAddressFields({ form }: ProfileAddressFieldsProps) {
             name="postal_code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Postal Code</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="M5H 2N2" />
-                </FormControl>
+                <FormFieldLayout label="Postal Code">
+                  <FormControl>
+                    <Input {...field} placeholder="M5H 2N2" />
+                  </FormControl>
+                </FormFieldLayout>
                 <FormMessage />
               </FormItem>
             )}
@@ -109,10 +109,11 @@ export function ProfileAddressFields({ form }: ProfileAddressFieldsProps) {
             name="country"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Canada" />
-                </FormControl>
+                <FormFieldLayout label="Country">
+                  <FormControl>
+                    <Input {...field} placeholder="Canada" />
+                  </FormControl>
+                </FormFieldLayout>
                 <FormMessage />
               </FormItem>
             )}

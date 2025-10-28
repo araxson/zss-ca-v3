@@ -1,12 +1,4 @@
-// Client-safe exports
-export {
-  CreateTicketForm,
-  ReplyForm,
-  TicketDetail,
-  TicketList,
-  UpdateStatusButton,
-} from './components'
-
+export { AdminTicketDetailFeature, CreateTicketForm, NewTicketFeature, ReplyForm, SupportListFeature, TicketDetail, TicketDetailFeature, TicketList, UpdateStatusButton } from './components'
 export {
   createTicketSchema,
   createReplySchema,
@@ -17,6 +9,6 @@ export {
   type UpdateTicketStatusInput,
   type ReplyToTicketInput,
 } from './schema'
-
-// Server-only types - safe to export as types
+export { getUserTickets, getAllTickets, getTicketById } from './api/queries'
+export { createTicketAction, replyToTicketAction, updateTicketStatusAction } from './api/mutations'
 export type { TicketWithProfile, ReplyWithProfile, TicketWithReplies } from './api/queries'

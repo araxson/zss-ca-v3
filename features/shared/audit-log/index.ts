@@ -1,6 +1,5 @@
-// Client-safe exports
 export { AuditLogTable, CreateAuditLogForm } from './components'
 export { createAuditLogSchema, type CreateAuditLogInput } from './schema'
-
-// Server-only types - safe to export as types
+export { getAuditLogs, getAuditLogsByResource, getAuditLogsByUser } from './api/queries'
+export { createAuditLogAction } from './api/mutations'
 export type { AuditLog, AuditLogWithProfiles } from './api/queries'

@@ -9,6 +9,7 @@ export const resourcesListData: ResourcesListData = {
       description: 'Keep stakeholders aligned with a launch plan covering QA, tracking, and GTM tasks.',
       type: 'Template',
       link: '#launch-checklist',
+      linkLabel: 'View launch checklist resource',
     },
     {
       id: 'conversion-benchmarks',
@@ -16,6 +17,7 @@ export const resourcesListData: ResourcesListData = {
       description: 'Benchmark your landing page and lead magnet performance against industry peers.',
       type: 'Benchmark',
       link: '#conversion-benchmarks',
+      linkLabel: 'View conversion benchmarks resource',
     },
     {
       id: 'seo-playbook',
@@ -23,6 +25,7 @@ export const resourcesListData: ResourcesListData = {
       description: 'Step-by-step guide to launching localized landing pages and schema for service businesses.',
       type: 'Guide',
       link: '#seo-playbook',
+      linkLabel: 'View local SEO playbook resource',
     },
   ],
 }

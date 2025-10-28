@@ -1,3 +1,3 @@
 // Client Dashboard - Public API
 export { getClientDashboardData } from './api/queries'
-export { DashboardOverview } from './components'
+export { DashboardFeature, DashboardOverview } from './components'

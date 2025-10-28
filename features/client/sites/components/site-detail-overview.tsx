@@ -9,10 +9,12 @@ import {
 } from '@/components/ui/item'
 import {
   Field,
+  FieldContent,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSet,
+  FieldTitle,
 } from '@/components/ui/field'
 import { ExternalLink } from 'lucide-react'
 import type { Database } from '@/lib/types/database.types'
@@ -88,40 +90,48 @@ export function SiteDetailOverview({
           <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
               <FieldLabel>Plan</FieldLabel>
-              <FieldDescription>
-                {plan?.name || 'No plan assigned'}
-              </FieldDescription>
+              <FieldContent>
+                <FieldTitle>{plan?.name || 'No plan assigned'}</FieldTitle>
+              </FieldContent>
             </Field>
-            {plan?.page_limit && (
+            {plan?.page_limit ? (
               <Field>
                 <FieldLabel>Page Limit</FieldLabel>
-                <p className="text-sm font-medium">{plan.page_limit} pages</p>
+                <FieldContent>
+                  <FieldTitle>{plan.page_limit} pages</FieldTitle>
+                </FieldContent>
               </Field>
-            )}
-            {plan?.revision_limit && (
+            ) : null}
+            {plan?.revision_limit ? (
               <Field>
                 <FieldLabel>Monthly Revisions</FieldLabel>
-                <p className="text-sm font-medium">
-                  {plan.revision_limit} revisions
-                </p>
+                <FieldContent>
+                  <FieldTitle>{plan.revision_limit} revisions</FieldTitle>
+                </FieldContent>
               </Field>
-            )}
+            ) : null}
             <Field>
               <FieldLabel>Created</FieldLabel>
-              <FieldDescription>{formatDate(createdAt)}</FieldDescription>
+              <FieldContent>
+                <FieldDescription>{formatDate(createdAt)}</FieldDescription>
+              </FieldContent>
             </Field>
-            {deployedAt && (
+            {deployedAt ? (
               <Field>
                 <FieldLabel>Deployed</FieldLabel>
-                <FieldDescription>{formatDate(deployedAt)}</FieldDescription>
+                <FieldContent>
+                  <FieldDescription>{formatDate(deployedAt)}</FieldDescription>
+                </FieldContent>
               </Field>
-            )}
-            {lastRevisionAt && (
+            ) : null}
+            {lastRevisionAt ? (
               <Field>
                 <FieldLabel>Last Revision</FieldLabel>
-                <FieldDescription>{formatDate(lastRevisionAt)}</FieldDescription>
+                <FieldContent>
+                  <FieldDescription>{formatDate(lastRevisionAt)}</FieldDescription>
+                </FieldContent>
               </Field>
-            )}
+            ) : null}
           </FieldGroup>
         </FieldSet>
 
@@ -129,25 +139,30 @@ export function SiteDetailOverview({
           {deploymentUrl && (
             <Field>
               <FieldLabel>Website URL</FieldLabel>
-              <ButtonGroup className="flex gap-2">
-                <Button asChild>
-                  <a
-                    href={deploymentUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    {deploymentUrl}
-                  </a>
-                </Button>
-              </ButtonGroup>
+              <FieldContent>
+                <FieldTitle className="truncate">{deploymentUrl}</FieldTitle>
+                <ButtonGroup aria-label="Website actions">
+                  <Button asChild>
+                    <a
+                      href={deploymentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="mr-2 size-4" aria-hidden="true" />
+                      Visit site
+                    </a>
+                  </Button>
+                </ButtonGroup>
+              </FieldContent>
             </Field>
           )}
 
           {customDomain && (
             <Field>
               <FieldLabel>Custom Domain</FieldLabel>
-              <FieldDescription>{customDomain}</FieldDescription>
+              <FieldContent>
+                <FieldDescription>{customDomain}</FieldDescription>
+              </FieldContent>
             </Field>
           )}
         </FieldGroup>

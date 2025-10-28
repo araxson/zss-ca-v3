@@ -42,7 +42,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
       <Empty className="border border-dashed">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <Users className="h-6 w-6" />
+            <Users className="size-6" />
           </EmptyMedia>
           <EmptyTitle>No clients found</EmptyTitle>
           <EmptyDescription>
@@ -83,13 +83,17 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                   {client.contact_name || 'N/A'}
                 </TableCell>
                 <TableCell>
-                  {client.contact_email ? (
-                    <a className="hover:text-primary" href={`mailto:${client.contact_email}`}>
-                      {client.contact_email}
-                    </a>
-                  ) : (
-                    'N/A'
-                  )}
+                    {client.contact_email ? (
+                      <a
+                        className="hover:text-primary"
+                        href={`mailto:${client.contact_email}`}
+                        aria-label={`Email ${client.contact_name || client.company_name || 'client'}`}
+                      >
+                        {client.contact_email}
+                      </a>
+                    ) : (
+                      'N/A'
+                    )}
                 </TableCell>
                 <TableCell>{client.company_name || 'N/A'}</TableCell>
                 <TableCell className="text-sm">
@@ -125,7 +129,11 @@ export function ClientsTable({ clients }: ClientsTableProps) {
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        aria-label={`Manage ${client.contact_name || client.company_name || 'client'}`}
+                      >
                         Manage
                       </Button>
                     </DropdownMenuTrigger>

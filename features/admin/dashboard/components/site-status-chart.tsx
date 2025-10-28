@@ -1,19 +1,19 @@
 'use client'
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
 import {
   Empty,
+  EmptyDescription,
   EmptyHeader,
   EmptyTitle,
-  EmptyDescription,
 } from '@/components/ui/empty'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemHeader,
-  ItemTitle,
-} from '@/components/ui/item'
 import {
   BarChart,
   Bar,
@@ -33,12 +33,12 @@ export function SiteStatusChart({ statusDistribution }: SiteStatusChartProps) {
   }))
 
   return (
-    <Item variant="outline" className="flex h-full flex-col">
-      <ItemHeader className="gap-1">
-        <ItemTitle>Site Status Distribution</ItemTitle>
-        <ItemDescription>Websites by deployment status</ItemDescription>
-      </ItemHeader>
-      <ItemContent>
+    <Card aria-label="Site status distribution chart">
+      <CardHeader>
+        <CardTitle>Site Status Distribution</CardTitle>
+        <CardDescription>Websites by deployment status</CardDescription>
+      </CardHeader>
+      <CardContent>
         {statusChartData.length > 0 ? (
           <ChartContainer
             config={{
@@ -66,7 +66,7 @@ export function SiteStatusChart({ statusDistribution }: SiteStatusChartProps) {
             </EmptyHeader>
           </Empty>
         )}
-      </ItemContent>
-    </Item>
+      </CardContent>
+    </Card>
   )
 }

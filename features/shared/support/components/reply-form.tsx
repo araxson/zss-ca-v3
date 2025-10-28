@@ -8,15 +8,7 @@ import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { Kbd } from '@/components/ui/kbd'
 import { Spinner } from '@/components/ui/spinner'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 import {
   FieldGroup,
@@ -24,12 +16,15 @@ import {
   FieldSet,
 } from '@/components/ui/field'
 import {
-  Item,
-  ItemContent,
-} from '@/components/ui/item'
-import { SectionHeader } from '@/features/shared/components'
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { replyToTicketSchema, type ReplyToTicketInput } from '../schema'
 import { replyToTicketAction } from '../api/mutations'
+import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 
 interface ReplyFormProps {
   ticketId: string
@@ -60,9 +55,12 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
   }
 
   return (
-    <Item variant="outline" className="flex flex-col gap-4 p-6">
-      <SectionHeader title="Add Reply" align="start" />
-      <ItemContent>
+    <Card>
+      <CardHeader>
+        <CardTitle>Add Reply</CardTitle>
+        <CardDescription>Continue the conversation with our support team</CardDescription>
+      </CardHeader>
+      <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FieldSet className="space-y-3">
@@ -73,23 +71,28 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Your Reply</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Type your reply here..."
-                          className="min-h-32"
-                          {...field}
-                          onKeyDown={(e) => {
-                            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                              e.preventDefault()
-                              form.handleSubmit(onSubmit)()
-                            }
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription className="flex items-center gap-1">
-                        Press <Kbd>Ctrl</Kbd> + <Kbd>Enter</Kbd> to send
-                      </FormDescription>
+                      <FormFieldLayout
+                        label="Your Reply"
+                        description={
+                          <span className="flex items-center gap-1">
+                            Press <Kbd>Ctrl</Kbd> + <Kbd>Enter</Kbd> to send
+                          </span>
+                        }
+                      >
+                        <FormControl>
+                          <Textarea
+                            placeholder="Type your reply here..."
+                            className="min-h-32"
+                            {...field}
+                            onKeyDown={(e) => {
+                              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                                e.preventDefault()
+                                form.handleSubmit(onSubmit)()
+                              }
+                            }}
+                          />
+                        </FormControl>
+                      </FormFieldLayout>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -115,7 +118,7 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
             </ButtonGroup>
           </form>
         </Form>
-      </ItemContent>
-    </Item>
+      </CardContent>
+    </Card>
   )
 }

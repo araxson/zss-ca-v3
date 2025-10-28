@@ -18,7 +18,7 @@ export default function NotFound() {
       <Empty className="w-full max-w-md border">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <Compass className="h-6 w-6" aria-hidden="true" />
+            <Compass className="size-6" aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>404 - Page Not Found</EmptyTitle>
           <EmptyDescription>

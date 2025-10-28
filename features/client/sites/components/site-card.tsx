@@ -1,11 +1,14 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Item,
   ItemActions,
   ItemContent,
   ItemDescription,
+  ItemFooter,
+  ItemHeader,
   ItemGroup,
   ItemTitle,
 } from '@/components/ui/item'
@@ -64,16 +67,17 @@ export function SiteCard({ site }: SiteCardProps) {
     : 'No plan assigned'
   return (
     <Item variant="outline" className="flex h-full flex-col">
-      <ItemContent className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <ItemTitle>{site.site_name}</ItemTitle>
-            <ItemDescription>{planSummary}</ItemDescription>
-          </div>
-          <Badge variant={getStatusVariant(site.status)}>
-            {formatStatus(site.status)}
-          </Badge>
+      <ItemHeader>
+        <div className="space-y-1">
+          <ItemTitle>{site.site_name}</ItemTitle>
+          <ItemDescription>{planSummary}</ItemDescription>
         </div>
+        <Badge variant={getStatusVariant(site.status)}>
+          {formatStatus(site.status)}
+        </Badge>
+      </ItemHeader>
+
+      <ItemContent>
         <ItemGroup className="grid grid-cols-2 gap-4">
           <Item variant="muted" size="sm" className="flex flex-col">
             <ItemContent className="space-y-0.5">
@@ -81,14 +85,12 @@ export function SiteCard({ site }: SiteCardProps) {
               <ItemTitle>{formatStatus(site.status)}</ItemTitle>
             </ItemContent>
           </Item>
-
           <Item variant="muted" size="sm" className="flex flex-col">
             <ItemContent className="space-y-0.5">
               <ItemDescription>Created</ItemDescription>
               <ItemTitle>{formatDate(site.created_at)}</ItemTitle>
             </ItemContent>
           </Item>
-
           {site.deployed_at ? (
             <Item variant="muted" size="sm" className="flex flex-col">
               <ItemContent className="space-y-0.5">
@@ -97,7 +99,6 @@ export function SiteCard({ site }: SiteCardProps) {
               </ItemContent>
             </Item>
           ) : null}
-
           {site.last_revision_at ? (
             <Item variant="muted" size="sm" className="flex flex-col">
               <ItemContent className="space-y-0.5">
@@ -107,39 +108,44 @@ export function SiteCard({ site }: SiteCardProps) {
             </Item>
           ) : null}
         </ItemGroup>
+      </ItemContent>
 
-        {site.deployment_url && (
-          <div className="flex gap-2">
+      {site.deployment_url ? (
+        <ItemContent>
+          <ButtonGroup aria-label="Site actions">
             <Button asChild>
               <a
                 href={site.deployment_url}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                View Live Site
+                <ExternalLink className="mr-2 size-4" aria-hidden="true" />
+                Visit site
               </a>
             </Button>
             <Button asChild variant="outline">
               <Link href={`${ROUTES.CLIENT_SUPPORT}?siteId=${site.id}`}>
-                <LifeBuoy className="mr-2 h-4 w-4" />Request update
+                <LifeBuoy className="mr-2 size-4" aria-hidden="true" />
+                Request update
               </Link>
             </Button>
-          </div>
-        )}
-
-        {!site.deployment_url && (
-          <div className="text-sm text-muted-foreground">
+          </ButtonGroup>
+        </ItemContent>
+      ) : (
+        <ItemContent>
+          <ItemDescription>
             Your site is not yet deployed. Our team is working on it.
-          </div>
-        )}
+          </ItemDescription>
+        </ItemContent>
+      )}
 
-      </ItemContent>
-      <ItemActions className="justify-end">
-        <Button asChild variant="outline" size="sm">
-          <Link href={`/client/sites/${site.id}`}>View Details</Link>
-        </Button>
-      </ItemActions>
+      <ItemFooter>
+        <ItemActions className="justify-end">
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/client/sites/${site.id}`}>View details</Link>
+          </Button>
+        </ItemActions>
+      </ItemFooter>
     </Item>
   )
 }

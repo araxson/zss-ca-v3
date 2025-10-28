@@ -60,7 +60,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
   const content = (
     <Item variant="outline" className={isUnread ? 'border-primary' : ''}>
       <ItemMedia>
-        <Icon className="h-5 w-5 text-muted-foreground" aria-hidden />
+        <Icon className="size-5 text-muted-foreground" aria-hidden />
       </ItemMedia>
       <ItemContent className="space-y-2">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -80,10 +80,13 @@ export function NotificationItem({ notification }: NotificationItemProps) {
         </div>
         {isUnread && (
           <ItemGroup className="flex items-center justify-between gap-4">
-            <ItemDescription className="text-xs text-muted-foreground">
-              Mark this update as reviewed.
-            </ItemDescription>
-            <Button size="sm" variant="outline" onClick={handleMarkRead}>
+            <ItemDescription>Mark this update as reviewed.</ItemDescription>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleMarkRead}
+              aria-label={`Mark notification ${notification.title} as read`}
+            >
               Mark as read
             </Button>
           </ItemGroup>
@@ -94,7 +97,11 @@ export function NotificationItem({ notification }: NotificationItemProps) {
 
   if (notification.action_url) {
     return (
-      <Link href={notification.action_url} onClick={handleMarkRead}>
+      <Link
+        href={notification.action_url}
+        onClick={handleMarkRead}
+        aria-label={`Open notification action for ${notification.title}`}
+      >
         {content}
       </Link>
     )

@@ -21,12 +21,7 @@ BEFORE starting any analysis:
 
 ### 1. Component Scanning Strategy
 
-Scan ALL feature directories systematically:
-- `features/business/*/components/*.tsx`
-- `features/customer/*/components/*.tsx`
-- `features/staff/*/components/*.tsx`
-- `features/admin/*/components/*.tsx`
-- `features/marketing/*/components/*.tsx`
+Scan ALL feature directories systematically
 
 For each component file, identify:
 - Generic div/span structures that could be semantic components
@@ -58,7 +53,6 @@ For each component file, identify:
 - Replace data card lists → Table/Data Table
 
 **Continuous Improvement:**
-- Ensure all interactive elements have proper ARIA labels
 - Verify keyboard navigation works correctly
 - Add proper focus management
 - Ensure color contrast meets WCAG AA standards
@@ -178,13 +172,11 @@ For each component file, identify:
 **For Navigation:**
 - Use Tabs for horizontal navigation
 - Use Accordion for collapsible sections
-- Use Sheet for slide-out navigation
 - NOT Card groups
 
 **For Actions/Alerts:**
 - Use Alert for notifications
 - Use Dialog for confirmations
-- Use Sheet for side panels
 - NOT styled Card components
 
 **For Data Display:**
@@ -219,11 +211,6 @@ For each component file, identify:
 3. Replace action cards with Alert/Dialog/Sheet
 4. Add Kbd components for keyboard shortcuts
 
-### Phase 4: Polish (Files 61+)
-1. Ensure all components have proper ARIA labels
-2. Verify keyboard navigation
-3. Check color contrast
-4. Test with screen readers (document considerations)
 
 ## Critical Rules
 
@@ -274,3 +261,5 @@ If you encounter:
 - Enhanced visual consistency
 
 You are autonomous and decisive. Make intelligent component choices based on context, semantics, and best practices. Transform the UI codebase into a showcase of proper shadcn/ui component usage.
+
+Do not ask me any questions. Begen now.

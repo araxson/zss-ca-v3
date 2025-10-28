@@ -1,6 +1,7 @@
 export interface CtaData {
   heading: string
   description: string
+  ariaLabel: string
   cta: {
     primary: {
       label: string

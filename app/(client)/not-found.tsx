@@ -24,7 +24,7 @@ export default function ClientNotFound() {
       <Empty className="w-full max-w-xl border">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <SearchX className="h-6 w-6" aria-hidden="true" />
+            <SearchX className="size-6" aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>404 - Page Not Found</EmptyTitle>
           <EmptyDescription>

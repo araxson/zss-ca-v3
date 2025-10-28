@@ -123,11 +123,16 @@ export function UpdateStatusButton({
         <Field className="flex flex-1 items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" disabled={loading} className="gap-2 w-48 sm:w-56 justify-between">
+              <Button
+                variant="outline"
+                disabled={loading}
+                className="gap-2 w-48 sm:w-56 justify-between"
+                aria-label="Select ticket status"
+              >
                 <Badge variant={currentStatusData.variant}>
                   {currentStatusData.label}
                 </Badge>
-                <ChevronDown className="h-4 w-4 opacity-50" />
+                <ChevronDown className="size-4 opacity-50" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
@@ -141,16 +146,14 @@ export function UpdateStatusButton({
                 >
                   <div className="flex items-center justify-between w-full">
                     <span>{option.label}</span>
-                    {status === option.value && <Check className="h-4 w-4" />}
+                    {status === option.value && <Check className="size-4" />}
                   </div>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </Field>
-        <FieldDescription className="text-xs text-muted-foreground">
-          Closing tickets prevents additional replies.
-        </FieldDescription>
+        <FieldDescription>Closing tickets prevents additional replies.</FieldDescription>
       </FieldGroup>
 
       <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>

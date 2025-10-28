@@ -42,12 +42,12 @@ import { createClient } from '@/lib/supabase/server'
 
 const getSupabase = cache(async () => createClient())
 
-export async function BusinessSummary({ businessId }: { businessId: string }) {
+export async function ClientSummary({ clientId }: { clientId: string }) {
   const supabase = await getSupabase()
   const { data, error } = await supabase
-    .from('business_metrics_view')
+    .from('client_metrics_view')
     .select('*')
-    .eq('business_id', businessId)
+    .eq('client_id', clientId)
     .single()
   if (error) throw error
 
@@ -65,7 +65,7 @@ import { createClient } from '@/lib/supabase/server'
 
 const getSupabase = cache(async () => createClient())
 
-export async function getAppointments(businessId: string) {
+export async function getAppointments(clientId: string) {
   const supabase = await getSupabase()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Unauthorized')
@@ -73,7 +73,7 @@ export async function getAppointments(businessId: string) {
   const { data, error } = await supabase
     .from('appointments_view')
     .select('*')
-    .eq('business_id', businessId)
+    .eq('client_id', clientId)
     .eq('user_id', user.id)
 
   if (error) throw error
@@ -81,27 +81,27 @@ export async function getAppointments(businessId: string) {
 }
 
 // ✅ CORRECT - Parallel fetching in Server Component
-export async function DashboardPanel({ businessId }: { businessId: string }) {
+export async function DashboardPanel({ clientId }: { clientId: string }) {
   // These run in parallel automatically
-  const [appointments, revenue, staff] = await Promise.all([
-    getAppointments(businessId),
-    getRevenue(businessId),
-    getStaff(businessId),
+  const [appointments, revenue, team] = await Promise.all([
+    getAppointments(clientId),
+    getRevenue(clientId),
+    getTeam(clientId),
   ])
 
   return (
     <div className="grid gap-4">
       <AppointmentsCard data={appointments} />
       <RevenueCard data={revenue} />
-      <StaffCard data={staff} />
+      <TeamCard data={team} />
     </div>
   )
 }
 
 // ✅ CORRECT - Streaming with Suspense boundaries
-export async function Dashboard({ businessId }: { businessId: string }) {
+export async function Dashboard({ clientId }: { clientId: string }) {
   // Fast data fetched immediately
-  const quickMetrics = await getQuickMetrics(businessId)
+  const quickMetrics = await getQuickMetrics(clientId)
 
   return (
     <div className="space-y-6">
@@ -110,11 +110,11 @@ export async function Dashboard({ businessId }: { businessId: string }) {
 
       {/* Stream slow data */}
       <Suspense fallback={<SkeletonChart />}>
-        <RevenueChart businessId={businessId} />
+        <RevenueChart clientId={clientId} />
       </Suspense>
 
       <Suspense fallback={<SkeletonTable />}>
-        <AppointmentsTable businessId={businessId} />
+        <AppointmentsTable clientId={clientId} />
       </Suspense>
     </div>
   )
@@ -169,7 +169,7 @@ function AppointmentsList({ data }) {
 
 import { useActionState } from 'react'
 import { Button } from '@/components/ui/button'
-import { toggleFavorite } from '@/features/customers/api/mutations'
+import { toggleFavorite } from '@/features/client/favorites/api/mutations'
 
 export function FavoriteButton({ initialState }: { initialState: boolean }) {
   const [state, action, pending] = useActionState(toggleFavorite, initialState)
@@ -197,13 +197,13 @@ export function FavoriteButton({ initialState }: { initialState: boolean }) {
 ```tsx
 // Server Component
 import { Suspense } from 'react'
-import { CustomerList } from './components/customer-list'
+import { ClientList } from './components/client-list'
 
-export async function CustomersFeature() {
-  const customers = await fetchCustomers()
+export async function ClientsFeature() {
+  const clients = await fetchClients()
   return (
-    <Suspense fallback={<div>Loading customers…</div>}>
-      <CustomerList customers={customers} />
+    <Suspense fallback={<div>Loading clients…</div>}>
+      <ClientList clients={clients} />
     </Suspense>
   )
 }
@@ -214,23 +214,23 @@ export async function CustomersFeature() {
 'use client'
 
 import { useOptimistic } from 'react'
-import type { Customer } from '../types'
-import { removeCustomer } from '../api/mutations'
+import type { Client } from '../types'
+import { removeClient } from '../api/mutations'
 
-export function CustomerList({ customers }: { customers: Customer[] }) {
-  const [optimisticCustomers, setOptimisticCustomers] = useOptimistic(customers)
+export function ClientList({ clients }: { clients: Client[] }) {
+  const [optimisticClients, setOptimisticClients] = useOptimistic(clients)
 
   async function handleDelete(id: string) {
-    setOptimisticCustomers((prev) => prev.filter((customer) => customer.id !== id))
-    await removeCustomer(id)
+    setOptimisticClients((prev) => prev.filter((client) => client.id !== id))
+    await removeClient(id)
   }
 
   return (
     <ul className="space-y-2">
-      {optimisticCustomers.map((customer) => (
-        <li key={customer.id} className="flex items-center justify-between">
-          <span>{customer.name}</span>
-          <button onClick={() => handleDelete(customer.id)} className="text-sm text-destructive">
+      {optimisticClients.map((client) => (
+        <li key={client.id} className="flex items-center justify-between">
+          <span>{client.name}</span>
+          <button onClick={() => handleDelete(client.id)} className="text-sm text-destructive">
             Remove
           </button>
         </li>
@@ -316,7 +316,7 @@ export function TaskChecklist({ tasks }: { tasks: Task[] }) {
 
   return state.map((task) => (
     <button key={task.id} onClick={() => handleToggle(task)} className="flex items-center gap-2">
-      <span className="h-4 w-4 rounded border" data-complete={task.completed} />
+      <span className="size-4 rounded border" data-complete={task.completed} />
       <span className={task.completed ? 'line-through text-muted-foreground' : ''}>{task.title}</span>
     </button>
   ))
@@ -329,11 +329,11 @@ Unwrap promises inside Server Components or synchronous layouts.
 
 ```tsx
 import { use } from 'react'
-import { getBusiness } from '@/features/business/api/queries'
+import { getClient } from '@/features/client/api/queries'
 
-export function BusinessHeader({ resource }: { resource: Promise<{ name: string }> }) {
-  const business = use(resource)
-  return <h1 className="text-2xl font-semibold">{business.name}</h1>
+export function ClientHeader({ resource }: { resource: Promise<{ name: string }> }) {
+  const client = use(resource)
+  return <h1 className="text-2xl font-semibold">{client.name}</h1>
 }
 ```
 
@@ -491,12 +491,12 @@ export function NotificationToggle({ notification }: { notification: Notificatio
 import { Suspense } from 'react'
 import { AppointmentTimeline } from './appointment-timeline'
 
-export function AppointmentPanel({ businessId }: { businessId: string }) {
+export function AppointmentPanel({ clientId }: { clientId: string }) {
   return (
     <section className="space-y-4">
       <h2 className="text-lg font-semibold">Today</h2>
       <Suspense fallback={<div className="text-sm text-muted-foreground">Loading timeline…</div>}>
-        <AppointmentTimeline businessId={businessId} />
+        <AppointmentTimeline clientId={clientId} />
       </Suspense>
     </section>
   )

@@ -47,7 +47,12 @@ export function NotificationList({ notifications, hasUnread }: NotificationListP
       {hasUnread && (
         <div className="flex justify-end">
           <ButtonGroup>
-            <Button onClick={handleMarkAllRead} variant="outline" size="sm">
+            <Button
+              onClick={handleMarkAllRead}
+              variant="outline"
+              size="sm"
+              aria-label="Mark all notifications as read"
+            >
               Mark all as read
             </Button>
           </ButtonGroup>

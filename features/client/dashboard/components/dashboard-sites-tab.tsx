@@ -1,15 +1,25 @@
+'use client'
+
+import { Fragment, useMemo, useState } from 'react'
 import Link from 'next/link'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { ButtonGroup } from '@/components/ui/button-group'
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+} from '@/components/ui/input-group'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Empty,
   EmptyContent,
@@ -17,29 +27,13 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from '@/components/ui/item'
-import { Progress } from '@/components/ui/progress'
-import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
+import { ItemGroup, ItemSeparator } from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
 import type { Database } from '@/lib/types/database.types'
-import {
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts'
-import { getSiteStatusLabel, getSiteStatusProgress } from './dashboard-site-helpers'
+import { getSiteStatusLabel } from './dashboard-site-helpers'
+import { DashboardSiteCard } from './dashboard-site-card'
+import { DashboardSitesChart } from './dashboard-sites-chart'
+import { DashboardSitesStats } from './dashboard-sites-stats'
 
 type Subscription = Database['public']['Tables']['subscription']['Row'] | null
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -52,13 +46,6 @@ interface DashboardSitesTabProps {
   sitesInProgressCount: number
 }
 
-const CHART_COLORS = [
-  'hsl(var(--chart-1))',
-  'hsl(var(--chart-2))',
-  'hsl(var(--chart-3))',
-  'hsl(var(--chart-4))',
-]
-
 export function DashboardSitesTab({
   sites,
   subscription,
@@ -66,6 +53,50 @@ export function DashboardSitesTab({
   activeSitesCount,
   sitesInProgressCount,
 }: DashboardSitesTabProps) {
+  const [query, setQuery] = useState('')
+
+  const filteredSites = useMemo(() => {
+    const term = query.trim().toLowerCase()
+    if (!term) return sites
+
+    return sites.filter((site) => {
+      const values = [
+        site.site_name,
+        site.custom_domain,
+        site.deployment_url,
+        getSiteStatusLabel(site.status),
+      ]
+
+      return values.some((value) => value?.toLowerCase().includes(term))
+    })
+  }, [sites, query])
+
+  const inProgressStatuses = useMemo(
+    () => new Set(['pending', 'in_production', 'awaiting_client_content', 'ready_for_review']),
+    [],
+  )
+
+  const filteredActiveSitesCount = useMemo(
+    () => filteredSites.filter((site) => site.status === 'live').length,
+    [filteredSites],
+  )
+  const filteredSitesInProgressCount = useMemo(
+    () => filteredSites.filter((site) => inProgressStatuses.has(site.status)).length,
+    [filteredSites, inProgressStatuses],
+  )
+
+  const filteredChartData = useMemo(() => {
+    if (!filteredSites.length) return []
+
+    const counts = filteredSites.reduce<Record<string, number>>((acc, site) => {
+      const label = getSiteStatusLabel(site.status)
+      acc[label] = (acc[label] ?? 0) + 1
+      return acc
+    }, {})
+
+    return Object.entries(counts).map(([name, count]) => ({ name, count }))
+  }, [filteredSites])
+
   if (sites.length === 0) {
     return (
       <Empty>
@@ -86,169 +117,91 @@ export function DashboardSitesTab({
 
   return (
     <>
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Site Status Overview</CardTitle>
-            <CardDescription>Distribution of your websites by status</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ChartContainer
-              config={{
-                count: {
-                  label: 'Sites',
-                  color: 'hsl(var(--chart-1))',
-                },
-              }}
-              className="h-52"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={siteStatusChartData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={70}
-                    fill="hsl(var(--chart-1))"
-                    dataKey="count"
+      <FieldGroup>
+        <Field orientation="responsive">
+          <FieldLabel htmlFor="client-sites-search">Search websites</FieldLabel>
+          <FieldContent>
+            <InputGroup>
+              <InputGroupInput
+                id="client-sites-search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search by name, domain, or status"
+                aria-label="Search websites"
+              />
+              <InputGroupAddon align="inline-start" aria-hidden="true">
+                <Search className="size-4" />
+              </InputGroupAddon>
+              <InputGroupAddon align="inline-end">
+                <InputGroupText aria-live="polite">
+                  {filteredSites.length} results
+                </InputGroupText>
+                {query ? (
+                  <InputGroupButton
+                    type="button"
+                    onClick={() => setQuery('')}
+                    aria-label="Clear search"
                   >
-                    {siteStatusChartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${entry.name}`}
-                        fill={CHART_COLORS[index % CHART_COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <ChartTooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+                    <X className="size-4" />
+                  </InputGroupButton>
+                ) : null}
+              </InputGroupAddon>
+            </InputGroup>
+            <FieldDescription>Filter your website list. Charts and stats reflect the current results.</FieldDescription>
+          </FieldContent>
+        </Field>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Site Summary</CardTitle>
-            <CardDescription>Quick stats about your websites</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Item>
-              <ItemContent>
-                <ItemTitle>Total Sites</ItemTitle>
-                <ItemDescription>All websites in your account</ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Badge variant="secondary" className="text-lg px-3 py-1">
-                  {sites.length}
-                </Badge>
-              </ItemActions>
-            </Item>
-            <Separator />
-            <Item>
-              <ItemContent>
-                <ItemTitle>Live Sites</ItemTitle>
-                <ItemDescription>Currently deployed and accessible</ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Badge variant="default" className="text-lg px-3 py-1">
-                  {activeSitesCount}
-                </Badge>
-              </ItemActions>
-            </Item>
-            <Separator />
-            <Item>
-              <ItemContent>
-                <ItemTitle>In Progress</ItemTitle>
-                <ItemDescription>Sites being developed</ItemDescription>
-              </ItemContent>
-              <ItemActions>
-                <Badge variant="outline" className="text-lg px-3 py-1">
-                  {sitesInProgressCount}
-                </Badge>
-              </ItemActions>
-            </Item>
-          </CardContent>
-        </Card>
-      </div>
+        <ButtonGroup aria-label="Website actions">
+          <Button asChild>
+            <Link href={ROUTES.CLIENT_SITES}>Manage Sites</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href={ROUTES.CLIENT_SITES_NEW}>Request New Site</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href={ROUTES.CLIENT_SUPPORT_NEW}>Create Support Ticket</Link>
+          </Button>
+        </ButtonGroup>
+      </FieldGroup>
 
-      <ScrollArea className="h-[600px]">
-        <div className="grid gap-4 pr-4">
-          {sites.map((site) => (
-            <Card key={site.id}>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle>{site.site_name ?? 'Website'}</CardTitle>
-                    <CardDescription>
-                      {site.custom_domain ?? site.deployment_url ?? 'No domain yet'}
-                    </CardDescription>
-                  </div>
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <Badge
-                        variant={
-                          site.status === 'live'
-                            ? 'default'
-                            : site.status === 'pending'
-                              ? 'secondary'
-                              : 'outline'
-                        }
-                        className="cursor-help"
-                      >
-                        {getSiteStatusLabel(site.status)}
-                      </Badge>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold">
-                          {getSiteStatusLabel(site.status)}
-                        </h4>
-                        <p className="text-sm text-muted-foreground">
-                          {site.status === 'pending' && 'Your website is queued for development. Our team will begin work shortly.'}
-                          {site.status === 'in_production' && 'Your website is currently being developed by our team.'}
-                          {site.status === 'awaiting_client_content' && 'We need content from you to proceed. Please check your support tickets.'}
-                          {site.status === 'ready_for_review' && 'Your website is ready for your review. Please provide feedback.'}
-                          {site.status === 'live' && 'Your website is live and accessible to the public.'}
-                        </p>
-                        <div className="flex items-center justify-between pt-2">
-                          <span className="text-xs text-muted-foreground">Progress</span>
-                          <span className="text-xs font-medium">
-                            {getSiteStatusProgress(site.status)}%
-                          </span>
-                        </div>
-                      </div>
-                    </HoverCardContent>
-                  </HoverCard>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className="font-medium">
-                      {getSiteStatusProgress(site.status)}%
-                    </span>
-                  </div>
-                  <Progress value={getSiteStatusProgress(site.status)} />
-                </div>
-                {site.status === 'live' && (site.custom_domain ?? site.deployment_url) && (
-                  <Button asChild variant="outline" className="w-full">
-                    <a
-                      href={site.custom_domain ?? site.deployment_url ?? '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View Site
-                    </a>
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </ScrollArea>
+      {filteredSites.length > 0 ? (
+        <>
+          <div className="grid gap-4 md:grid-cols-2">
+            <DashboardSitesChart
+              chartData={query ? filteredChartData : siteStatusChartData}
+            />
+            <DashboardSitesStats
+              totalSites={query ? filteredSites.length : sites.length}
+              activeSitesCount={query ? filteredActiveSitesCount : activeSitesCount}
+              sitesInProgressCount={query ? filteredSitesInProgressCount : sitesInProgressCount}
+            />
+          </div>
+
+          <ScrollArea aria-label="Client sites list">
+            <ItemGroup>
+              {filteredSites.map((site, index) => (
+                <Fragment key={site.id}>
+                  <DashboardSiteCard site={site} />
+                  {index < filteredSites.length - 1 ? <ItemSeparator /> : null}
+                </Fragment>
+              ))}
+            </ItemGroup>
+            <ScrollBar orientation="vertical" />
+          </ScrollArea>
+        </>
+      ) : (
+        <Empty>
+          <EmptyHeader>
+            <EmptyTitle>No matching websites</EmptyTitle>
+            <EmptyDescription>Adjust your search terms or clear the filter to view all sites</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button type="button" variant="outline" onClick={() => setQuery('')}>
+              Clear filter
+            </Button>
+          </EmptyContent>
+        </Empty>
+      )}
     </>
   )
 }

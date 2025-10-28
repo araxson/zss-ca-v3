@@ -1,9 +1,12 @@
-// Client-safe exports
+// Client-safe exports only
 export {
   CheckoutButton,
   ManageSubscriptionButtons,
   SubscriptionCard,
 } from './components'
+
+// Server components must be imported directly:
+// import { SubscriptionFeature } from '@/features/shared/subscription/components/subscription-feature'
 
 export {
   createCheckoutSessionSchema,

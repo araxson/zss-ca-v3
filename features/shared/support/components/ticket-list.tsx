@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item'
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { MessageSquare } from 'lucide-react'
 import { SectionHeader } from '@/features/shared/components'
 import type { TicketWithProfile } from '../api/queries'
@@ -44,6 +44,9 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
     return (
       <Empty>
         <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <MessageSquare />
+          </EmptyMedia>
           <EmptyTitle>No tickets yet</EmptyTitle>
           <EmptyDescription>
             Create a support request to start a conversation with our team.
@@ -71,9 +74,12 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
 
             return (
               <Item asChild key={ticket.id}>
-                <Link href={`${basePath}/${ticket.id}`}>
+                <Link
+                  href={`${basePath}/${ticket.id}`}
+                  aria-label={`Open ticket ${ticket.subject}`}
+                >
                   <ItemMedia>
-                    <MessageSquare className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                    <MessageSquare className="size-4 text-muted-foreground" aria-hidden="true" />
                   </ItemMedia>
                   <ItemContent className="min-w-0 gap-1">
                     <ItemTitle>{ticket.subject}</ItemTitle>

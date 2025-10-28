@@ -1,10 +1,6 @@
-// Sites - Public API
-export {
-  CreateSiteForm,
-  DeploySiteForm,
-  EditSiteForm,
-  SiteDetailCard,
-  SitesTable,
-} from './components'
+export { AdminSitesFeature } from './admin-sites-feature'
+export { AdminCreateSiteFeature } from './admin-create-site-feature'
+export { AdminSiteDetailFeature } from './admin-site-detail-feature'
+export { CreateSiteForm, DeploySiteForm, EditSiteForm, SiteDetailCard, SitesTable } from './components'
 export { getAllSites, getSiteById } from './api/queries'
 export { createSiteAction, updateSiteAction, deleteSiteAction, deploySiteAction } from './api/mutations'

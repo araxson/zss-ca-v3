@@ -1,6 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
+import { ButtonGroup } from '@/components/ui/button-group'
 import type { Database } from '@/lib/types/database.types'
 import { ROUTES } from '@/lib/constants/routes'
 import {
@@ -11,13 +13,24 @@ import {
   CommandSeparator,
 } from '@/components/ui/command'
 import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldTitle,
+} from '@/components/ui/field'
+import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemFooter,
   ItemGroup,
   ItemHeader,
+  ItemSeparator,
   ItemTitle,
 } from '@/components/ui/item'
+import { Kbd, KbdGroup } from '@/components/ui/kbd'
 import { SectionHeader } from '@/features/shared/components'
 import { Bell, CreditCard, Globe, LifeBuoy } from 'lucide-react'
 
@@ -30,69 +43,90 @@ interface DashboardAccountTabProps {
 
 export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTabProps) {
   return (
-    <ItemGroup className="space-y-6">
+    <ItemGroup>
       <SectionHeader
         title="Account overview"
         description="Review your profile and jump to frequently used tools."
         align="start"
       />
-      <Item variant="outline" className="flex flex-col gap-4 p-6">
-        <ItemHeader className="gap-1">
+      <Item variant="outline">
+        <ItemHeader>
           <ItemTitle>Account Information</ItemTitle>
           <ItemDescription>Your profile details</ItemDescription>
         </ItemHeader>
-        <ItemContent className="space-y-4">
-          <dl className="space-y-2">
-            <div className="flex items-center justify-between">
-              <dt className="text-sm text-muted-foreground">Name</dt>
-              <dd className="font-medium">{profile?.contact_name ?? '—'}</dd>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <dt className="text-sm text-muted-foreground">Email</dt>
-              <dd className="font-medium">{profile?.contact_email ?? '—'}</dd>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <dt className="text-sm text-muted-foreground">Company</dt>
-              <dd className="font-medium">{profile?.company_name ?? '—'}</dd>
-            </div>
-            <Separator />
-            <div className="flex items-center justify-between">
-              <dt className="text-sm text-muted-foreground">Phone</dt>
-              <dd className="font-medium">{profile?.contact_phone ?? '—'}</dd>
-            </div>
-          </dl>
-          <Button asChild variant="outline" className="w-full">
+        <ItemContent>
+          <FieldGroup>
+            <Field orientation="responsive">
+              <FieldLabel>Name</FieldLabel>
+              <FieldContent>
+                <FieldTitle>{profile?.contact_name ?? '—'}</FieldTitle>
+                {!profile?.contact_name ? (
+                  <FieldDescription>Add your name so our team knows who to contact.</FieldDescription>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field orientation="responsive">
+              <FieldLabel>Email</FieldLabel>
+              <FieldContent>
+                <FieldTitle>{profile?.contact_email ?? '—'}</FieldTitle>
+                {!profile?.contact_email ? (
+                  <FieldDescription>Keep your email up to date for important notifications.</FieldDescription>
+                ) : null}
+              </FieldContent>
+            </Field>
+            <Field orientation="responsive">
+              <FieldLabel>Company</FieldLabel>
+              <FieldContent>
+                <FieldTitle>{profile?.company_name ?? '—'}</FieldTitle>
+              </FieldContent>
+            </Field>
+            <Field orientation="responsive">
+              <FieldLabel>Phone</FieldLabel>
+              <FieldContent>
+                <FieldTitle>{profile?.contact_phone ?? '—'}</FieldTitle>
+                {!profile?.contact_phone ? (
+                  <FieldDescription>Adding a phone number helps with urgent updates.</FieldDescription>
+                ) : null}
+              </FieldContent>
+            </Field>
+          </FieldGroup>
+        </ItemContent>
+        <ItemFooter>
+          <Button asChild variant="outline">
             <Link href={ROUTES.CLIENT_PROFILE}>Edit Profile</Link>
           </Button>
-        </ItemContent>
+        </ItemFooter>
       </Item>
 
-      <Item variant="outline" className="flex flex-col gap-4 p-6">
-        <ItemHeader className="gap-1">
-          <ItemTitle>Quick Actions</ItemTitle>
-          <ItemDescription>Common tasks</ItemDescription>
-        </ItemHeader>
+      <Item variant="outline">
         <ItemContent>
-          <Command
-            aria-label="Client quick navigation"
-            className="w-full rounded-md border"
-          >
+          <ItemTitle>Quick Actions</ItemTitle>
+          <ItemDescription>
+            Common tasks. Press{' '}
+            <KbdGroup>
+              <Kbd>⌘</Kbd>
+              <span>+</span>
+              <Kbd>K</Kbd>
+            </KbdGroup>{' '}
+            to open global navigation.
+          </ItemDescription>
+        </ItemContent>
+        <ItemContent>
+          <Command aria-label="Client quick navigation">
             <CommandList>
               <CommandGroup heading="Account">
                 <CommandItem
                   value="client-sites"
                   onSelect={() => onNavigate(ROUTES.CLIENT_SITES)}
                 >
-                  <Globe className="mr-2 h-4 w-4" />
+                  <Globe className="mr-2 size-4" />
                   <span>My Websites</span>
                 </CommandItem>
                 <CommandItem
                   value="client-subscription"
                   onSelect={() => onNavigate(ROUTES.CLIENT_SUBSCRIPTION)}
                 >
-                  <CreditCard className="mr-2 h-4 w-4" />
+                  <CreditCard className="mr-2 size-4" />
                   <span>Subscription</span>
                 </CommandItem>
               </CommandGroup>
@@ -102,19 +136,30 @@ export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTab
                   value="client-support"
                   onSelect={() => onNavigate(ROUTES.CLIENT_SUPPORT)}
                 >
-                  <LifeBuoy className="mr-2 h-4 w-4" />
+                  <LifeBuoy className="mr-2 size-4" />
                   <span>Support</span>
                 </CommandItem>
                 <CommandItem
                   value="client-notifications"
                   onSelect={() => onNavigate(ROUTES.CLIENT_NOTIFICATIONS)}
                 >
-                  <Bell className="mr-2 h-4 w-4" />
+                  <Bell className="mr-2 size-4" />
                   <span>Notifications</span>
                 </CommandItem>
               </CommandGroup>
             </CommandList>
           </Command>
+        </ItemContent>
+        <ItemSeparator />
+        <ItemContent>
+          <ButtonGroup aria-label="Account shortcuts">
+            <Button variant="outline" onClick={() => onNavigate(ROUTES.CLIENT_SUBSCRIPTION)}>
+              Subscription
+            </Button>
+            <Button variant="outline" onClick={() => onNavigate(ROUTES.CLIENT_SUPPORT)}>
+              Support
+            </Button>
+          </ButtonGroup>
         </ItemContent>
       </Item>
     </ItemGroup>

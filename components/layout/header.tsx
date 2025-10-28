@@ -109,7 +109,7 @@ export default async function Header() {
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
               <Button variant="ghost" size="icon">
-                <Menu className="h-5 w-5" />
+                <Menu className="size-4" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>

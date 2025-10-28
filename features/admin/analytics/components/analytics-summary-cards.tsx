@@ -54,24 +54,22 @@ export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsPr
   return (
     <ItemGroup className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {metrics.map(({ title, period, value, delta, icon: Icon }) => (
-        <Item key={title} variant="outline" className="flex h-full flex-col">
-          <ItemContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <ItemTitle>{title}</ItemTitle>
-                <ItemDescription>{period}</ItemDescription>
-              </div>
-              <ItemMedia>
-                <Icon className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              </ItemMedia>
-            </div>
-            <FieldGroup>
-              <FieldLabel className="text-2xl font-bold">{value.toLocaleString()}</FieldLabel>
-              <FieldDescription className="text-xs text-muted-foreground">
-                {delta}
-              </FieldDescription>
-            </FieldGroup>
+        <Item
+          key={title}
+          variant="outline"
+          aria-label={`${title} summary`}
+        >
+          <ItemContent>
+            <ItemTitle>{title}</ItemTitle>
+            <ItemDescription>{period}</ItemDescription>
           </ItemContent>
+          <ItemMedia variant="icon">
+            <Icon aria-hidden="true" />
+          </ItemMedia>
+          <FieldGroup className="mt-3">
+            <FieldLabel className="text-2xl font-bold">{value.toLocaleString()}</FieldLabel>
+            <FieldDescription>{delta}</FieldDescription>
+          </FieldGroup>
         </Item>
       ))}
     </ItemGroup>

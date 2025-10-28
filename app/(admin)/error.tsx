@@ -37,7 +37,7 @@ export default function AdminError({ error, reset }: ErrorProps) {
       <Empty className="w-full max-w-xl border">
         <EmptyHeader>
           <EmptyMedia variant="icon">
-            <ShieldAlert className="h-6 w-6" aria-hidden="true" />
+            <ShieldAlert className="size-6" aria-hidden="true" />
           </EmptyMedia>
           <EmptyTitle>Error in Admin Portal</EmptyTitle>
           <EmptyDescription>

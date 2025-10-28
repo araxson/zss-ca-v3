@@ -1,12 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemTitle,
-} from '@/components/ui/item'
+import { ButtonGroup } from '@/components/ui/button-group'
+import { Card, CardContent } from '@/components/ui/card'
 import { SectionHeader } from '@/features/shared/components'
 import { caseCtaData } from './case-cta.data'
 
@@ -18,16 +13,20 @@ export function CaseCta() {
         description={caseCtaData.description}
         align="center"
       />
-      <Item variant="outline" className="flex flex-col items-center gap-6 text-center">
-        <ItemActions className="flex flex-col gap-3 sm:flex-row">
-        <Button asChild size="lg">
-          <Link href={caseCtaData.primary.href}>{caseCtaData.primary.label}</Link>
-        </Button>
-        <Button asChild variant="outline" size="lg">
-          <Link href={caseCtaData.secondary.href}>{caseCtaData.secondary.label}</Link>
-        </Button>
-        </ItemActions>
-      </Item>
+      <Card>
+        <CardContent>
+          <div className="flex justify-center p-6">
+            <ButtonGroup aria-label={caseCtaData.ariaLabel}>
+              <Button asChild size="lg">
+                <Link href={caseCtaData.primary.href}>{caseCtaData.primary.label}</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href={caseCtaData.secondary.href}>{caseCtaData.secondary.label}</Link>
+              </Button>
+            </ButtonGroup>
+          </div>
+        </CardContent>
+      </Card>
     </section>
   )
 }

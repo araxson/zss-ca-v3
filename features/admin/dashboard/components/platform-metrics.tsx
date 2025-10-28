@@ -1,13 +1,18 @@
 'use client'
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
   Item,
-  ItemActions,
   ItemContent,
   ItemDescription,
   ItemGroup,
-  ItemHeader,
   ItemSeparator,
   ItemTitle,
 } from '@/components/ui/item'
@@ -28,52 +33,46 @@ export function PlatformMetrics({ totalClients, activeSubscriptions, liveSites }
     : 0
 
   return (
-    <Item variant="outline" className="flex h-full flex-col">
-      <ItemHeader className="gap-1">
-        <ItemTitle>Platform Metrics</ItemTitle>
-        <ItemDescription>Key performance indicators</ItemDescription>
-      </ItemHeader>
-      <ItemContent>
-        <ItemGroup className="space-y-2">
-          <Item variant="muted" size="sm" className="items-start justify-between">
-            <ItemContent className="space-y-0.5">
+    <Card aria-label="Platform metrics summary">
+      <CardHeader>
+        <CardTitle>Platform Metrics</CardTitle>
+        <CardDescription>Key performance indicators</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ItemGroup>
+          <Item variant="muted" size="sm">
+            <ItemContent>
               <ItemTitle>Conversion Rate</ItemTitle>
               <ItemDescription>Clients to active subscriptions</ItemDescription>
             </ItemContent>
-            <ItemActions>
-              <Badge variant="default" className="px-3 py-1 text-lg">
-                {subscriptionRate.toFixed(0)}%
-              </Badge>
-            </ItemActions>
+            <Badge variant="default">
+              {subscriptionRate.toFixed(0)}%
+            </Badge>
           </Item>
           <ItemSeparator />
-          <Item variant="muted" size="sm" className="items-start justify-between">
-            <ItemContent className="space-y-0.5">
+          <Item variant="muted" size="sm">
+            <ItemContent>
               <ItemTitle>Deployment Rate</ItemTitle>
               <ItemDescription>Subscriptions with live sites</ItemDescription>
             </ItemContent>
-            <ItemActions>
-              <Badge variant="default" className="px-3 py-1 text-lg">
-                {liveRate.toFixed(0)}%
-              </Badge>
-            </ItemActions>
+            <Badge variant="default">
+              {liveRate.toFixed(0)}%
+            </Badge>
           </Item>
           <ItemSeparator />
-          <Item variant="muted" size="sm" className="items-start justify-between">
-            <ItemContent className="space-y-0.5">
+          <Item variant="muted" size="sm">
+            <ItemContent>
               <ItemTitle>Average Sites</ItemTitle>
               <ItemDescription>Sites per active subscription</ItemDescription>
             </ItemContent>
-            <ItemActions>
-              <Badge variant="secondary" className="px-3 py-1 text-lg">
-                {activeSubscriptions > 0
-                  ? (liveSites / activeSubscriptions).toFixed(1)
-                  : '0.0'}
-              </Badge>
-            </ItemActions>
+            <Badge variant="secondary">
+              {activeSubscriptions > 0
+                ? (liveSites / activeSubscriptions).toFixed(1)
+                : '0.0'}
+            </Badge>
           </Item>
         </ItemGroup>
-      </ItemContent>
-    </Item>
+      </CardContent>
+    </Card>
   )
 }

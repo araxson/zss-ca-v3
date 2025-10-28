@@ -1,10 +1,4 @@
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemGroup,
-  ItemTitle,
-} from '@/components/ui/item'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { SectionHeader } from '@/features/shared/components'
 import { homeIndustriesData } from './industries.data'
 
@@ -16,16 +10,16 @@ export function HomeIndustries() {
         description="We partner with Canadian organizations who rely on compelling storytelling and consistent lead flow."
         align="center"
       />
-      <ItemGroup className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {homeIndustriesData.industries.map((industry) => (
-          <Item key={industry.id} variant="outline" className="flex flex-col">
-            <ItemContent className="space-y-2">
-              <ItemTitle>{industry.name}</ItemTitle>
-              <ItemDescription>{industry.description}</ItemDescription>
-            </ItemContent>
-          </Item>
+          <Card key={industry.id}>
+            <CardHeader>
+              <CardTitle>{industry.name}</CardTitle>
+              <CardDescription>{industry.description}</CardDescription>
+            </CardHeader>
+          </Card>
         ))}
-      </ItemGroup>
+      </div>
     </section>
   )
 }
