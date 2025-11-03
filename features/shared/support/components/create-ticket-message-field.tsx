@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Kbd } from '@/components/ui/kbd'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 import type { Control, UseFormHandleSubmit } from 'react-hook-form'
-import type { CreateTicketInput } from '../schema'
+import type { CreateTicketInput } from '../api/schema'
 
 interface CreateTicketMessageFieldProps {
   control: Control<CreateTicketInput>

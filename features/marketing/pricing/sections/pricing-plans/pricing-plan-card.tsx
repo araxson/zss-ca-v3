@@ -4,34 +4,12 @@ import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { CheckoutButton } from '@/features/shared/subscription'
-import { pricingPlansCopy } from './pricing-plans-copy'
-import type { PricingPlan } from './pricing-plans.types'
-import type { BillingInterval } from './billing-interval-toggle'
 import { siteConfig } from '@/lib/config/site.config'
-
-type PlanFeature = {
-  name: string
-  description?: string | null
-  included: boolean
-}
-
-const YEARLY_DISCOUNT = 0.8
-
-function getPlanFeatures(plan: PricingPlan): PlanFeature[] {
-  if (!plan.features || !Array.isArray(plan.features)) {
-    return []
-  }
-
-  return plan.features.filter((feature): feature is PlanFeature => {
-    return Boolean(feature && typeof feature === 'object' && 'name' in feature)
-  })
-}
-
-function getMonthlyRate(plan: PricingPlan): number {
-  const cents = plan.setup_fee_cents ?? 0
-  return cents / 100
-}
+import { pricingPlansData } from './pricing-plans.data'
+import { getPlanFeatures, getMonthlyRate, YEARLY_DISCOUNT } from './utils/pricing-plans'
+import type { BillingInterval, PricingPlan } from './pricing-plans.types'
 
 type PricingPlanCardProps = {
   plan: PricingPlan
@@ -60,11 +38,9 @@ export function PricingPlanCard({
         <div className="space-y-3">
           <div className="flex items-start justify-between gap-2">
             <CardTitle>{plan.name}</CardTitle>
-            {isPopular && <Badge>{pricingPlansCopy.popularLabel}</Badge>}
+            {isPopular && <Badge>{pricingPlansData.popularLabel}</Badge>}
           </div>
-          {plan.description ? (
-            <CardDescription>{plan.description}</CardDescription>
-          ) : null}
+          {plan.description ? <CardDescription>{plan.description}</CardDescription> : null}
           <div className="space-y-1">
             {monthlyRate > 0 ? (
               <p className="flex items-baseline gap-1 text-3xl font-bold">
@@ -90,23 +66,25 @@ export function PricingPlanCard({
       </CardHeader>
       <CardContent>
         {features.length > 0 ? (
-          <div className="space-y-3" aria-label={`${plan.name} features`}>
+          <ItemGroup className="gap-2" aria-label={`${plan.name} features`}>
             {features
               .filter((feature) => feature.included)
               .map((feature) => (
-                <div key={feature.name} className="flex items-start gap-3 rounded-md bg-muted/40 p-3">
-                  <span className="mt-1 text-primary" aria-hidden="true">
-                    <Check className="size-4" />
-                  </span>
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-foreground">{feature.name}</p>
+                <Item key={feature.name} className="items-start gap-3 rounded-lg bg-muted/40 p-3">
+                  <ItemMedia variant="icon" aria-hidden="true">
+                    <Check className="size-4 text-primary" aria-hidden="true" />
+                  </ItemMedia>
+                  <ItemContent className="gap-1">
+                    <ItemTitle className="text-sm font-medium text-foreground">{feature.name}</ItemTitle>
                     {feature.description ? (
-                      <p className="text-xs text-muted-foreground">{feature.description}</p>
+                      <ItemDescription className="line-clamp-none text-xs text-muted-foreground">
+                        {feature.description}
+                      </ItemDescription>
                     ) : null}
-                  </div>
-                </div>
+                  </ItemContent>
+                </Item>
               ))}
-          </div>
+          </ItemGroup>
         ) : null}
       </CardContent>
       <CardFooter>

@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import { Form } from '@/components/ui/form'
 import {
@@ -21,7 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { createTicketSchema, type CreateTicketInput } from '../schema'
+import { createTicketSchema, type CreateTicketInput } from '../api/schema'
 import { createTicketAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
 import { CreateTicketSubjectField } from './create-ticket-subject-field'
@@ -87,11 +86,8 @@ export function CreateTicketForm() {
               onSubmit={onSubmit}
             />
 
-            <ButtonGroup>
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-              >
+            <div className="flex gap-2">
+              <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? <Spinner /> : 'Create Ticket'}
               </Button>
               <Button
@@ -101,7 +97,7 @@ export function CreateTicketForm() {
               >
                 Cancel
               </Button>
-            </ButtonGroup>
+            </div>
           </form>
         </Form>
       </CardContent>

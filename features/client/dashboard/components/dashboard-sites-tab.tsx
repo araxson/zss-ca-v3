@@ -1,25 +1,8 @@
 'use client'
 
-import { Fragment, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-  InputGroupText,
-} from '@/components/ui/input-group'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Empty,
   EmptyContent,
@@ -27,13 +10,14 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { ItemGroup, ItemSeparator } from '@/components/ui/item'
+import { ItemGroup } from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
 import type { Database } from '@/lib/types/database.types'
-import { getSiteStatusLabel } from './dashboard-site-helpers'
-import { DashboardSiteCard } from './dashboard-site-card'
+import { getSiteStatusLabel } from '@/features/shared/utils'
 import { DashboardSitesChart } from './dashboard-sites-chart'
 import { DashboardSitesStats } from './dashboard-sites-stats'
+import { SitesSearchField } from './sites-search-field'
+import { SitesList } from './sites-list'
 
 type Subscription = Database['public']['Tables']['subscription']['Row'] | null
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -117,56 +101,15 @@ export function DashboardSitesTab({
 
   return (
     <>
-      <FieldGroup>
-        <Field orientation="responsive">
-          <FieldLabel htmlFor="client-sites-search">Search websites</FieldLabel>
-          <FieldContent>
-            <InputGroup>
-              <InputGroupInput
-                id="client-sites-search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search by name, domain, or status"
-                aria-label="Search websites"
-              />
-              <InputGroupAddon align="inline-start" aria-hidden="true">
-                <Search className="size-4" />
-              </InputGroupAddon>
-              <InputGroupAddon align="inline-end">
-                <InputGroupText aria-live="polite">
-                  {filteredSites.length} results
-                </InputGroupText>
-                {query ? (
-                  <InputGroupButton
-                    type="button"
-                    onClick={() => setQuery('')}
-                    aria-label="Clear search"
-                  >
-                    <X className="size-4" />
-                  </InputGroupButton>
-                ) : null}
-              </InputGroupAddon>
-            </InputGroup>
-            <FieldDescription>Filter your website list. Charts and stats reflect the current results.</FieldDescription>
-          </FieldContent>
-        </Field>
-
-        <ButtonGroup aria-label="Website actions">
-          <Button asChild>
-            <Link href={ROUTES.CLIENT_SITES}>Manage Sites</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href={ROUTES.CLIENT_SITES_NEW}>Request New Site</Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href={ROUTES.CLIENT_SUPPORT_NEW}>Create Support Ticket</Link>
-          </Button>
-        </ButtonGroup>
-      </FieldGroup>
+      <SitesSearchField
+        query={query}
+        onQueryChange={setQuery}
+        resultsCount={filteredSites.length}
+      />
 
       {filteredSites.length > 0 ? (
         <>
-          <div className="grid gap-4 md:grid-cols-2">
+          <ItemGroup className="!grid gap-4 md:grid-cols-2" aria-label="Website insights">
             <DashboardSitesChart
               chartData={query ? filteredChartData : siteStatusChartData}
             />
@@ -175,19 +118,9 @@ export function DashboardSitesTab({
               activeSitesCount={query ? filteredActiveSitesCount : activeSitesCount}
               sitesInProgressCount={query ? filteredSitesInProgressCount : sitesInProgressCount}
             />
-          </div>
+          </ItemGroup>
 
-          <ScrollArea aria-label="Client sites list">
-            <ItemGroup>
-              {filteredSites.map((site, index) => (
-                <Fragment key={site.id}>
-                  <DashboardSiteCard site={site} />
-                  {index < filteredSites.length - 1 ? <ItemSeparator /> : null}
-                </Fragment>
-              ))}
-            </ItemGroup>
-            <ScrollBar orientation="vertical" />
-          </ScrollArea>
+          <SitesList sites={filteredSites} />
         </>
       ) : (
         <Empty>

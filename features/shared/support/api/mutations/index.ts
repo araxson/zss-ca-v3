@@ -2,4 +2,4 @@ export {
   createTicketAction,
   replyToTicketAction,
   updateTicketStatusAction,
-} from '../mutations'
+} from './tickets'

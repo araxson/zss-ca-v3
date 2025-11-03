@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { AdminSiteDetailFeature } from '@/features/admin/sites'
+import { SiteDetailPageFeature } from '@/features/admin/sites/[id]'
 
 interface AdminSiteDetailPageProps {
   params: Promise<{ id: string }>
@@ -8,7 +8,7 @@ interface AdminSiteDetailPageProps {
 export default async function AdminSiteDetailPage({ params }: AdminSiteDetailPageProps) {
   return (
     <Suspense fallback={null}>
-      <AdminSiteDetailFeature params={params} />
+      <SiteDetailPageFeature params={params} />
     </Suspense>
   )
 }

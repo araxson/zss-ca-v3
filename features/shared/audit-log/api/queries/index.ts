@@ -4,4 +4,4 @@ export {
   getAuditLogsByUser,
   type AuditLog,
   type AuditLogWithProfiles,
-} from '../queries'
+} from './audit-logs'

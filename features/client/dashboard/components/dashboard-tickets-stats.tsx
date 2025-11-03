@@ -11,6 +11,13 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
 
 interface DashboardTicketsStatsProps {
   totalTickets: number
@@ -27,23 +34,33 @@ export function DashboardTicketsStats({
         <ItemTitle>Support Summary</ItemTitle>
         <ItemDescription>Your support request overview</ItemDescription>
       </ItemContent>
-      <ItemContent className="space-y-3">
-        <div className="flex items-center justify-between border-t pt-3">
-          <div>
-            <div className="font-medium">Total Tickets</div>
-            <div className="text-sm text-muted-foreground">All support requests</div>
-          </div>
-          <Badge variant="secondary">{totalTickets}</Badge>
-        </div>
-        <div className="flex items-center justify-between border-t pt-3">
-          <div>
-            <div className="font-medium">Open Tickets</div>
-            <div className="text-sm text-muted-foreground">Awaiting response</div>
-          </div>
-          <Badge variant={openTicketsCount > 0 ? 'destructive' : 'secondary'}>
-            {openTicketsCount}
-          </Badge>
-        </div>
+      <ItemContent className="gap-0">
+        <FieldGroup className="gap-0">
+          <Field
+            orientation="responsive"
+            className="border-t border-border py-3 first:border-t-0 first:pt-0 last:pb-0"
+          >
+            <FieldLabel>Total Tickets</FieldLabel>
+            <FieldContent className="flex-row items-start justify-between gap-3">
+              <FieldDescription>All support requests</FieldDescription>
+              <Badge variant="secondary" className="shrink-0">
+                {totalTickets}
+              </Badge>
+            </FieldContent>
+          </Field>
+          <Field
+            orientation="responsive"
+            className="border-t border-border py-3 first:border-t-0 first:pt-0 last:pb-0"
+          >
+            <FieldLabel>Open Tickets</FieldLabel>
+            <FieldContent className="flex-row items-start justify-between gap-3">
+              <FieldDescription>Awaiting response</FieldDescription>
+              <Badge variant={openTicketsCount > 0 ? 'destructive' : 'secondary'} className="shrink-0">
+                {openTicketsCount}
+              </Badge>
+            </FieldContent>
+          </Field>
+        </FieldGroup>
       </ItemContent>
       <ItemFooter>
         <Button asChild>

@@ -1,3 +1,4 @@
+import { BarChart2, BookOpen, ClipboardList } from 'lucide-react'
 import type { ResourcesListData } from './resources-list.types'
 
 export const resourcesListData: ResourcesListData = {
@@ -10,6 +11,8 @@ export const resourcesListData: ResourcesListData = {
       type: 'Template',
       link: '#launch-checklist',
       linkLabel: 'View launch checklist resource',
+      icon: ClipboardList,
+      iconLabel: 'Checklist resource icon',
     },
     {
       id: 'conversion-benchmarks',
@@ -18,6 +21,8 @@ export const resourcesListData: ResourcesListData = {
       type: 'Benchmark',
       link: '#conversion-benchmarks',
       linkLabel: 'View conversion benchmarks resource',
+      icon: BarChart2,
+      iconLabel: 'Benchmark resource icon',
     },
     {
       id: 'seo-playbook',
@@ -26,6 +31,8 @@ export const resourcesListData: ResourcesListData = {
       type: 'Guide',
       link: '#seo-playbook',
       linkLabel: 'View local SEO playbook resource',
+      icon: BookOpen,
+      iconLabel: 'Guide resource icon',
     },
   ],
 }

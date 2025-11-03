@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import type { MarkNotificationReadInput } from '../../schema'
+import type { MarkNotificationReadInput } from '../schema'
 
 export async function markNotificationReadAction(data: MarkNotificationReadInput) {
   const supabase = await createClient()
@@ -15,6 +15,7 @@ export async function markNotificationReadAction(data: MarkNotificationReadInput
   }
 
   const { error } = await supabase
+    
     .from('notification')
     .update({ read_at: new Date().toISOString() })
     .eq('id', data.notificationId)
@@ -42,6 +43,7 @@ export async function markAllNotificationsReadAction() {
   }
 
   const { error } = await supabase
+    
     .from('notification')
     .update({ read_at: new Date().toISOString() })
     .eq('profile_id', user.id)

@@ -1,2 +1,4 @@
 // Support - Public API
-export { AdminSupportDashboard } from './components'
+export { AdminSupportFeature } from './admin-support-feature'
+export * from './api'
+export * from './components'

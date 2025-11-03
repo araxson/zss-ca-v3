@@ -1,13 +1,13 @@
 'use client'
 
 import { Control } from 'react-hook-form'
-import { CreateAuditLogInput } from '../schema'
+import { CreateAuditLogInput } from '../api/schema'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
-import { commonTables } from './create-audit-log-form-data'
+import { commonTables } from '../constants'
 
 type CreateAuditLogFormResourceFieldsProps = {
   control: Control<CreateAuditLogInput>

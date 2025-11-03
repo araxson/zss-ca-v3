@@ -1,5 +1,3 @@
 export { PricingPreview } from './pricing-preview'
 export { pricingPreviewData } from './pricing-preview.data'
-export { getPlansForPreview } from './api/queries'
 export type { PricingTier, PricingPreviewData } from './pricing-preview.types'
-export type { PlanWithPricing } from './api/queries'

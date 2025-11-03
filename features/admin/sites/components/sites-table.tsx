@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,7 +14,6 @@ import { Globe } from 'lucide-react'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableHead,
   TableHeader,
   TableRow,
@@ -61,8 +62,7 @@ export function SitesTable({ sites }: SitesTableProps) {
 
   return (
     <ScrollArea className="rounded-md border">
-      <Table className="min-w-[900px]">
-        <TableCaption>Managed client sites with plan, status, and quick navigation.</TableCaption>
+      <Table className="min-w-[700px] md:min-w-[900px]">
         <TableHeader>
           <TableRow>
             <TableHead>Site Name</TableHead>

@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ROUTES } from '@/lib/constants/routes'
@@ -6,7 +8,9 @@ import { getClientSiteById } from '@/features/client/sites/api/queries'
 import { SiteDetail } from '@/features/client/sites/components/site-detail'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
-import { getSiteAnalytics, getAnalyticsSummary, AnalyticsSummaryCards, AnalyticsChart } from '@/features/admin/analytics'
+import { getSiteAnalytics, getAnalyticsSummary } from '@/features/client/analytics/api/queries'
+import { AnalyticsSummaryCards, AnalyticsChart } from '@/features/client/analytics'
+import { Item, ItemHeader, ItemTitle, ItemDescription } from '@/components/ui/item'
 import { SectionHeader } from '@/features/shared/components'
 
 interface SiteDetailFeatureProps {
@@ -42,8 +46,8 @@ export async function SiteDetailFeature({ id }: SiteDetailFeatureProps) {
         description="Website details and status"
         align="start"
         leading={
-          <Button asChild variant="ghost" size="icon">
-            <Link href="/client/sites">
+          <Button asChild variant="ghost" size="icon" aria-label="Back to sites">
+            <Link href={ROUTES.CLIENT_SITES}>
               <ArrowLeft className="size-4" aria-hidden="true" />
             </Link>
           </Button>
@@ -54,11 +58,12 @@ export async function SiteDetailFeature({ id }: SiteDetailFeatureProps) {
 
       {site.status === 'live' && (
         <>
-          <SectionHeader
-            title="Analytics"
-            description="Performance metrics for your website"
-            align="start"
-          />
+          <Item variant="outline">
+            <ItemHeader>
+              <ItemTitle className="text-2xl font-semibold">Analytics</ItemTitle>
+              <ItemDescription>Performance metrics for your website</ItemDescription>
+            </ItemHeader>
+          </Item>
 
           <AnalyticsSummaryCards summary={summary} days={days} />
           <AnalyticsChart analytics={analytics} />

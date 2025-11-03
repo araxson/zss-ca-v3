@@ -1,13 +1,13 @@
 'use client'
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import {
   Empty,
   EmptyDescription,
@@ -19,7 +19,7 @@ import {
   Bar,
   XAxis,
   YAxis,
-  ResponsiveContainer,
+  CartesianGrid,
 } from 'recharts'
 
 interface SiteStatusChartProps {
@@ -33,40 +33,48 @@ export function SiteStatusChart({ statusDistribution }: SiteStatusChartProps) {
   }))
 
   return (
-    <Card aria-label="Site status distribution chart">
-      <CardHeader>
-        <CardTitle>Site Status Distribution</CardTitle>
-        <CardDescription>Websites by deployment status</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Item variant="outline" aria-label="Site status distribution chart">
+      <ItemHeader>
+        <ItemTitle>Site Status Distribution</ItemTitle>
+        <ItemDescription>Websites by deployment status</ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         {statusChartData.length > 0 ? (
           <ChartContainer
             config={{
               count: {
                 label: 'Sites',
-                color: 'hsl(var(--chart-2))',
+                color: 'hsl(var(--chart-3))',
               },
             }}
-            className="h-64"
+            className="min-h-[280px]"
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={statusChartData} layout="vertical">
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={120} />
-                <ChartTooltip />
-                <Bar dataKey="count" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <BarChart
+              data={statusChartData}
+              layout="vertical"
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+              <XAxis type="number" />
+              <YAxis dataKey="name" type="category" width={120} />
+              <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'hsl(var(--muted))' }} />
+              <Bar
+                dataKey="count"
+                fill="hsl(var(--chart-3))"
+                radius={[0, 4, 4, 0]}
+                maxBarSize={40}
+              />
+            </BarChart>
           </ChartContainer>
         ) : (
-          <Empty className="h-64">
+          <Empty className="min-h-[280px]">
             <EmptyHeader>
               <EmptyTitle>No site data</EmptyTitle>
               <EmptyDescription>No sites to display</EmptyDescription>
             </EmptyHeader>
           </Empty>
         )}
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

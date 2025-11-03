@@ -1,7 +1,7 @@
 'use client'
 
 import { Control } from 'react-hook-form'
-import { CreateNotificationInput } from '../schema'
+import { CreateNotificationInput } from '../api/schema'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { FieldDescription, FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'

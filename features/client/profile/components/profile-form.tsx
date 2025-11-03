@@ -6,12 +6,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import { Form } from '@/components/ui/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { updateProfileAction } from '../api/mutations'
-import { updateProfileSchema, type UpdateProfileInput } from '../schema'
+import { updateProfileSchema, type UpdateProfileInput } from '../api/schema'
 import type { Database } from '@/lib/types/database.types'
 import { ProfileContactFields } from './profile-contact-fields'
 import { ProfileCompanyFields } from './profile-company-fields'
@@ -67,7 +66,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {error && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" aria-live="assertive">
             <AlertCircle className="size-4" aria-hidden="true" />
             <AlertTitle>Profile update failed</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
@@ -87,7 +86,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
         <ProfileAddressFields form={form} />
         <ProfilePreferencesFields form={form} />
 
-        <ButtonGroup>
+        <div className="flex gap-2">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
           </Button>
@@ -99,7 +98,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
           >
             Reset
           </Button>
-        </ButtonGroup>
+        </div>
       </form>
     </Form>
   )

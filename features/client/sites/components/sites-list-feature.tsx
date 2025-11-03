@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { ROUTES } from '@/lib/constants/routes'
@@ -14,6 +16,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { Globe } from 'lucide-react'
+import { ItemGroup } from '@/components/ui/item'
 import { SectionHeader } from '@/features/shared/components'
 
 export async function SitesListFeature() {
@@ -35,7 +38,6 @@ export async function SitesListFeature() {
         description="View and manage your website deployments"
         align="start"
       />
-
       {sites.length === 0 ? (
         <Empty className="border border-dashed">
           <EmptyHeader>
@@ -54,11 +56,11 @@ export async function SitesListFeature() {
           </EmptyContent>
         </Empty>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <ItemGroup className="!grid gap-6 md:grid-cols-2" aria-label="Website cards">
           {sites.map((site) => (
             <SiteCard key={site.id} site={site} />
           ))}
-        </div>
+        </ItemGroup>
       )}
     </div>
   )

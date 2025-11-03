@@ -12,7 +12,7 @@ import { DashboardSummaryCards } from './dashboard-summary-cards'
 import { DashboardSitesTab } from './dashboard-sites-tab'
 import { DashboardTicketsTab } from './dashboard-tickets-tab'
 import { DashboardAccountTab } from './dashboard-account-tab'
-import { getSiteStatusLabel } from './dashboard-site-helpers'
+import { getSiteStatusLabel } from '@/features/shared/utils'
 import { SectionHeader } from '@/features/shared/components'
 import { AlertCircle } from 'lucide-react'
 

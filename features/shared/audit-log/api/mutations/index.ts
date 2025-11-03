@@ -1,1 +1,1 @@
-export { createAuditLogAction } from '../mutations'
+export { createAuditLogAction } from './audit-logs'

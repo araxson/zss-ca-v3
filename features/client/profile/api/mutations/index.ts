@@ -1,0 +1,1 @@
+export { updateProfileAction } from './profile'

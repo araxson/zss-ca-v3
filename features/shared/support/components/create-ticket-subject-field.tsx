@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/input-group'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 import type { Control } from 'react-hook-form'
-import type { CreateTicketInput } from '../schema'
+import type { CreateTicketInput } from '../api/schema'
 
 interface CreateTicketSubjectFieldProps {
   control: Control<CreateTicketInput>

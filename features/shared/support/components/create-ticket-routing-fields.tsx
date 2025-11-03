@@ -11,9 +11,9 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
-import { categoryOptions, priorityOptions } from './create-ticket-form-data'
+import { categoryOptions, priorityOptions } from '../constants'
 import type { Control } from 'react-hook-form'
-import type { CreateTicketInput } from '../schema'
+import type { CreateTicketInput } from '../api/schema'
 
 interface CreateTicketRoutingFieldsProps {
   control: Control<CreateTicketInput>

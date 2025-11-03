@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
@@ -13,7 +15,7 @@ import {
 import { TableCell, TableRow } from '@/components/ui/table'
 import type { Database } from '@/lib/types/database.types'
 import { ROUTES } from '@/lib/constants/routes'
-import { getStatusVariant, formatStatus } from './sites-table-helpers'
+import { getStatusVariant, formatStatus } from '@/features/shared/utils'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
 type Profile = Database['public']['Tables']['profile']['Row']

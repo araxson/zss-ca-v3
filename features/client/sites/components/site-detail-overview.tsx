@@ -1,6 +1,5 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import {
   Item,
   ItemContent,
@@ -18,42 +17,10 @@ import {
 } from '@/components/ui/field'
 import { ExternalLink } from 'lucide-react'
 import type { Database } from '@/lib/types/database.types'
+import { getStatusVariant, formatStatus } from '@/features/shared/utils'
+import { formatDate } from '@/lib/utils'
 
 type Plan = Database['public']['Tables']['plan']['Row']
-
-function getStatusVariant(status: string) {
-  switch (status) {
-    case 'live':
-      return 'default'
-    case 'in_production':
-      return 'secondary'
-    case 'ready_for_review':
-      return 'outline'
-    case 'pending':
-      return 'outline'
-    case 'awaiting_client_content':
-      return 'secondary'
-    case 'paused':
-      return 'secondary'
-    case 'archived':
-      return 'outline'
-    default:
-      return 'outline'
-  }
-}
-
-function formatStatus(status: string) {
-  return status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
-}
-
-function formatDate(dateString: string | null) {
-  if (!dateString) return 'N/A'
-  return new Date(dateString).toLocaleDateString('en-CA', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
 
 interface SiteDetailOverviewProps {
   status: string
@@ -141,7 +108,7 @@ export function SiteDetailOverview({
               <FieldLabel>Website URL</FieldLabel>
               <FieldContent>
                 <FieldTitle className="truncate">{deploymentUrl}</FieldTitle>
-                <ButtonGroup aria-label="Website actions">
+                <div className="flex" role="group" aria-label="Website actions">
                   <Button asChild>
                     <a
                       href={deploymentUrl}
@@ -152,7 +119,7 @@ export function SiteDetailOverview({
                       Visit site
                     </a>
                   </Button>
-                </ButtonGroup>
+                </div>
               </FieldContent>
             </Field>
           )}

@@ -1,2 +1,2 @@
-export { getAllSites, getSiteById, getSitesByClientId } from './sites'
+export { listSites, getSitesByClientId } from './sites'
 export type { SiteWithRelations } from './sites'

@@ -4,11 +4,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { createNotificationSchema, type CreateNotificationInput } from '../schema'
+import { createNotificationSchema, type CreateNotificationInput } from '../api/schema'
 import { createNotificationAction } from '../api/mutations'
 import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ROUTES } from '@/lib/constants/routes'
@@ -74,7 +73,7 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
       </ItemHeader>
       <ItemContent>
         {error && (
-          <Alert variant="destructive" className="mb-6">
+          <Alert variant="destructive" className="mb-6" aria-live="assertive">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -85,7 +84,7 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
             <CreateNotificationFormContentFields control={form.control} />
             <CreateNotificationFormFollowupFields control={form.control} />
 
-            <ButtonGroup>
+            <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? <Spinner /> : 'Create Notification'}
               </Button>
@@ -97,7 +96,7 @@ export function CreateNotificationForm({ clients }: CreateNotificationFormProps)
               >
                 Cancel
               </Button>
-            </ButtonGroup>
+            </div>
           </form>
         </Form>
       </ItemContent>

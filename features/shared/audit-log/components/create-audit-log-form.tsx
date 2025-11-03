@@ -4,11 +4,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { createAuditLogSchema, type CreateAuditLogInput } from '../schema'
+import { createAuditLogSchema, type CreateAuditLogInput } from '../api/schema'
 import { createAuditLogAction } from '../api/mutations'
 import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item'
@@ -95,7 +94,7 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
       </Item>
 
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" aria-live="assertive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -118,7 +117,7 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
               onChangeSummaryChange={setChangeSummary}
             />
 
-            <ButtonGroup>
+            <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? <Spinner /> : 'Create Audit Log'}
               </Button>
@@ -130,7 +129,7 @@ export function CreateAuditLogForm({ clients = [] }: CreateAuditLogFormProps) {
               >
                 Cancel
               </Button>
-            </ButtonGroup>
+            </div>
           </form>
         </Item>
       </Form>

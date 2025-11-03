@@ -1,8 +1,8 @@
 export {
   getUnreadNotifications,
-  getAllNotifications,
+  listNotifications,
   getUnreadNotificationCount,
-  getAllNotificationsAdmin,
+  listNotificationsAdmin,
   type Notification,
   type NotificationWithProfile,
 } from './notifications'

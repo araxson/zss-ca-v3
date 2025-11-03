@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react'
+
 export interface ResourceItem {
   id: string
   title: string
@@ -5,6 +7,8 @@ export interface ResourceItem {
   type: 'Guide' | 'Template' | 'Benchmark';
   link: string
   linkLabel?: string
+  icon?: LucideIcon
+  iconLabel?: string
 }
 
 export interface ResourcesListData {

@@ -1,8 +1,9 @@
 export {
   getUserTickets,
+  listTickets,
   getTicketById,
-  getAllTickets,
+  getAdminTicketProfile,
   type TicketWithProfile,
   type ReplyWithProfile,
   type TicketWithReplies,
-} from '../queries'
+} from './tickets'

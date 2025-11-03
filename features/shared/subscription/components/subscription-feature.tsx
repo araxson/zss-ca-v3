@@ -13,7 +13,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { SectionHeader } from '@/features/shared/components'
+import { Item, ItemHeader, ItemTitle, ItemDescription } from '@/components/ui/item'
 import { CreditCard } from 'lucide-react'
 
 export async function SubscriptionFeature() {
@@ -31,11 +31,12 @@ export async function SubscriptionFeature() {
   if (!subscription) {
     return (
       <div className="space-y-6">
-        <SectionHeader
-          title="Subscription"
-          description="Manage your subscription plan"
-          align="start"
-        />
+        <Item variant="outline">
+          <ItemHeader>
+            <ItemTitle className="text-3xl font-bold tracking-tight">Subscription</ItemTitle>
+            <ItemDescription>Manage your subscription plan</ItemDescription>
+          </ItemHeader>
+        </Item>
 
         <Empty className="border border-dashed">
           <EmptyHeader>
@@ -59,11 +60,12 @@ export async function SubscriptionFeature() {
 
   return (
     <div className="space-y-6">
-      <SectionHeader
-        title="Subscription"
-        description="Manage your subscription plan"
-        align="start"
-      />
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle className="text-3xl font-bold tracking-tight">Subscription</ItemTitle>
+          <ItemDescription>Manage your subscription plan</ItemDescription>
+        </ItemHeader>
+      </Item>
 
       <SubscriptionCard subscription={subscription} />
     </div>

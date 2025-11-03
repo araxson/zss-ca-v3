@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import type { DeleteNotificationInput } from '../../schema'
+import type { DeleteNotificationInput } from '../schema'
 
 export async function deleteNotificationAction(data: DeleteNotificationInput) {
   const supabase = await createClient()
@@ -26,6 +26,7 @@ export async function deleteNotificationAction(data: DeleteNotificationInput) {
   }
 
   const { error } = await supabase
+    
     .from('notification')
     .delete()
     .eq('id', data.notificationId)

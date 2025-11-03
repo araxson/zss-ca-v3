@@ -1,13 +1,13 @@
 'use client'
 
 import { Control } from 'react-hook-form'
-import { CreateNotificationInput } from '../schema'
+import { CreateNotificationInput } from '../api/schema'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { FieldDescription, FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { User } from 'lucide-react'
-import { notificationTypes } from './create-notification-form-data'
+import { notificationTypes } from '../constants'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 
 type CreateNotificationFormRecipientFieldsProps = {

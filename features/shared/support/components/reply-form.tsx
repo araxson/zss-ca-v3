@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Kbd } from '@/components/ui/kbd'
 import { Spinner } from '@/components/ui/spinner'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -16,13 +15,13 @@ import {
   FieldSet,
 } from '@/components/ui/field'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { replyToTicketSchema, type ReplyToTicketInput } from '../schema'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
+import { replyToTicketSchema, type ReplyToTicketInput } from '../api/schema'
 import { replyToTicketAction } from '../api/mutations'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 
@@ -55,12 +54,12 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add Reply</CardTitle>
-        <CardDescription>Continue the conversation with our support team</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Item variant="outline">
+      <ItemHeader>
+        <ItemTitle>Add Reply</ItemTitle>
+        <ItemDescription>Continue the conversation with our support team</ItemDescription>
+      </ItemHeader>
+      <ItemContent className="basis-full">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FieldSet className="space-y-3">
@@ -100,11 +99,8 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
               </FieldGroup>
             </FieldSet>
 
-            <ButtonGroup>
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting}
-              >
+            <div className="flex gap-2">
+              <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? <Spinner /> : 'Send Reply'}
               </Button>
               <Button
@@ -115,10 +111,10 @@ export function ReplyForm({ ticketId }: ReplyFormProps) {
               >
                 Clear
               </Button>
-            </ButtonGroup>
+            </div>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

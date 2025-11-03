@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/item'
 import { Progress } from '@/components/ui/progress'
 import type { Database } from '@/lib/types/database.types'
-import { getSiteStatusLabel, getSiteStatusProgress } from './dashboard-site-helpers'
+import { getSiteStatusLabel, getSiteStatusProgress } from '@/features/shared/utils'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
 

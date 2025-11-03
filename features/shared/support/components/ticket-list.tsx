@@ -1,42 +1,19 @@
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item'
+import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemHeader, ItemMedia, ItemTitle } from '@/components/ui/item'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { MessageSquare } from 'lucide-react'
-import { SectionHeader } from '@/features/shared/components'
 import type { TicketWithProfile } from '../api/queries'
+import {
+  getTicketStatusVariant,
+  getTicketPriorityVariant,
+  getTicketStatusLabel,
+  getTicketPriorityLabel,
+} from '@/features/shared/support/utils'
 
 interface TicketListProps {
   tickets: TicketWithProfile[]
   basePath: string
-}
-
-function getStatusVariant(status: string) {
-  switch (status) {
-    case 'open':
-      return 'default'
-    case 'in_progress':
-      return 'secondary'
-    case 'resolved':
-      return 'outline'
-    case 'closed':
-      return 'outline'
-    default:
-      return 'default'
-  }
-}
-
-function getPriorityVariant(priority: string) {
-  switch (priority) {
-    case 'high':
-      return 'destructive'
-    case 'medium':
-      return 'default'
-    case 'low':
-      return 'secondary'
-    default:
-      return 'default'
-  }
 }
 
 export function TicketList({ tickets, basePath }: TicketListProps) {
@@ -62,44 +39,43 @@ export function TicketList({ tickets, basePath }: TicketListProps) {
   }
 
   return (
-    <>
-      <SectionHeader
-        title="Support tickets"
-        description="View recent conversations with our team."
-        align="start"
-      />
-      <ItemGroup className="space-y-3">
-          {tickets.map((ticket) => {
-            const createdAt = new Date(ticket.created_at)
+    <ItemGroup className="space-y-3">
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle>Support Tickets</ItemTitle>
+          <ItemDescription>View recent conversations with our team.</ItemDescription>
+        </ItemHeader>
+      </Item>
+      {tickets.map((ticket) => {
+        const createdAt = new Date(ticket.created_at)
 
-            return (
-              <Item asChild key={ticket.id}>
-                <Link
-                  href={`${basePath}/${ticket.id}`}
-                  aria-label={`Open ticket ${ticket.subject}`}
-                >
-                  <ItemMedia>
-                    <MessageSquare className="size-4 text-muted-foreground" aria-hidden="true" />
-                  </ItemMedia>
-                  <ItemContent className="min-w-0 gap-1">
-                    <ItemTitle>{ticket.subject}</ItemTitle>
-                    <ItemDescription>
+        return (
+          <Item asChild key={ticket.id}>
+            <Link
+              href={`${basePath}/${ticket.id}`}
+              aria-label={`Open ticket ${ticket.subject}`}
+            >
+              <ItemMedia>
+                <MessageSquare className="size-4 text-muted-foreground" aria-hidden="true" />
+              </ItemMedia>
+              <ItemContent className="min-w-0 gap-1">
+                <ItemTitle>{ticket.subject}</ItemTitle>
+                <ItemDescription>
                   {ticket.category.replace('_', ' ')} • {createdAt.toLocaleDateString()}
                 </ItemDescription>
               </ItemContent>
               <ItemActions className="gap-2">
-                <Badge variant={getPriorityVariant(ticket.priority)}>
-                  {ticket.priority}
+                <Badge variant={getTicketPriorityVariant(ticket.priority)}>
+                  {getTicketPriorityLabel(ticket.priority)}
                 </Badge>
-                <Badge variant={getStatusVariant(ticket.status)}>
-                  {ticket.status.replace('_', ' ')}
+                <Badge variant={getTicketStatusVariant(ticket.status)}>
+                  {getTicketStatusLabel(ticket.status)}
                 </Badge>
               </ItemActions>
             </Link>
           </Item>
         )
-          })}
-      </ItemGroup>
-    </>
+      })}
+    </ItemGroup>
   )
 }

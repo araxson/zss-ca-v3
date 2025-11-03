@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import type { Database } from '@/lib/types/database.types'
 import { ROUTES } from '@/lib/constants/routes'
 import {
@@ -152,14 +151,18 @@ export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTab
         </ItemContent>
         <ItemSeparator />
         <ItemContent>
-          <ButtonGroup aria-label="Account shortcuts">
+          <div
+            className="flex gap-2"
+            role="group"
+            aria-label="Account shortcuts"
+          >
             <Button variant="outline" onClick={() => onNavigate(ROUTES.CLIENT_SUBSCRIPTION)}>
               Subscription
             </Button>
             <Button variant="outline" onClick={() => onNavigate(ROUTES.CLIENT_SUPPORT)}>
               Support
             </Button>
-          </ButtonGroup>
+          </div>
         </ItemContent>
       </Item>
     </ItemGroup>

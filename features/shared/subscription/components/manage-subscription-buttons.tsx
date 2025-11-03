@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import {
   AlertDialog,
@@ -76,7 +75,7 @@ export function ManageSubscriptionButtons({
   }
 
   return (
-    <ButtonGroup className="w-full">
+    <div className="flex w-full gap-2">
       <Button onClick={handleBillingPortal} disabled={loading} className="flex-1">
         {loading ? <Spinner /> : 'Manage Billing'}
       </Button>
@@ -96,7 +95,7 @@ export function ManageSubscriptionButtons({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <ButtonGroup className="justify-end">
+            <div className="flex justify-end gap-2">
               <AlertDialogCancel asChild>
                 <Button variant="outline">Keep Subscription</Button>
               </AlertDialogCancel>
@@ -105,10 +104,10 @@ export function ManageSubscriptionButtons({
                   {cancelLoading ? <Spinner /> : 'Yes, Cancel'}
                 </Button>
               </AlertDialogAction>
-            </ButtonGroup>
+            </div>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </ButtonGroup>
+    </div>
   )
 }

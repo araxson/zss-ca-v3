@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import type { Database } from '@/lib/types/database.types'
-import type { CreateNotificationInput } from '../../schema'
+import type { CreateNotificationInput } from '../schema'
 
 type Json = Database['public']['Tables']['notification']['Row']['metadata']
 
@@ -28,7 +28,10 @@ export async function createNotificationAction(data: CreateNotificationInput) {
     return { error: 'Only admins can create notifications' }
   }
 
-  const { error } = await supabase.from('notification').insert({
+  const { error } = await supabase
+    
+    .from('notification')
+    .insert({
     profile_id: data.profile_id,
     notification_type: data.notification_type,
     title: data.title,

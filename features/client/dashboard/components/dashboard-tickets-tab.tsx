@@ -4,7 +4,6 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
@@ -15,6 +14,7 @@ import {
   ItemDescription,
   ItemHeader,
   ItemTitle,
+  ItemGroup,
 } from '@/components/ui/item'
 import type { Database } from '@/lib/types/database.types'
 import { ROUTES } from '@/lib/constants/routes'
@@ -116,19 +116,19 @@ export function DashboardTicketsTab({
           </FieldContent>
         </Field>
 
-        <ButtonGroup aria-label="Support actions">
+        <div className="flex gap-2" role="group" aria-label="Support actions">
           <Button asChild>
             <Link href={ROUTES.CLIENT_SUPPORT}>Manage Tickets</Link>
           </Button>
           <Button asChild variant="outline">
             <Link href={ROUTES.CLIENT_SUPPORT_NEW}>Create Ticket</Link>
           </Button>
-        </ButtonGroup>
+        </div>
       </FieldGroup>
 
       {hasResults ? (
         <>
-          <div className="grid gap-4 md:grid-cols-2">
+          <ItemGroup className="!grid gap-4 md:grid-cols-2" aria-label="Support insights">
             <Item variant="outline">
               <ItemHeader>
                 <ItemTitle>Ticket Status</ItemTitle>
@@ -167,7 +167,7 @@ export function DashboardTicketsTab({
               totalTickets={ticketsToRender.length}
               openTicketsCount={hasQuery ? filteredOpenTicketsCount : openTicketsCount}
             />
-          </div>
+          </ItemGroup>
 
           <Item variant="outline">
             <ItemHeader>

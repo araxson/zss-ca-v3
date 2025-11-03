@@ -2,7 +2,7 @@
 
 import { Control } from 'react-hook-form'
 import { Type, FileText } from 'lucide-react'
-import { CreateNotificationInput } from '../schema'
+import { CreateNotificationInput } from '../api/schema'
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupTextarea } from '@/components/ui/input-group'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'

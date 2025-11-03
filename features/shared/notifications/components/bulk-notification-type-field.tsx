@@ -11,9 +11,9 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
-import { notificationTypeOptions } from './bulk-notification-form-data'
+import { notificationTypeOptions } from '../constants/bulk-notification'
 import type { Control } from 'react-hook-form'
-import type { BulkCreateNotificationInput } from '../schema'
+import type { BulkCreateNotificationInput } from '../api/schema'
 
 interface BulkNotificationTypeFieldProps {
   control: Control<BulkCreateNotificationInput>
@@ -35,7 +35,7 @@ export function BulkNotificationTypeField({ control }: BulkNotificationTypeField
               >
                 {notificationTypeOptions.map((option) => (
                   <Label key={option.value} htmlFor={`type-${option.value}`} className="cursor-pointer">
-                    <Item variant="outline" size="sm" className="items-start gap-3">
+                    <Item variant="outline" size="sm">
                       <ItemMedia>
                         <RadioGroupItem value={option.value} id={`type-${option.value}`} />
                       </ItemMedia>

@@ -1,10 +1,11 @@
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+'use client'
+
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import type { BillingInterval } from './pricing-plans.types'
 
-type BillingInterval = 'monthly' | 'yearly'
-
-interface BillingIntervalToggleProps {
+type BillingIntervalToggleProps = {
   value: BillingInterval
   onChange: (interval: BillingInterval) => void
 }
@@ -39,5 +40,3 @@ export function BillingIntervalToggle({ value, onChange }: BillingIntervalToggle
     </Card>
   )
 }
-
-export type { BillingInterval }

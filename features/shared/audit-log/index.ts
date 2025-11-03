@@ -1,5 +1,8 @@
 export { AuditLogTable, CreateAuditLogForm } from './components'
-export { createAuditLogSchema, type CreateAuditLogInput } from './schema'
-export { getAuditLogs, getAuditLogsByResource, getAuditLogsByUser } from './api/queries'
-export { createAuditLogAction } from './api/mutations'
-export type { AuditLog, AuditLogWithProfiles } from './api/queries'
+
+// Client-safe API exports (mutations and schema only)
+export * from './api/mutations'
+export * from './api/schema'
+
+// Server queries must be imported directly:
+// import { getAuditLogs } from '@/features/shared/audit-log/api/queries'

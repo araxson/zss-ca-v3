@@ -1,10 +1,10 @@
 import { Suspense } from 'react'
-import { AdminCreateSiteFeature } from '@/features/admin/sites'
+import { CreateSitePageFeature } from '@/features/admin/sites/new'
 
 export default async function AdminCreateSitePage() {
   return (
     <Suspense fallback={null}>
-      <AdminCreateSiteFeature />
+      <CreateSitePageFeature />
     </Suspense>
   )
 }

@@ -1,4 +1,3 @@
-export { createSiteAction } from './create'
-export { updateSiteAction } from './update'
-export { deploySiteAction } from './deploy'
-export { deleteSiteAction } from './delete'
+// Note: mutations have been moved to sub-routes
+// - create: ./new/api/mutations/
+// - update, delete, deploy: ./[id]/api/mutations/

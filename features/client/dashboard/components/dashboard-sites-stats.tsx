@@ -7,6 +7,13 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item'
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from '@/components/ui/field'
 
 interface DashboardSitesStatsProps {
   totalSites: number
@@ -25,28 +32,45 @@ export function DashboardSitesStats({
         <ItemTitle>Sites Summary</ItemTitle>
         <ItemDescription>Quick overview of your website portfolio</ItemDescription>
       </ItemContent>
-      <ItemContent className="space-y-3">
-        <div className="flex items-center justify-between border-t pt-3">
-          <div>
-            <div className="font-medium">Total Sites</div>
-            <div className="text-sm text-muted-foreground">All websites in your account</div>
-          </div>
-          <Badge variant="secondary">{totalSites}</Badge>
-        </div>
-        <div className="flex items-center justify-between border-t pt-3">
-          <div>
-            <div className="font-medium">Live Sites</div>
-            <div className="text-sm text-muted-foreground">Currently deployed and accessible</div>
-          </div>
-          <Badge variant="default">{activeSitesCount}</Badge>
-        </div>
-        <div className="flex items-center justify-between border-t pt-3">
-          <div>
-            <div className="font-medium">In Progress</div>
-            <div className="text-sm text-muted-foreground">Sites being developed</div>
-          </div>
-          <Badge variant="outline">{sitesInProgressCount}</Badge>
-        </div>
+      <ItemContent className="gap-0">
+        <FieldGroup className="gap-0">
+          <Field
+            orientation="responsive"
+            className="border-t border-border py-3 first:border-t-0 first:pt-0 last:pb-0"
+          >
+            <FieldLabel>Total Sites</FieldLabel>
+            <FieldContent className="flex-row items-start justify-between gap-3">
+              <FieldDescription>All websites in your account</FieldDescription>
+              <Badge variant="secondary" className="shrink-0">
+                {totalSites}
+              </Badge>
+            </FieldContent>
+          </Field>
+          <Field
+            orientation="responsive"
+            className="border-t border-border py-3 first:border-t-0 first:pt-0 last:pb-0"
+          >
+            <FieldLabel>Live Sites</FieldLabel>
+            <FieldContent className="flex-row items-start justify-between gap-3">
+              <FieldDescription>Currently deployed and accessible</FieldDescription>
+              <Badge variant="default" className="shrink-0">
+                {activeSitesCount}
+              </Badge>
+            </FieldContent>
+          </Field>
+          <Field
+            orientation="responsive"
+            className="border-t border-border py-3 first:border-t-0 first:pt-0 last:pb-0"
+          >
+            <FieldLabel>In Progress</FieldLabel>
+            <FieldContent className="flex-row items-start justify-between gap-3">
+              <FieldDescription>Sites being developed</FieldDescription>
+              <Badge variant="outline" className="shrink-0">
+                {sitesInProgressCount}
+              </Badge>
+            </FieldContent>
+          </Field>
+        </FieldGroup>
       </ItemContent>
     </Item>
   )

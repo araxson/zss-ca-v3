@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import type { Database } from '@/lib/types/database.types'
-import type { BulkCreateNotificationInput } from '../../schema'
+import type { BulkCreateNotificationInput } from '../schema'
 
 type Json = Database['public']['Tables']['notification']['Row']['metadata']
 
@@ -54,7 +54,10 @@ export async function bulkCreateNotificationAction(data: BulkCreateNotificationI
     metadata: (data.metadata || {}) as Json,
   }))
 
-  const { error } = await supabase.from('notification').insert(notifications)
+  const { error } = await supabase
+    
+    .from('notification')
+    .insert(notifications)
 
   if (error) {
     return { error: error.message }

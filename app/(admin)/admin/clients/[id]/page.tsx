@@ -1,4 +1,4 @@
-import { getClientById, ClientDetailView } from '@/features/admin/clients'
+import { ClientDetailPageFeature } from '@/features/admin/clients/[id]'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -6,7 +6,5 @@ interface PageProps {
 
 export default async function AdminClientDetailPage({ params }: PageProps) {
   const { id } = await params
-  const client = await getClientById(id)
-
-  return <ClientDetailView client={client} />
+  return <ClientDetailPageFeature clientId={id} />
 }

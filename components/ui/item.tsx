@@ -2,7 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils/index"
 import { Separator } from "@/components/ui/separator"
 
 function ItemGroup({ className, ...props }: React.ComponentProps<"div">) {
@@ -24,7 +24,7 @@ function ItemSeparator({
     <Separator
       data-slot="item-separator"
       orientation="horizontal"
-      className={cn("my-0", className)}
+      className={cn("my-0 basis-full", className)}
       {...props}
     />
   )

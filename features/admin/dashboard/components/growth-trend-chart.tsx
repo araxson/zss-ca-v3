@@ -1,19 +1,20 @@
 'use client'
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+  ItemHeader,
+  ItemSeparator,
+} from '@/components/ui/item'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
-  ResponsiveContainer,
+  CartesianGrid,
   Legend
 } from 'recharts'
 
@@ -33,12 +34,15 @@ export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTr
   ]
 
   return (
-    <Card aria-label="Growth trends chart">
-      <CardHeader>
-        <CardTitle>Growth Trend</CardTitle>
-        <CardDescription>Client and subscription growth over time</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Item variant="outline" aria-label="Growth trends chart">
+      <ItemHeader>
+        <ItemTitle>Growth Trend</ItemTitle>
+      </ItemHeader>
+
+      <ItemSeparator />
+
+      <ItemContent>
+        <ItemDescription>Client and subscription growth over time</ItemDescription>
         <ChartContainer
           config={{
             clients: {
@@ -50,40 +54,32 @@ export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTr
               color: 'hsl(var(--chart-2))',
             },
           }}
-          className="h-64"
+          className="min-h-[300px]"
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={trendData}>
-              <defs>
-                <linearGradient id="colorClients" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="colorSubscriptions" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <ChartTooltip />
-              <Legend />
-              <Area
-                type="monotone"
-                dataKey="clients"
-                stroke="hsl(var(--chart-1))"
-                fill="url(#colorClients)"
-              />
-              <Area
-                type="monotone"
-                dataKey="subscriptions"
-                stroke="hsl(var(--chart-2))"
-                fill="url(#colorSubscriptions)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <BarChart
+            data={trendData}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'hsl(var(--muted))' }} />
+            <Legend />
+            <Bar
+              dataKey="clients"
+              fill="hsl(var(--chart-1))"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={60}
+            />
+            <Bar
+              dataKey="subscriptions"
+              fill="hsl(var(--chart-2))"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={60}
+            />
+          </BarChart>
         </ChartContainer>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

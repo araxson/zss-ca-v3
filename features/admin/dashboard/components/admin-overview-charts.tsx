@@ -1,4 +1,5 @@
 'use client'
+
 import { GrowthTrendChart } from './growth-trend-chart'
 import { SubscriptionDistributionChart } from './subscription-distribution-chart'
 import { SiteStatusChart } from './site-status-chart'
@@ -16,7 +17,7 @@ interface AdminOverviewChartsProps {
 
 export function AdminOverviewCharts({ stats }: AdminOverviewChartsProps) {
   return (
-    <>
+    <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2" aria-label="Growth and subscription charts">
         <GrowthTrendChart
           totalClients={stats.totalClients}
@@ -33,6 +34,6 @@ export function AdminOverviewCharts({ stats }: AdminOverviewChartsProps) {
           liveSites={stats.liveSites}
         />
       </div>
-    </>
+    </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { CreditCard, Globe, LifeBuoy } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,7 +10,9 @@ import {
   ItemDescription,
   ItemFooter,
   ItemHeader,
+  ItemMedia,
   ItemTitle,
+  ItemGroup,
 } from '@/components/ui/item'
 import {
   Tooltip,
@@ -42,8 +45,14 @@ export function DashboardSummaryCards({
   const liveRate = sitesCount > 0 ? Math.round((activeSitesCount / Math.max(sitesCount, 1)) * 100) : 0
   const hasSubscription = Boolean(subscription)
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Item variant="outline">
+    <ItemGroup
+      aria-label="Account summary"
+      className="gap-4 md:grid md:grid-cols-2 lg:grid-cols-3"
+    >
+      <Item variant="outline" role="listitem">
+        <ItemMedia variant="icon">
+          <CreditCard aria-hidden="true" />
+        </ItemMedia>
         <ItemHeader>
           <ItemTitle>Subscription Plan</ItemTitle>
           {hasSubscription && subscription ? (
@@ -80,7 +89,10 @@ export function DashboardSummaryCards({
         </ItemFooter>
       </Item>
 
-      <Item variant="outline">
+      <Item variant="outline" role="listitem">
+        <ItemMedia variant="icon">
+          <Globe aria-hidden="true" />
+        </ItemMedia>
         <ItemHeader>
           <ItemTitle>Websites</ItemTitle>
           <TooltipProvider>
@@ -138,7 +150,10 @@ export function DashboardSummaryCards({
         )}
       </Item>
 
-      <Item variant="outline">
+      <Item variant="outline" role="listitem">
+        <ItemMedia variant="icon">
+          <LifeBuoy aria-hidden="true" />
+        </ItemMedia>
         <ItemHeader>
           <ItemTitle>Support</ItemTitle>
           <Badge variant={openTicketsCount > 0 ? 'destructive' : 'secondary'}>
@@ -162,6 +177,6 @@ export function DashboardSummaryCards({
           </Button>
         </ItemFooter>
       </Item>
-    </div>
+    </ItemGroup>
   )
 }

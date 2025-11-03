@@ -4,7 +4,7 @@ export { pricingPageMetadata } from './pricing.seo'
 export { PricingHero, pricingHeroData } from './sections/pricing-hero'
 export type { PricingHeroData } from './sections/pricing-hero'
 
-export { PricingPlans, pricingPlansCopy } from './sections/pricing-plans'
+export { PricingPlans, pricingPlansData } from './sections/pricing-plans'
 export type {
   PricingPlan,
   PricingPlansProps,

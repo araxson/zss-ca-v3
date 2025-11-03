@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { Check, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
 import {
-  Field,
   FieldDescription,
-  FieldGroup,
   FieldLabel,
 } from '@/components/ui/field'
 import {
@@ -116,17 +113,15 @@ export function UpdateStatusButton({
 
   return (
     <>
-      <FieldGroup className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <Field>
+      <div className="space-y-2">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
           <FieldLabel className="text-sm">Update Status</FieldLabel>
-        </Field>
-        <Field className="flex flex-1 items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 disabled={loading}
-                className="gap-2 w-48 sm:w-56 justify-between"
+                className="w-full gap-2 justify-between sm:w-56"
                 aria-label="Select ticket status"
               >
                 <Badge variant={currentStatusData.variant}>
@@ -152,9 +147,9 @@ export function UpdateStatusButton({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-        </Field>
+        </div>
         <FieldDescription>Closing tickets prevents additional replies.</FieldDescription>
-      </FieldGroup>
+      </div>
 
       <AlertDialog open={showConfirm} onOpenChange={setShowConfirm}>
         <AlertDialogContent>
@@ -166,7 +161,7 @@ export function UpdateStatusButton({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <ButtonGroup>
+            <div className="flex gap-2">
               <AlertDialogCancel asChild>
                 <Button variant="outline" onClick={handleCancel}>
                   Cancel
@@ -175,7 +170,7 @@ export function UpdateStatusButton({
               <AlertDialogAction asChild>
                 <Button onClick={handleUpdate}>Confirm</Button>
               </AlertDialogAction>
-            </ButtonGroup>
+            </div>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

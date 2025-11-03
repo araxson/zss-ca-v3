@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { resend } from './client'
 import * as templates from './templates'
 import { siteConfig } from '../config/site.config'

@@ -14,19 +14,11 @@ import {
   ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
-import { Cell, Pie, PieChart } from 'recharts'
+import { Bar, BarChart, XAxis, YAxis, CartesianGrid } from 'recharts'
 
 interface DashboardSitesChartProps {
   chartData: Array<{ name: string; count: number }>
 }
-
-const CHART_COLORS = [
-  'hsl(var(--chart-1))',
-  'hsl(var(--chart-2))',
-  'hsl(var(--chart-3))',
-  'hsl(var(--chart-4))',
-  'hsl(var(--chart-5))',
-]
 
 export function DashboardSitesChart({ chartData }: DashboardSitesChartProps) {
   if (chartData.length === 0) {
@@ -62,28 +54,24 @@ export function DashboardSitesChart({ chartData }: DashboardSitesChartProps) {
               color: 'hsl(var(--chart-1))',
             },
           }}
-          className="min-h-[200px]"
+          className="min-h-[280px]"
         >
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              label={false}
-              outerRadius={80}
-              fill="hsl(var(--chart-1))"
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <XAxis type="number" />
+            <YAxis dataKey="name" type="category" width={100} />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'hsl(var(--muted))' }} />
+            <Bar
               dataKey="count"
-            >
-              {chartData.map((_entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={CHART_COLORS[index % CHART_COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <ChartTooltip content={<ChartTooltipContent />} />
-          </PieChart>
+              fill="hsl(var(--chart-1))"
+              radius={[0, 4, 4, 0]}
+              maxBarSize={40}
+            />
+          </BarChart>
         </ChartContainer>
       </ItemContent>
     </Item>

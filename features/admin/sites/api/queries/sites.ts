@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, requireAuth, requireAdminRole } from '@/lib/supabase'
 import type { Database } from '@/lib/types/database.types'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
@@ -14,8 +14,10 @@ export type SiteWithRelations = ClientSite & {
   subscription: Pick<Subscription, 'id' | 'status'> | null
 }
 
-export async function getAllSites(): Promise<SiteWithRelations[]> {
+export async function listSites(): Promise<SiteWithRelations[]> {
   const supabase = await createClient()
+  const user = await requireAuth(supabase)
+  await requireAdminRole(supabase, user.id)
 
   const { data: sites } = await supabase
     .from('client_site')
@@ -31,26 +33,10 @@ export async function getAllSites(): Promise<SiteWithRelations[]> {
   return (sites as SiteWithRelations[]) || []
 }
 
-export async function getSiteById(siteId: string): Promise<SiteWithRelations | null> {
-  const supabase = await createClient()
-
-  const { data: site } = await supabase
-    .from('client_site')
-    .select(`
-      *,
-      profile:profile_id(id, contact_name, contact_email, company_name),
-      plan:plan_id(id, name, slug),
-      subscription:subscription_id(id, status)
-    `)
-    .eq('id', siteId)
-    .is('deleted_at', null)
-    .single()
-
-  return (site as SiteWithRelations) || null
-}
-
 export async function getSitesByClientId(profileId: string): Promise<ClientSite[]> {
   const supabase = await createClient()
+  const user = await requireAuth(supabase)
+  await requireAdminRole(supabase, user.id)
 
   const { data: sites } = await supabase
     .from('client_site')

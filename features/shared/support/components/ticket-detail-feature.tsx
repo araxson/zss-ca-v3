@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
 import { getTicketById } from '@/features/shared/support/api/queries'
-import { TicketDetail } from '@/features/shared/support'
+import { TicketDetail } from './ticket-detail'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   Empty,
@@ -11,7 +11,7 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { SectionHeader } from '@/features/shared/components'
+import { Item, ItemHeader, ItemTitle, ItemDescription } from '@/components/ui/item'
 
 interface TicketDetailFeatureProps {
   id: string
@@ -58,11 +58,12 @@ export async function TicketDetailFeature({ id }: TicketDetailFeatureProps) {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      <SectionHeader
-        title="Ticket Details"
-        description="View and respond to your support ticket"
-        align="start"
-      />
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle className="text-3xl font-bold tracking-tight">Ticket Details</ItemTitle>
+          <ItemDescription>View and respond to your support ticket</ItemDescription>
+        </ItemHeader>
+      </Item>
 
       <TicketDetail ticket={ticket} currentUserId={user.id} isAdmin={false} />
     </div>

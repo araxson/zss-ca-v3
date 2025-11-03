@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { TicketDetailFeature } from '@/features/shared/support'
+import { TicketDetailFeature } from '@/features/shared/support/components/ticket-detail-feature'
 
 interface PageProps {
   params: Promise<{ id: string }>

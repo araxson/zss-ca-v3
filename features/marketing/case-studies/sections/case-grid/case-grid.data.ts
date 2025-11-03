@@ -1,3 +1,4 @@
+import { Gavel, HeartPulse, Home, Laptop } from 'lucide-react'
 import type { CaseGridData } from './case-grid.types'
 
 export const caseGridData: CaseGridData = {
@@ -9,6 +10,8 @@ export const caseGridData: CaseGridData = {
       industry: 'Health & wellness',
       summary: 'Rebuilt their patient acquisition funnel with appointment integrations and accessibility-first design.',
       services: ['UX Strategy', 'Web Development', 'Analytics'],
+      icon: HeartPulse,
+      iconLabel: 'Healthcare icon',
     },
     {
       id: 'north-peak',
@@ -16,6 +19,8 @@ export const caseGridData: CaseGridData = {
       industry: 'Home services',
       summary: 'Localized SEO pages and seasonal landing campaigns that doubled quote requests in 60 days.',
       services: ['Marketing Site', 'SEO Foundations', 'Ongoing Support'],
+      icon: Home,
+      iconLabel: 'Home services icon',
     },
     {
       id: 'lumen-software',
@@ -23,6 +28,8 @@ export const caseGridData: CaseGridData = {
       industry: 'Tech / SaaS',
       summary: 'Launched a docs hub, marketing site, and changelog that ship in sync with their product team.',
       services: ['Design System', 'CMS Integration', 'Product Marketing'],
+      icon: Laptop,
+      iconLabel: 'Technology icon',
     },
     {
       id: 'harbour-legal',
@@ -30,6 +37,8 @@ export const caseGridData: CaseGridData = {
       industry: 'Professional services',
       summary: 'Positioned a boutique legal firm with thought-leadership resources and lead routing automations.',
       services: ['Brand Refresh', 'Web Development', 'Content Enablement'],
+      icon: Gavel,
+      iconLabel: 'Legal icon',
     },
   ],
 }

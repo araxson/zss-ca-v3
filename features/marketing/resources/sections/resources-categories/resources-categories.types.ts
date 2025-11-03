@@ -1,8 +1,12 @@
+import type { LucideIcon } from 'lucide-react'
+
 export interface ResourceCategory {
   id: string
   eyebrow?: string
   name: string
   description: string
+  icon?: LucideIcon
+  iconLabel?: string
 }
 
 export interface ResourcesCategoriesData {

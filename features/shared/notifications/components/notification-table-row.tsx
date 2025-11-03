@@ -15,7 +15,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import type { NotificationWithProfile } from '../api/queries'
 
@@ -82,7 +81,6 @@ export function NotificationTableRow({
             <Button
               aria-label="Delete notification"
               variant="ghost"
-              size="sm"
               disabled={deletingId === notification.id}
             >
               <Trash2 className="size-4" aria-hidden="true" />
@@ -98,7 +96,7 @@ export function NotificationTableRow({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <ButtonGroup>
+              <div className="flex gap-2">
                 <AlertDialogCancel asChild>
                   <Button variant="outline">Cancel</Button>
                 </AlertDialogCancel>
@@ -111,7 +109,7 @@ export function NotificationTableRow({
                     {deletingId === notification.id ? <Spinner /> : 'Delete'}
                   </Button>
                 </AlertDialogAction>
-              </ButtonGroup>
+              </div>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

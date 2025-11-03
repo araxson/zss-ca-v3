@@ -1,7 +1,10 @@
-import { getAdminDashboardStats, AdminOverview } from '@/features/admin/dashboard'
+import { Suspense } from 'react'
+import { AdminDashboardFeature } from '@/features/admin/dashboard'
 
 export default async function AdminDashboardPage() {
-  const stats = await getAdminDashboardStats()
-
-  return <AdminOverview stats={stats} />
+  return (
+    <Suspense fallback={null}>
+      <AdminDashboardFeature />
+    </Suspense>
+  )
 }

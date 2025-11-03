@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
-import { getAllNotifications, getUnreadNotificationCount } from '@/features/shared/notifications/api/queries'
+import { listNotifications, getUnreadNotificationCount } from '@/features/shared/notifications/api/queries'
 import { NotificationList } from '@/features/shared/notifications'
-import { SectionHeader } from '@/features/shared/components'
+import { Item, ItemHeader, ItemTitle, ItemDescription } from '@/components/ui/item'
 
 export async function NotificationsFeature() {
   const supabase = await createClient()
@@ -16,17 +16,18 @@ export async function NotificationsFeature() {
   }
 
   const [notifications, unreadCount] = await Promise.all([
-    getAllNotifications(user.id),
+    listNotifications(user.id),
     getUnreadNotificationCount(user.id),
   ])
 
   return (
     <div className="space-y-6">
-      <SectionHeader
-        title="Notifications"
-        description="Stay updated with important information about your account and sites"
-        align="start"
-      />
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle className="text-3xl font-bold tracking-tight">Notifications</ItemTitle>
+          <ItemDescription>Stay updated with important information about your account and sites</ItemDescription>
+        </ItemHeader>
+      </Item>
 
       <NotificationList notifications={notifications} hasUnread={unreadCount > 0} />
     </div>

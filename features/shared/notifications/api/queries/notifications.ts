@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { createClient } from '@/lib/supabase/server'
+import { createClient, requireAuth, requireAdminRole } from '@/lib/supabase'
 import type { Database } from '@/lib/types/database.types'
 
 export type Notification = Database['public']['Tables']['notification']['Row']
@@ -17,6 +17,7 @@ export async function getUnreadNotifications(
   userId: string
 ): Promise<Notification[]> {
   const supabase = await createClient()
+  await requireAuth(supabase)
 
   const { data, error } = await supabase
     .from('notification')
@@ -34,11 +35,12 @@ export async function getUnreadNotifications(
   return data || []
 }
 
-export async function getAllNotifications(
+export async function listNotifications(
   userId: string,
   limit = 50
 ): Promise<Notification[]> {
   const supabase = await createClient()
+  await requireAuth(supabase)
 
   const { data, error } = await supabase
     .from('notification')
@@ -60,6 +62,7 @@ export async function getUnreadNotificationCount(
   userId: string
 ): Promise<number> {
   const supabase = await createClient()
+  await requireAuth(supabase)
 
   const { count, error } = await supabase
     .from('notification')
@@ -76,10 +79,12 @@ export async function getUnreadNotificationCount(
   return count || 0
 }
 
-export async function getAllNotificationsAdmin(
+export async function listNotificationsAdmin(
   limit = 100
 ): Promise<NotificationWithProfile[]> {
   const supabase = await createClient()
+  const user = await requireAuth(supabase)
+  await requireAdminRole(supabase, user.id)
 
   const { data, error } = await supabase
     .from('notification')

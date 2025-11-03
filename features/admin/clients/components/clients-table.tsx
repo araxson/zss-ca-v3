@@ -1,10 +1,11 @@
+'use client'
+
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -60,8 +61,7 @@ export function ClientsTable({ clients }: ClientsTableProps) {
 
   return (
     <ScrollArea className="rounded-md border">
-      <Table className="min-w-[720px]">
-        <TableCaption>Client accounts with subscription status and quick actions.</TableCaption>
+      <Table className="min-w-[620px] md:min-w-[720px]">
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>

@@ -1,18 +1,12 @@
 'use client'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
   Item,
   ItemContent,
   ItemDescription,
   ItemGroup,
+  ItemHeader,
   ItemSeparator,
   ItemTitle,
 } from '@/components/ui/item'
@@ -33,12 +27,12 @@ export function PlatformMetrics({ totalClients, activeSubscriptions, liveSites }
     : 0
 
   return (
-    <Card aria-label="Platform metrics summary">
-      <CardHeader>
-        <CardTitle>Platform Metrics</CardTitle>
-        <CardDescription>Key performance indicators</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Item variant="outline" aria-label="Platform metrics summary">
+      <ItemHeader>
+        <ItemTitle>Platform Metrics</ItemTitle>
+        <ItemDescription>Key performance indicators</ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         <ItemGroup>
           <Item variant="muted" size="sm">
             <ItemContent>
@@ -72,7 +66,7 @@ export function PlatformMetrics({ totalClients, activeSubscriptions, liveSites }
             </Badge>
           </Item>
         </ItemGroup>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

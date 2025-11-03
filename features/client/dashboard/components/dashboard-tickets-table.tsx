@@ -7,6 +7,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableCaption,
   TableHead,
   TableHeader,
   TableRow,
@@ -24,6 +25,7 @@ export function DashboardTicketsTable({ tickets }: DashboardTicketsTableProps) {
   return (
     <ScrollArea className="rounded-md border" aria-label="Support tickets table">
       <Table>
+        <TableCaption>Latest tickets ordered by created date</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Subject</TableHead>
@@ -72,7 +74,9 @@ export function DashboardTicketsTable({ tickets }: DashboardTicketsTableProps) {
                 </Badge>
               </TableCell>
               <TableCell>
-                {new Date(ticket.created_at).toLocaleDateString()}
+                <time dateTime={ticket.created_at}>
+                  {new Date(ticket.created_at).toLocaleDateString()}
+                </time>
               </TableCell>
             </TableRow>
           ))}

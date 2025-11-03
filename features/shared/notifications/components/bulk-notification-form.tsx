@@ -4,11 +4,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { bulkCreateNotificationSchema, type BulkCreateNotificationInput } from '../schema'
+import { bulkCreateNotificationSchema, type BulkCreateNotificationInput } from '../api/schema'
 import { bulkCreateNotificationAction } from '../api/mutations'
 import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
-import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Users } from 'lucide-react'
@@ -78,14 +77,12 @@ export function BulkNotificationForm() {
 
   return (
     <div className="space-y-6">
-      <Item variant="muted" className="flex flex-col gap-2">
-        <ItemContent className="space-y-1">
-          <div className="flex items-center gap-2">
-            <ItemMedia>
-              <Users className="size-5" />
-            </ItemMedia>
-            <ItemTitle>Send to All Clients</ItemTitle>
-          </div>
+      <Item variant="muted">
+        <ItemMedia>
+          <Users className="size-5" />
+        </ItemMedia>
+        <ItemContent>
+          <ItemTitle>Send to All Clients</ItemTitle>
           <ItemDescription>
             This notification will be sent to all active clients in the system
           </ItemDescription>
@@ -93,7 +90,7 @@ export function BulkNotificationForm() {
       </Item>
 
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" aria-live="assertive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -105,47 +102,48 @@ export function BulkNotificationForm() {
       )}
 
       <Form {...form}>
-        <Item variant="outline" className="p-6">
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-6"
-          >
-          <FieldSet className="space-y-4">
-            <FieldLegend>Broadcast type</FieldLegend>
-            <FieldGroup>
-              <BulkNotificationTypeField control={form.control} />
-            </FieldGroup>
-          </FieldSet>
+        <Item variant="outline">
+          <ItemContent className="basis-full">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6">
+              <FieldSet className="space-y-4">
+                <FieldLegend>Broadcast type</FieldLegend>
+                <FieldGroup>
+                  <BulkNotificationTypeField control={form.control} />
+                </FieldGroup>
+              </FieldSet>
 
-          <FieldSet className="space-y-4">
-            <FieldLegend>Content</FieldLegend>
-            <FieldGroup className="space-y-4">
-              <BulkNotificationContentFields control={form.control} />
-            </FieldGroup>
-          </FieldSet>
+              <FieldSet className="space-y-4">
+                <FieldLegend>Content</FieldLegend>
+                <FieldGroup className="space-y-4">
+                  <BulkNotificationContentFields control={form.control} />
+                </FieldGroup>
+              </FieldSet>
 
-          <FieldSet className="space-y-4">
-            <FieldLegend>Follow-up</FieldLegend>
-            <FieldDescription>Optionally include a link and expiration for this announcement.</FieldDescription>
-            <FieldGroup className="grid gap-4 sm:grid-cols-2">
-              <BulkNotificationFollowupFields control={form.control} />
-            </FieldGroup>
-          </FieldSet>
+              <FieldSet className="space-y-4">
+                <FieldLegend>Follow-up</FieldLegend>
+                <FieldDescription>
+                  Optionally include a link and expiration for this announcement.
+                </FieldDescription>
+                <FieldGroup className="grid gap-4 sm:grid-cols-2">
+                  <BulkNotificationFollowupFields control={form.control} />
+                </FieldGroup>
+              </FieldSet>
 
-          <ButtonGroup>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? <Spinner /> : 'Send to All Clients'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-          </ButtonGroup>
-          </form>
+              <div className="flex gap-2">
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? <Spinner /> : 'Send to All Clients'}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.back()}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </ItemContent>
         </Item>
       </Form>
     </div>

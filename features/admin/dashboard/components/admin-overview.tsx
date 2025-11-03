@@ -1,13 +1,13 @@
 'use client'
 
-import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { SectionHeader } from '@/features/shared/components'
+import { Item, ItemContent, ItemTitle, ItemDescription } from '@/components/ui/item'
 import { AdminOverviewStats } from './admin-overview-stats'
 import { AdminOverviewCharts } from './admin-overview-charts'
 import { AdminOverviewActions } from './admin-overview-actions'
 import { AdminRecentClients } from './admin-recent-clients'
 import { AdminRecentTickets } from './admin-recent-tickets'
+import type { TicketStatus, TicketPriority } from '@/lib/types/global.types'
 
 interface AdminOverviewProps {
   stats: {
@@ -25,8 +25,8 @@ interface AdminOverviewProps {
     recentTickets: Array<{
       id: string
       subject: string
-      status: string
-      priority: string
+      status: TicketStatus
+      priority: TicketPriority
       created_at: string
       profile: { contact_name: string | null; company_name: string | null } | null
     }>
@@ -38,13 +38,12 @@ interface AdminOverviewProps {
 export function AdminOverview({ stats }: AdminOverviewProps) {
   return (
     <div className="space-y-6">
-      <SectionHeader
-        title="Admin Dashboard"
-        description="Overview of your platform performance"
-        align="start"
-      />
-
-      <Separator />
+      <Item variant="outline">
+        <ItemContent>
+          <ItemTitle className="text-3xl font-bold tracking-tight">Admin Dashboard</ItemTitle>
+          <ItemDescription>Overview of your platform performance and key metrics</ItemDescription>
+        </ItemContent>
+      </Item>
 
       <AdminOverviewStats stats={stats} />
 

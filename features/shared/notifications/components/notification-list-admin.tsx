@@ -8,8 +8,6 @@ import { deleteNotificationAction } from '../api/mutations'
 import {
   Table,
   TableBody,
-  TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -24,7 +22,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { SectionHeader } from '@/features/shared/components'
 import { NotificationTableRow } from './notification-table-row'
 
 type NotificationListAdminProps = {
@@ -98,20 +95,14 @@ export function NotificationListAdmin({ notifications }: NotificationListAdminPr
 
   return (
     <div className="space-y-4">
-      <SectionHeader
-        title="Client notifications"
-        description="Review broadcasts and individual messages sent to clients."
-        align="start"
-      />
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" aria-live="assertive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
-      <ScrollArea className="rounded-md border" aria-label="Client notifications table">
-        <Table className="min-w-[960px]">
-          <TableCaption>Latest notifications sent to clients with status tracking.</TableCaption>
+      <ScrollArea className="rounded-md border" aria-label="Notifications table">
+        <Table className="min-w-[700px] lg:min-w-[960px]">
           <TableHeader>
             <TableRow>
               <TableHead>Type</TableHead>

@@ -1,13 +1,13 @@
 'use client'
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { ChartContainer, ChartTooltip } from '@/components/ui/chart'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemHeader,
+  ItemTitle,
+} from '@/components/ui/item'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import {
   Empty,
   EmptyDescription,
@@ -15,19 +15,12 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
+  Bar,
+  BarChart,
+  XAxis,
+  YAxis,
+  CartesianGrid,
 } from 'recharts'
-
-const CHART_COLORS = [
-  'hsl(var(--chart-1))',
-  'hsl(var(--chart-2))',
-  'hsl(var(--chart-3))',
-  'hsl(var(--chart-4))',
-  'hsl(var(--chart-5))',
-]
 
 interface SubscriptionDistributionChartProps {
   planDistribution: Record<string, number>
@@ -40,51 +33,48 @@ export function SubscriptionDistributionChart({ planDistribution }: Subscription
   }))
 
   return (
-    <Card aria-label="Subscription distribution chart">
-      <CardHeader>
-        <CardTitle>Subscription Distribution</CardTitle>
-        <CardDescription>Active subscriptions by plan</CardDescription>
-      </CardHeader>
-      <CardContent>
+    <Item variant="outline" aria-label="Subscription distribution chart">
+      <ItemHeader>
+        <ItemTitle>Subscription Distribution</ItemTitle>
+        <ItemDescription>Active subscriptions by plan</ItemDescription>
+      </ItemHeader>
+      <ItemContent>
         {planChartData.length > 0 ? (
           <ChartContainer
             config={{
               count: {
                 label: 'Subscriptions',
-                color: 'hsl(var(--primary))',
+                color: 'hsl(var(--chart-2))',
               },
             }}
-            className="h-64"
+            className="min-h-[280px]"
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={planChartData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="hsl(var(--primary))"
-                  dataKey="count"
-                >
-                  {planChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
-                  ))}
-                </Pie>
-                <ChartTooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            <BarChart
+              data={planChartData}
+              layout="vertical"
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+              <XAxis type="number" />
+              <YAxis dataKey="name" type="category" width={100} />
+              <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'hsl(var(--muted))' }} />
+              <Bar
+                dataKey="count"
+                fill="hsl(var(--chart-2))"
+                radius={[0, 4, 4, 0]}
+                maxBarSize={40}
+              />
+            </BarChart>
           </ChartContainer>
         ) : (
-          <Empty className="h-64">
+          <Empty className="min-h-[280px]">
             <EmptyHeader>
               <EmptyTitle>No subscription data</EmptyTitle>
               <EmptyDescription>No active subscriptions to display</EmptyDescription>
             </EmptyHeader>
           </Empty>
         )}
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   )
 }

@@ -8,12 +8,9 @@ export {
 // Server components must be imported directly:
 // import { SubscriptionFeature } from '@/features/shared/subscription/components/subscription-feature'
 
-export {
-  createCheckoutSessionSchema,
-  cancelSubscriptionSchema,
-  type CreateCheckoutSessionInput,
-  type CancelSubscriptionInput,
-} from './schema'
+// Client-safe API exports (mutations and schema only, no server queries)
+export * from './api/mutations'
+export * from './api/schema'
 
-// Server-only types - safe to export as types
-export type { SubscriptionWithPlan } from './api/queries'
+// Server queries must be imported directly:
+// import { getSubscription } from '@/features/shared/subscription/api/queries'

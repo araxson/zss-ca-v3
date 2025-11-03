@@ -36,91 +36,90 @@ export function SubscriptionCard({ subscription }: SubscriptionCardProps) {
   const yearlyPrice = monthlyPrice * 12
 
   return (
-    <Item variant="outline" className="space-y-6 rounded-lg border p-6">
-      <ItemContent className="space-y-6">
-        <Item variant="muted" className="flex flex-col gap-3">
-          <ItemContent className="space-y-1">
-            <ItemTitle>{plan.name} Plan</ItemTitle>
-            <ItemDescription>{plan.description}</ItemDescription>
-        </ItemContent>
-        <ItemActions>
-          <Badge
-            className="w-fit"
-            variant={isActive ? 'default' : isPastDue ? 'destructive' : 'secondary'}
-          >
-            {subscription.status}
-          </Badge>
-        </ItemActions>
-      </Item>
+    <Item variant="outline">
+      <ItemContent className="basis-full">
+        <div className="space-y-6 p-6">
+          <Item variant="muted">
+            <ItemContent>
+              <ItemTitle>{plan.name} Plan</ItemTitle>
+              <ItemDescription>{plan.description}</ItemDescription>
+            </ItemContent>
+            <ItemActions>
+              <Badge variant={isActive ? 'default' : isPastDue ? 'destructive' : 'secondary'}>
+                {subscription.status}
+              </Badge>
+            </ItemActions>
+          </Item>
 
-      <FieldSet className="space-y-4">
-        <FieldLegend>Billing details</FieldLegend>
-        <FieldGroup className="space-y-4">
-          {currentPeriodEnd && (
-            <>
+          <FieldSet className="space-y-4">
+            <FieldLegend>Billing details</FieldLegend>
+            <FieldGroup className="space-y-4">
+              {currentPeriodEnd && (
+                <>
+                  <Field>
+                    <FieldLabel>Current Period</FieldLabel>
+                    <FieldDescription>
+                      Renews on {currentPeriodEnd.toLocaleDateString()}
+                    </FieldDescription>
+                  </Field>
+                  <Separator />
+                </>
+              )}
+
               <Field>
-                <FieldLabel>Current Period</FieldLabel>
+                <FieldLabel>Plan Features</FieldLabel>
                 <FieldDescription>
-                  Renews on {currentPeriodEnd.toLocaleDateString()}
+                  <div className="space-y-2">
+                    <Item variant="outline" size="sm">
+                      <ItemMedia>
+                        <Check className="size-4 text-muted-foreground" aria-hidden="true" />
+                      </ItemMedia>
+                      <ItemContent>
+                        <ItemTitle>
+                          {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
+                        </ItemTitle>
+                        <ItemDescription>Page allotment included in this plan</ItemDescription>
+                      </ItemContent>
+                    </Item>
+                    <Item variant="outline" size="sm">
+                      <ItemMedia>
+                        <Check className="size-4 text-muted-foreground" aria-hidden="true" />
+                      </ItemMedia>
+                      <ItemContent>
+                        <ItemTitle>
+                          {plan.revision_limit
+                            ? `${plan.revision_limit} revisions/month`
+                            : 'Unlimited revisions'}
+                        </ItemTitle>
+                        <ItemDescription>Revision capacity per billing cycle</ItemDescription>
+                      </ItemContent>
+                    </Item>
+                  </div>
                 </FieldDescription>
               </Field>
+
               <Separator />
-            </>
+
+              <Field>
+                <FieldLabel>Pricing</FieldLabel>
+                <p className="font-medium">
+                  ${monthlyPrice}/month or ${yearlyPrice}/year
+                </p>
+              </Field>
+            </FieldGroup>
+          </FieldSet>
+
+          {isPastDue && (
+            <Alert variant="destructive" aria-live="assertive">
+              <AlertTitle>Payment Failed</AlertTitle>
+              <AlertDescription>
+                Please update your payment method to continue your subscription.
+              </AlertDescription>
+            </Alert>
           )}
 
-          <Field>
-            <FieldLabel>Plan Features</FieldLabel>
-            <FieldDescription>
-              <div className="space-y-2">
-                <Item variant="outline" size="sm">
-                  <ItemMedia>
-                    <Check className="size-4 text-muted-foreground" aria-hidden="true" />
-                  </ItemMedia>
-                  <ItemContent>
-                    <ItemTitle>
-                      {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
-                    </ItemTitle>
-                    <ItemDescription>Page allotment included in this plan</ItemDescription>
-                  </ItemContent>
-                </Item>
-                <Item variant="outline" size="sm">
-                  <ItemMedia>
-                    <Check className="size-4 text-muted-foreground" aria-hidden="true" />
-                  </ItemMedia>
-                  <ItemContent>
-                    <ItemTitle>
-                      {plan.revision_limit
-                        ? `${plan.revision_limit} revisions/month`
-                        : 'Unlimited revisions'}
-                    </ItemTitle>
-                    <ItemDescription>Revision capacity per billing cycle</ItemDescription>
-                  </ItemContent>
-                </Item>
-              </div>
-            </FieldDescription>
-          </Field>
-
-          <Separator />
-
-          <Field>
-            <FieldLabel>Pricing</FieldLabel>
-            <p className="font-medium">
-              ${monthlyPrice}/month or ${yearlyPrice}/year
-            </p>
-          </Field>
-        </FieldGroup>
-      </FieldSet>
-
-      {isPastDue && (
-        <Alert variant="destructive">
-          <AlertTitle>Payment Failed</AlertTitle>
-          <AlertDescription>
-            Please update your payment method to continue your subscription.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <ManageSubscriptionButtons subscriptionId={subscription.id} />
+          <ManageSubscriptionButtons subscriptionId={subscription.id} />
+        </div>
       </ItemContent>
     </Item>
   )

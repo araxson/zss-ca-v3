@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ROUTES } from '@/lib/constants/routes'
-import { CreateTicketForm } from '@/features/shared/support'
-import { SectionHeader } from '@/features/shared/components'
+import { CreateTicketForm } from './create-ticket-form'
+import { Item, ItemHeader, ItemTitle, ItemDescription } from '@/components/ui/item'
 
 export async function NewTicketFeature() {
   const supabase = await createClient()
@@ -16,11 +16,12 @@ export async function NewTicketFeature() {
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <SectionHeader
-        title="Create Support Ticket"
-        description="Submit a new support request"
-        align="start"
-      />
+      <Item variant="outline">
+        <ItemHeader>
+          <ItemTitle className="text-3xl font-bold tracking-tight">Create Support Ticket</ItemTitle>
+          <ItemDescription>Submit a new support request</ItemDescription>
+        </ItemHeader>
+      </Item>
 
       <CreateTicketForm />
     </div>

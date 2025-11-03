@@ -1,5 +1,1 @@
-export { ClientDetailCard } from './client-detail-card'
-export { ClientDetailView } from './client-detail-view'
 export { ClientsTable } from './clients-table'
-export { DeleteClientButton } from './delete-client-button'
-export { EditClientForm } from './edit-client-form'

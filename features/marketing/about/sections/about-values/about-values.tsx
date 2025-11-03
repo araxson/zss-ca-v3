@@ -1,5 +1,10 @@
-import { Check } from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '@/components/ui/item'
 import { SectionHeader } from '@/features/shared/components'
 import { aboutValuesData } from './about-values.data'
 
@@ -9,19 +14,33 @@ export function AboutValues() {
       <SectionHeader title={aboutValuesData.title} align="center" />
       <div className="grid gap-4 md:grid-cols-2">
         {aboutValuesData.values.map((value) => (
-          <Card key={value.title}>
-            <CardHeader>
+          <Item
+            key={value.title}
+            variant="outline"
+            asChild
+            className="h-full flex-col items-start gap-4 rounded-xl bg-background/60 p-6 text-left"
+          >
+            <article aria-labelledby={`about-value-${value.title.replace(/\s+/g, '-').toLowerCase()}`}>
               <div className="flex items-start gap-3">
-                <span className="mt-1 text-primary" aria-hidden="true">
-                  <Check className="size-5" />
-                </span>
-                <div className="space-y-1">
-                  <CardTitle>{value.title}</CardTitle>
-                  <CardDescription>{value.description}</CardDescription>
-                </div>
+                {value.icon ? (
+                  <>
+                    <ItemMedia variant="icon" aria-hidden="true">
+                      <value.icon className="size-5" aria-hidden="true" />
+                    </ItemMedia>
+                    <span className="sr-only">{value.iconLabel}</span>
+                  </>
+                ) : null}
+                <ItemContent className="gap-2">
+                  <ItemTitle id={`about-value-${value.title.replace(/\s+/g, '-').toLowerCase()}`}>
+                    {value.title}
+                  </ItemTitle>
+                  <ItemDescription className="line-clamp-none">
+                    {value.description}
+                  </ItemDescription>
+                </ItemContent>
               </div>
-            </CardHeader>
-          </Card>
+            </article>
+          </Item>
         ))}
       </div>
     </section>

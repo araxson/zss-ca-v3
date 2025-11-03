@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { NewTicketFeature } from '@/features/shared/support'
+import { NewTicketFeature } from '@/features/shared/support/components/new-ticket-feature'
 
 export default async function NewSupportTicketPage() {
   return (

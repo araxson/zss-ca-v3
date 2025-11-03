@@ -7,17 +7,10 @@ export {
   NotificationListAdmin,
   NotificationsFeature,
 } from './components'
-export {
-  createNotificationSchema,
-  bulkCreateNotificationSchema,
-  type CreateNotificationInput,
-  type BulkCreateNotificationInput,
-} from './schema'
-export {
-  getUnreadNotifications,
-  getAllNotifications,
-  getUnreadNotificationCount,
-  getAllNotificationsAdmin,
-} from './api/queries'
-export { createNotificationAction, markNotificationReadAction, bulkCreateNotificationAction } from './api/mutations'
-export type { Notification, NotificationWithProfile } from './api/queries'
+
+// Client-safe API exports (mutations and schema only)
+export * from './api/mutations'
+export * from './api/schema'
+
+// Server queries must be imported directly:
+// import { getNotifications } from '@/features/shared/notifications/api/queries'

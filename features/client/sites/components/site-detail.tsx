@@ -2,6 +2,7 @@ import { SectionHeader } from '@/features/shared/components'
 import type { Database } from '@/lib/types/database.types'
 import { SiteDetailOverview } from './site-detail-overview'
 import { SiteDetailInfo } from './site-detail-info'
+import { formatStatus } from '@/features/shared/utils'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
 type Plan = Database['public']['Tables']['plan']['Row']
@@ -12,10 +13,6 @@ type SiteWithPlan = ClientSite & {
 
 interface SiteDetailProps {
   site: SiteWithPlan
-}
-
-function formatStatus(status: string) {
-  return status.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())
 }
 
 export function SiteDetail({ site }: SiteDetailProps) {

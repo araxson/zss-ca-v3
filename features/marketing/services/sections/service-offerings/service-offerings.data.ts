@@ -1,3 +1,4 @@
+import { Compass, Layout, LineChart } from 'lucide-react'
 import type { ServiceOfferingsData } from './service-offerings.types'
 
 export const serviceOfferingsData: ServiceOfferingsData = {
@@ -7,6 +8,8 @@ export const serviceOfferingsData: ServiceOfferingsData = {
       id: 'strategy',
       title: 'Strategy & research',
       summary: 'We start with your goals, audience, and brand voice so every page has purpose.',
+      icon: Compass,
+      iconLabel: 'Discovery icon',
       features: [
         { title: 'Audience discovery', description: 'User interviews and keyword research to guide messaging.' },
         { title: 'Content planning', description: 'Page outlines, content guidance, and copy support.' },
@@ -17,6 +20,8 @@ export const serviceOfferingsData: ServiceOfferingsData = {
       id: 'design',
       title: 'Design & development',
       summary: 'Modern, responsive websites built on a battle-tested Next.js stack.',
+      icon: Layout,
+      iconLabel: 'Design icon',
       features: [
         { title: 'Component-driven design', description: 'Systemized UI components for faster iterations.' },
         { title: 'Performance obsessed', description: 'Lighthouse, accessibility, and SEO baked into every build.' },
@@ -27,6 +32,8 @@ export const serviceOfferingsData: ServiceOfferingsData = {
       id: 'care',
       title: 'Growth & care',
       summary: 'Stay ahead of customer needs with continuous improvements and analytics insights.',
+      icon: LineChart,
+      iconLabel: 'Growth icon',
       features: [
         { title: 'Ongoing enhancements', description: 'Unlimited update requests routed through your roadmap.' },
         { title: 'Monthly analytics digest', description: 'Actionable insights with recommendations from our team.' },

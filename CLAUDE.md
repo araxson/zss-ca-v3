@@ -61,8 +61,10 @@ if (!user) throw new Error('Unauthorized')
 
 ### Pattern 1: Portal Features (admin, client)
 
+**Hybrid Structure:** Main page at root level, sub-pages nested within.
+
 ```
-features/{portal}/[feature]/
+features/{portal}/[page]/              # Main page (e.g., /admin/sites)
 ├── api/
 │   ├── queries/
 │   │   ├── index.ts                    # Re-exports (< 50 lines)
@@ -72,18 +74,75 @@ features/{portal}/[feature]/
 │   │   ├── index.ts                    # Re-exports (< 50 lines)
 │   │   ├── [action].ts                 # Mutation functions (< 300 lines)
 │   │   └── helpers.ts                  # Mutation helpers (< 200 lines)
-│   ├── types.ts                        # API types (< 200 lines)
 │   ├── schema.ts                       # Zod schemas (< 250 lines)
+│   ├── types.ts                        # API types (< 200 lines)
 │   └── constants.ts                    # Constants (< 100 lines)
 ├── components/
-│   ├── index.ts                         # Re-exports ALL components (< 50 lines)
-│   ├── [feature]-[component].tsx       # Components (< 200 lines)
+│   ├── index.ts                        # Re-exports ALL components (< 50 lines)
+│   ├── [page]-[component].tsx          # Components (< 200 lines)
 │   └── [component-name].tsx            # Components (< 200 lines)
 ├── hooks/
 │   └── use-[hook-name].ts              # Hooks (< 150 lines)
 ├── utils/
 │   └── [utility-name].ts               # Utils (< 150 lines)
-└── index.tsx                           # Feature export (< 50 lines)
+├── [id]/                               # Sub-page: detail view (e.g., /admin/sites/[id])
+│   ├── api/
+│   │   ├── queries/
+│   │   │   ├── index.ts                # Re-exports (< 50 lines)
+│   │   │   └── [domain].ts             # Query functions (< 300 lines)
+│   │   ├── mutations/
+│   │   │   ├── index.ts                # Re-exports (< 50 lines)
+│   │   │   └── [action].ts             # Mutation functions (< 300 lines)
+│   │   └── schema.ts                   # Zod schemas (< 250 lines)
+│   ├── components/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   └── [component].tsx             # Components (< 200 lines)
+│   └── index.ts                        # Feature export (< 50 lines)
+├── new/                                # Sub-page: create form (e.g., /admin/sites/new)
+│   ├── api/
+│   │   ├── mutations/
+│   │   │   ├── index.ts                # Re-exports (< 50 lines)
+│   │   │   └── [action].ts             # Mutation functions (< 300 lines)
+│   │   └── schema.ts                   # Zod schemas (< 250 lines)
+│   ├── components/
+│   │   ├── index.ts                    # Re-exports (< 50 lines)
+│   │   └── [component].tsx             # Components (< 200 lines)
+│   └── index.ts                        # Feature export (< 50 lines)
+└── index.ts                            # Main page feature export (< 50 lines)
+```
+
+**Structure Examples:**
+
+```
+# Single page (no sub-routes)
+features/admin/dashboard/
+├── api/
+├── components/
+└── index.ts
+
+# Page with detail view
+features/admin/clients/
+├── api/                    # For /admin/clients (list)
+├── components/
+├── [id]/                   # For /admin/clients/[id] (detail)
+│   ├── api/
+│   ├── components/
+│   └── index.ts
+└── index.ts
+
+# Page with create + detail
+features/admin/sites/
+├── api/                    # For /admin/sites (list)
+├── components/
+├── new/                    # For /admin/sites/new (create)
+│   ├── api/
+│   ├── components/
+│   └── index.ts
+├── [id]/                   # For /admin/sites/[id] (detail)
+│   ├── api/
+│   ├── components/
+│   └── index.ts
+└── index.ts
 ```
 
 **File Limits:**
@@ -95,6 +154,11 @@ features/{portal}/[feature]/
 - Types: < 200 lines
 - Schemas: < 250 lines
 - Constants: < 100 lines
+
+**Naming Convention:**
+- Main page: `[page]-page-feature.tsx` or components for the list
+- Sub-page: `[subpage]-page-feature.tsx` or components for the specific route
+- Map directly to app/ routes for clarity
 
 ---
 
@@ -126,7 +190,7 @@ features/marketing/[page-name]/
 ### Pattern 3: Auth Features
 
 ```
-features/shared/auth/
+features/auth/
 ├── api/
 │   ├── queries/
 │   │   ├── index.ts                    # Re-exports (< 50 lines)
