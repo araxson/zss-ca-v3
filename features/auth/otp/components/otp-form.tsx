@@ -1,25 +1,27 @@
 'use client'
 
-import * as React from 'react'
+import { Fragment, useActionState, useState, useEffect } from 'react'
 import Link from 'next/link'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Item } from '@/components/ui/item'
-import { FieldGroup } from '@/components/ui/field'
+import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
 import { ROUTES } from '@/lib/constants/routes'
-import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 import { OTPFormHeader } from './otp-form-header'
 import { OTPFormActions } from './otp-form-actions'
-
-const otpSchema = z.object({
-  otp: z.string().min(6, {
-    message: 'Your one-time password must be 6 characters.',
-  }),
-})
+import { AlertCircle, CheckCircle2 } from 'lucide-react'
+import { toast } from 'sonner'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import { cn } from '@/lib/utils/index'
+import { Kbd } from '@/components/ui/kbd'
+import { AuthFormAnnouncements } from '@/features/auth/components/auth-form-announcements'
 
 interface OTPFormProps {
   email: string
@@ -38,71 +40,172 @@ export function OTPForm({
   title = 'Enter Verification Code',
   description = "We've sent a 6-digit verification code to your email.",
 }: OTPFormProps) {
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [isResending, setIsResending] = React.useState(false)
-  const [error, setError] = React.useState<string | null>(null)
-  const [canResend, setCanResend] = React.useState(false)
-  const [resendTimer, setResendTimer] = React.useState(60)
+  const [isResending, setIsResending] = useState(false)
+  const [resendTimer, setResendTimer] = useState(0)
+  const [resendSuccess, setResendSuccess] = useState(false)
+  const [otpAnnouncement, setOtpAnnouncement] = useState<string | null>(null)
+  const otpDescriptionId = 'otp-instructions'
+  const verificationSteps = (() => {
+    if (verificationType === 'password_reset') {
+      return [
+        { label: '1. Request Reset', status: 'complete' as const },
+        { label: '2. Verify Code', status: 'current' as const },
+        { label: '3. Update Password', status: 'upcoming' as const },
+      ]
+    }
 
-  const form = useForm<z.infer<typeof otpSchema>>({
-    resolver: zodResolver(otpSchema),
-    defaultValues: {
-      otp: '',
-    },
-  })
+    if (verificationType === 'email_confirmation') {
+      return [
+        { label: '1. Create Account', status: 'complete' as const },
+        { label: '2. Verify Email', status: 'current' as const },
+        { label: '3. Get Started', status: 'upcoming' as const },
+      ]
+    }
 
-  React.useEffect(() => {
+    return [
+      { label: '1. Sign In', status: 'complete' as const },
+      { label: '2. Verify Code', status: 'current' as const },
+      { label: '3. Access Account', status: 'upcoming' as const },
+    ]
+  })()
+
+  // Handle resend cooldown timer
+  useEffect(() => {
     if (resendTimer > 0) {
       const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000)
       return () => clearTimeout(timer)
     }
-
-    setCanResend(true)
+    return undefined
   }, [resendTimer])
 
-  async function onSubmit(data: z.infer<typeof otpSchema>) {
-    setIsLoading(true)
-    setError(null)
+  useEffect(() => {
+    if (!resendSuccess) {
+      return
+    }
+
+    toast.success('Verification code sent', {
+      description: 'Check your email for the new code. It may take a few moments to arrive.',
+    })
+
+    const timer = setTimeout(() => setResendSuccess(false), 5000)
+    return () => clearTimeout(timer)
+  }, [resendSuccess])
+
+  useEffect(() => {
+    if (isPending) {
+      setOtpAnnouncement('Verifying code, please wait')
+    }
+  }, [isPending])
+
+  useEffect(() => {
+    if (!otpAnnouncement) {
+      return
+    }
+
+    const timer = setTimeout(() => setOtpAnnouncement(null), 1500)
+    return () => clearTimeout(timer)
+  }, [otpAnnouncement])
+
+  // Create a wrapper action for useActionState
+  const verifyAction = async (
+    prevState: { error?: string; success?: boolean } | null,
+    formData: FormData
+  ) => {
+    const otp = formData.get('otp') as string
+
+    if (!otp || otp.length !== 6) {
+      return {
+        error: 'Please enter a valid 6-digit code',
+      }
+    }
 
     try {
-      const result = await onVerify(data.otp)
+      const result = await onVerify(otp)
 
       if (!result.success) {
-        setError(result.message || 'Invalid verification code')
-        form.reset()
-        return
+        return {
+          error: result.message || 'Invalid or expired verification code. Please try again or request a new code.',
+        }
       }
-    } catch (_err) {
-      setError('An error occurred. Please try again.')
-      form.reset()
-    } finally {
-      setIsLoading(false)
+
+      toast.success('Code verified successfully', {
+        description: 'Redirecting you to the next step.',
+      })
+
+      return {
+        success: true,
+      }
+    } catch (_error) {
+      return {
+        error: 'An error occurred while verifying your code. Please try again.',
+      }
     }
   }
 
-  async function handleResend() {
-    if (!canResend || !onResend) return
+  const handleResend = async () => {
+    if (!onResend || isResending || resendTimer > 0) return
 
     setIsResending(true)
-    setError(null)
+    setResendSuccess(false)
 
     try {
       await onResend()
-      setCanResend(false)
-      setResendTimer(60)
-      form.reset()
-    } catch (_err) {
-      setError('Failed to resend code. Please try again.')
+      setResendTimer(60) // 60 second cooldown
+      setResendSuccess(true)
+      setOtpAnnouncement('Verification code resent successfully')
+    } catch (error) {
+      console.error('Failed to resend code:', error)
     } finally {
       setIsResending(false)
     }
   }
 
+  const [state, formAction, isPending] = useActionState(verifyAction, null)
+
+  const announcements = [
+    isPending && 'Verifying code, please wait',
+    isResending && 'Sending new code, please wait',
+    !isPending && state?.error,
+    !isPending && state?.success && 'Code verified successfully',
+    resendSuccess && 'New code sent successfully',
+    resendTimer > 0 && `You can request a new code in ${resendTimer} seconds`,
+    otpAnnouncement,
+  ]
+
   return (
     <div className="flex flex-col gap-6 items-center">
+      <AuthFormAnnouncements messages={announcements} />
+
       <Item variant="outline" className="overflow-hidden bg-card max-w-7xl w-full">
         <div className="grid p-0 md:grid-cols-2 gap-0 w-full">
           <FieldGroup className="gap-6 p-6 md:p-8">
+            <Breadcrumb>
+              <BreadcrumbList>
+                {verificationSteps.map((step, index) => (
+                  <Fragment key={step.label}>
+                    <BreadcrumbItem>
+                      {step.status === 'current' ? (
+                        <BreadcrumbPage className="font-medium text-foreground">
+                          {step.label}
+                        </BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink asChild>
+                          <span
+                            className={cn(
+                              step.status === 'complete' ? 'text-foreground' : 'text-muted-foreground',
+                            )}
+                          >
+                            {step.label}
+                          </span>
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                    {index < verificationSteps.length - 1 ? <BreadcrumbSeparator /> : null}
+                  </Fragment>
+                ))}
+              </BreadcrumbList>
+            </Breadcrumb>
+
             <OTPFormHeader
               title={title}
               description={description}
@@ -110,55 +213,80 @@ export function OTPForm({
               verificationType={verificationType}
             />
 
-            {error ? (
-              <Alert variant="destructive" aria-live="assertive">
-                <AlertDescription>{error}</AlertDescription>
+            {/* Success message for code resend */}
+            {resendSuccess ? (
+              <Alert className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 text-green-900 dark:text-green-100">
+                <CheckCircle2 className="size-4 text-green-600 dark:text-green-400" />
+                <AlertTitle>Code sent</AlertTitle>
+                <AlertDescription>
+                  A new verification code has been sent to your email. It may take a few minutes to arrive.
+                </AlertDescription>
               </Alert>
             ) : null}
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FieldGroup className="gap-4">
-                  <FormField
-                    control={form.control}
-                    name="otp"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormFieldLayout
-                          label="One-Time Password"
-                          description="Enter the 6-digit code sent to your email"
-                        >
-                          <FormControl>
-                            <InputOTP maxLength={6} disabled={isLoading} {...field}>
-                              <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                              </InputOTPGroup>
-                              <InputOTPSeparator />
-                              <InputOTPGroup>
-                                <InputOTPSlot index={3} />
-                                <InputOTPSlot index={4} />
-                                <InputOTPSlot index={5} />
-                              </InputOTPGroup>
-                            </InputOTP>
-                          </FormControl>
-                        </FormFieldLayout>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </FieldGroup>
+            {/* Error message from form submission */}
+            {state?.error ? (
+              <Alert variant="destructive" aria-live="assertive">
+                <AlertCircle className="size-4" />
+                <AlertTitle>Verification failed</AlertTitle>
+                <AlertDescription>{state.error}</AlertDescription>
+              </Alert>
+            ) : null}
 
-                <OTPFormActions
-                  isLoading={isLoading}
-                  isResending={isResending}
-                  canResend={canResend}
-                  resendTimer={resendTimer}
-                  onResend={onResend ? handleResend : undefined}
-                />
-              </form>
-            </Form>
+            <form action={formAction} className="space-y-6" noValidate>
+              <FieldGroup className="gap-4">
+                <Field data-invalid={!!state?.error}>
+                  <FieldLabel htmlFor="otp">One-Time Password</FieldLabel>
+                  <FieldDescription id={otpDescriptionId}>
+                    Enter the 6-digit code we sent. Use <Kbd>Tab</Kbd> to move forward and{' '}
+                    <Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> to move back between slots.
+                  </FieldDescription>
+                  <InputOTP
+                    maxLength={6}
+                    disabled={isPending}
+                    name="otp"
+                    id="otp"
+                    required
+                    aria-required="true"
+                    aria-invalid={!!state?.error}
+                    aria-describedby={[
+                      state?.error ? 'otp-error' : null,
+                      otpDescriptionId,
+                    ].filter(Boolean).join(' ')}
+                    onChange={(value) => {
+                      if (value.length === 3) {
+                        setOtpAnnouncement('Halfway through code entry')
+                      }
+                    }}
+                    onComplete={() => {
+                      setOtpAnnouncement('Code entry complete, verifying now')
+                    }}
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                    </InputOTPGroup>
+                    <InputOTPSeparator />
+                    <InputOTPGroup>
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                  {state?.error ? (
+                    <FieldError id="otp-error" errors={[{ message: state.error }]} />
+                  ) : null}
+                </Field>
+              </FieldGroup>
+
+              <OTPFormActions
+                isResending={isResending}
+                canResend={resendTimer === 0}
+                resendTimer={resendTimer}
+                onResend={handleResend}
+              />
+            </form>
           </FieldGroup>
 
           <div className="bg-muted relative hidden md:flex items-center rounded-md justify-center text-center">

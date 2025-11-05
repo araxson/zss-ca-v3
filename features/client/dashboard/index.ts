@@ -1,3 +1,2 @@
-// Client Dashboard - Public API
-export { DashboardFeature, DashboardOverview } from './components'
-export * from './api'
+export * from './components'
+export { DashboardFeature } from './components/dashboard-feature'

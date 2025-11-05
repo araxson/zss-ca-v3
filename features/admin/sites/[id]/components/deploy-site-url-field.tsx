@@ -16,7 +16,7 @@ interface DeploySiteUrlFieldProps {
   control: Control<DeploySiteInput>
 }
 
-export function DeploySiteUrlField({ control }: DeploySiteUrlFieldProps) {
+export function DeploySiteUrlField({ control }: DeploySiteUrlFieldProps): React.JSX.Element {
   return (
     <FormField
       control={control}

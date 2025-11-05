@@ -1,3 +1,5 @@
+import 'server-only'
+
 import { redirect } from 'next/navigation'
 import { Users, BadgeCheck, UserMinus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
@@ -11,20 +13,19 @@ export async function ClientsPageFeature() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect(ROUTES.LOGIN)
 
-  const { data: profile } = await supabase.from('profile').select('role').eq('id', user.id).single()
-  if (profile?.role !== 'admin') redirect(ROUTES.CLIENT_DASHBOARD)
+  // ✅ Parallel data fetching to avoid waterfall
+  const [profileResult, clients] = await Promise.all([
+    supabase.from('profile').select('role').eq('id', user.id).single(),
+    listClients(),
+  ])
 
-  const clients = await listClients()
+  const { data: profile } = profileResult
+  if (profile?.role !== 'admin') redirect(ROUTES.CLIENT_DASHBOARD)
   const activeClients = clients.filter((c) => c.subscription)
   const inactiveClients = clients.filter((c) => !c.subscription)
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Clients</h1>
-        <p className="text-muted-foreground">Manage all client accounts - {clients.length} {clients.length === 1 ? 'client' : 'clients'} total</p>
-      </div>
-
       <ItemGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Item variant="outline" aria-label="Total clients summary">
           <ItemMedia variant="icon">

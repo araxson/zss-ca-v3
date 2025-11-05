@@ -1,2 +1,9 @@
-// Queries - Public API
-export * from './tickets'
+export {
+  getUserTickets,
+  listTickets,
+  getTicketById,
+  getAdminTicketProfile,
+  type TicketWithProfile,
+  type ReplyWithProfile,
+  type TicketWithReplies,
+} from './tickets'

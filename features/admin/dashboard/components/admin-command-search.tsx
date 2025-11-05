@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/command'
 import { ROUTES } from '@/lib/constants/routes'
 
-export function AdminCommandSearch() {
+export function AdminCommandSearch(): React.JSX.Element {
   const router = useRouter()
 
   return (

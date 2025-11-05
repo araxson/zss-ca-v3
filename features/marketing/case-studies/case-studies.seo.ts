@@ -14,7 +14,22 @@ export const caseStudiesPageMetadata: Metadata = {
       'How Canadian organizations launch, scale, and optimize their marketing sites with Zenith Strategic Solutions.',
     url: `${siteConfig.url}/case-studies`,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `Case Studies | ${siteConfig.name}`,
+      },
+    ],
     locale: 'en_CA',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `Case Studies | ${siteConfig.name}`,
+    description:
+      'How Canadian organizations launch, scale, and optimize their marketing sites with Zenith Strategic Solutions.',
+    images: [siteConfig.ogImage],
   },
 }

@@ -1,12 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
-import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty'
-import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
+import { FieldGroup } from '@/components/ui/field'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import {
   Item,
@@ -14,13 +12,18 @@ import {
   ItemDescription,
   ItemHeader,
   ItemTitle,
-  ItemGroup,
 } from '@/components/ui/item'
 import type { Database } from '@/lib/types/database.types'
-import { ROUTES } from '@/lib/constants/routes'
+import { ROUTES, ROUTE_HELPERS } from '@/lib/constants/routes'
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
+import { DashboardSearchField } from './dashboard-search-field'
 import { DashboardTicketsStats } from './dashboard-tickets-stats'
 import { DashboardTicketsTable } from './dashboard-tickets-table'
+import {
+  getTicketStatusLabel,
+  getTicketPriorityLabel,
+  getTicketPriorityVariant,
+} from '@/features/client/support/utils'
 
 type SupportTicket = Database['public']['Tables']['support_ticket']['Row']
 
@@ -37,30 +40,39 @@ export function DashboardTicketsTab({
 }: DashboardTicketsTabProps) {
   const [query, setQuery] = useState('')
 
+  // React Compiler automatically memoizes these simple operations
   const trimmedQuery = query.trim().toLowerCase()
-  const filteredTickets = useMemo(() => {
-    if (!trimmedQuery) return tickets
-    return tickets.filter((ticket) => {
-      const values = [ticket.subject, ticket.status, ticket.priority]
-      return values.some((value) => value.toLowerCase().includes(trimmedQuery))
-    })
-  }, [tickets, trimmedQuery])
+  const filteredTickets = !trimmedQuery
+    ? tickets
+    : tickets.filter((ticket) => {
+        const values = [ticket.subject, ticket.status, ticket.priority]
+        return values.some((value) => value.toLowerCase().includes(trimmedQuery))
+      })
+
   const hasQuery = trimmedQuery.length > 0
   const ticketsToRender = hasQuery ? filteredTickets : tickets
-  const chartDataToRender = useMemo(() => {
-    if (!hasQuery) return ticketChartData
-    const grouped = filteredTickets.reduce<Record<string, number>>((acc, ticket) => {
-      const label = ticket.status.replace('_', ' ')
-      acc[label] = (acc[label] ?? 0) + 1
-      return acc
-    }, {})
-    return Object.entries(grouped).map(([name, count]) => ({ name, count }))
-  }, [filteredTickets, hasQuery, ticketChartData])
-  const filteredOpenTicketsCount = useMemo(
-    () => filteredTickets.filter((ticket) => ticket.status === 'open').length,
-    [filteredTickets],
-  )
+  const chartDataToRender = !hasQuery
+    ? ticketChartData
+    : (() => {
+        const grouped = filteredTickets.reduce<Record<string, number>>((acc, ticket) => {
+          const label = ticket.status.replace('_', ' ')
+          acc[label] = (acc[label] ?? 0) + 1
+          return acc
+        }, {})
+        return Object.entries(grouped).map(([name, count]) => ({ name, count }))
+      })()
+
+  const filteredOpenTicketsCount = filteredTickets.filter((ticket) => ticket.status === 'open').length
   const hasResults = ticketsToRender.length > 0
+
+  const searchSuggestions = ticketsToRender.slice(0, 6).map((ticket) => ({
+    value: ticket.subject || ticket.id,
+    label: ticket.subject || 'Untitled ticket',
+    href: ROUTE_HELPERS.clientSupportDetail(ticket.id),
+    description: `${getTicketPriorityLabel(ticket.priority)} • ${getTicketStatusLabel(ticket.status)}`,
+    badge: getTicketPriorityLabel(ticket.priority),
+    badgeVariant: getTicketPriorityVariant(ticket.priority),
+  }))
 
   if (tickets.length === 0) {
     return (
@@ -81,40 +93,16 @@ export function DashboardTicketsTab({
   return (
     <>
       <FieldGroup>
-        <Field orientation="responsive">
-          <FieldLabel htmlFor="client-ticket-search">Search tickets</FieldLabel>
-          <FieldContent>
-            <InputGroup>
-              <InputGroupInput
-                id="client-ticket-search"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search by subject, status, or priority"
-                aria-label="Search support tickets"
-              />
-              <InputGroupAddon align="inline-start" aria-hidden="true">
-                <Search className="size-4" />
-              </InputGroupAddon>
-              <InputGroupAddon align="inline-end">
-                <InputGroupText aria-live="polite">
-                  {ticketsToRender.length} results
-                </InputGroupText>
-                {hasQuery ? (
-                  <InputGroupButton
-                    type="button"
-                    onClick={() => setQuery('')}
-                    aria-label="Clear search"
-                  >
-                    <X className="size-4" />
-                  </InputGroupButton>
-                ) : null}
-              </InputGroupAddon>
-            </InputGroup>
-            <FieldDescription>
-              Filter your support history. Charts and summaries update with your search.
-            </FieldDescription>
-          </FieldContent>
-        </Field>
+        <DashboardSearchField
+          label="Search tickets"
+          placeholder="Search by subject, status, or priority"
+          value={query}
+          onChange={setQuery}
+          resultsCount={ticketsToRender.length}
+          suggestions={searchSuggestions}
+          description="Filter your support history. Charts and summaries update with your search."
+          ariaLabel="Search support tickets"
+        />
 
         <div className="flex gap-2" role="group" aria-label="Support actions">
           <Button asChild>
@@ -128,7 +116,7 @@ export function DashboardTicketsTab({
 
       {hasResults ? (
         <>
-          <ItemGroup className="!grid gap-4 md:grid-cols-2" aria-label="Support insights">
+          <div className="grid gap-4 md:grid-cols-2" role="list" aria-label="Support insights">
             <Item variant="outline">
               <ItemHeader>
                 <ItemTitle>Ticket Status</ItemTitle>
@@ -140,16 +128,16 @@ export function DashboardTicketsTab({
                     config={{
                       count: {
                         label: 'Tickets',
-                        color: 'hsl(var(--chart-3))',
+                        color: 'var(--chart-3)',
                       },
                     }}
                     className="min-h-[208px]"
                   >
-                    <BarChart data={chartDataToRender}>
+                    <BarChart accessibilityLayer data={chartDataToRender}>
                       <XAxis dataKey="name" />
                       <YAxis />
                       <ChartTooltip content={<ChartTooltipContent />} />
-                      <Bar dataKey="count" fill="hsl(var(--chart-3))" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="count" fill="var(--chart-3)" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ChartContainer>
                 ) : (
@@ -167,7 +155,7 @@ export function DashboardTicketsTab({
               totalTickets={ticketsToRender.length}
               openTicketsCount={hasQuery ? filteredOpenTicketsCount : openTicketsCount}
             />
-          </ItemGroup>
+          </div>
 
           <Item variant="outline">
             <ItemHeader>

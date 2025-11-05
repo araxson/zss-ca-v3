@@ -13,7 +13,7 @@ import { OTPForm } from './otp-form'
 import { verifyOTPAction, resendOTPAction } from '../api/mutations'
 import { ROUTES } from '@/lib/constants/routes'
 
-export function OTPVerificationForm() {
+export function OTPVerificationForm(): React.JSX.Element {
   const searchParams = useSearchParams()
   const router = useRouter()
   const email = searchParams.get('email') || ''
@@ -27,11 +27,11 @@ export function OTPVerificationForm() {
       type,
     })
 
-    if (!result.error) {
+    if ('error' in result && result.error === null) {
       // Handle different verification types
       if (type === 'password_reset') {
         // Redirect to update password page
-        router.push(`${ROUTES.UPDATE_PASSWORD}?email=${encodeURIComponent(email)}&profileId=${result.profileId}`)
+        router.push(`${ROUTES.UPDATE_PASSWORD}?email=${encodeURIComponent(email)}&profileId=${result.data?.profileId}`)
       } else if (type === 'email_confirmation') {
         // If user came from pricing page with a plan, redirect to pricing to complete checkout
         if (planId) {
@@ -44,7 +44,7 @@ export function OTPVerificationForm() {
       return { success: true }
     }
 
-    return { success: false, message: result.error }
+    return { success: false, message: 'error' in result && result.error !== null ? result.error : 'An error occurred' }
   }
 
   const handleResend = async () => {

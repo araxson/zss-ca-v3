@@ -31,15 +31,15 @@ interface DeleteClientButtonProps {
   clientName: string
 }
 
-export function DeleteClientButton({ clientId, clientName }: DeleteClientButtonProps) {
+export function DeleteClientButton({ clientId, clientName }: DeleteClientButtonProps): React.JSX.Element {
   const router = useRouter()
   const [isDeleting, setIsDeleting] = useState(false)
 
-  async function handleDelete() {
+  async function handleDelete(): Promise<void> {
     setIsDeleting(true)
     const result = await deleteClientAction({ profileId: clientId })
 
-    if (result.error) {
+    if ('error' in result) {
       toast.error('Delete failed', {
         description: result.error,
       })

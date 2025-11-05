@@ -6,13 +6,13 @@ import { FieldDescription, FieldGroup, FieldLegend, FieldSet } from '@/component
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 import { Globe, FileText } from 'lucide-react'
 import type { UseFormReturn } from 'react-hook-form'
+import type { CreateSiteInput } from '../api/schema'
 
 interface CreateSiteDetailFieldsProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<any>
+  form: UseFormReturn<CreateSiteInput>
 }
 
-export function CreateSiteDetailFields({ form }: CreateSiteDetailFieldsProps) {
+export function CreateSiteDetailFields({ form }: CreateSiteDetailFieldsProps): React.JSX.Element {
   return (
     <FieldSet className="space-y-4">
       <FieldLegend>Project details</FieldLegend>
@@ -52,7 +52,7 @@ export function CreateSiteDetailFields({ form }: CreateSiteDetailFieldsProps) {
                     <InputGroupTextarea
                       placeholder="Enter design requirements, brand references, and success criteria..."
                       rows={6}
-                      value={typeof field.value?.notes === 'string' ? field.value.notes : ''}
+                      value={typeof field.value?.['notes'] === 'string' ? field.value['notes'] : ''}
                       onChange={(event) => field.onChange({ notes: event.target.value })}
                     />
                   </InputGroup>

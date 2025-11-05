@@ -1,3 +1,3 @@
-import { AuthNotFound } from '@/features/shared/components'
+import { AuthNotFound } from '@/components/error-boundaries'
 
 export default AuthNotFound

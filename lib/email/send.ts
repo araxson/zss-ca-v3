@@ -4,7 +4,7 @@ import { resend } from './client'
 import * as templates from './templates'
 import { siteConfig } from '../config/site.config'
 
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'noreply@example.com'
+const FROM_EMAIL = process.env['RESEND_FROM_EMAIL'] || 'noreply@example.com'
 
 interface SendEmailOptions {
   to: string
@@ -15,7 +15,7 @@ interface SendEmailOptions {
 
 async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   // Check if RESEND_API_KEY is configured
-  if (!process.env.RESEND_API_KEY) {
+  if (!process.env['RESEND_API_KEY']) {
     console.warn('RESEND_API_KEY not configured - email not sent')
     // In development, return success with mock data
     if (process.env.NODE_ENV === 'development') {
@@ -41,7 +41,7 @@ async function sendEmail({ to, subject, html, text }: SendEmailOptions) {
   }
 }
 
-export async function sendWelcomeEmail(to: string, name: string) {
+export async function sendWelcomeEmail(to: string, name: string): Promise<{ success: boolean; data?: unknown; error?: unknown }> {
   const template = templates.welcomeEmail(name)
   return sendEmail({ to, ...template })
 }
@@ -107,7 +107,7 @@ export async function sendSiteStatusChangedEmail(
   return sendEmail({ to, ...template })
 }
 
-export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string) {
+export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string): Promise<{ success: boolean; data?: unknown; error?: unknown }> {
   const template = templates.passwordResetEmail(name, resetUrl)
   return sendEmail({ to, ...template })
 }

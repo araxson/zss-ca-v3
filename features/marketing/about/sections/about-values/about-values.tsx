@@ -5,13 +5,18 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
-import { SectionHeader } from '@/features/shared/components'
 import { aboutValuesData } from './about-values.data'
 
 export function AboutValues() {
   return (
     <section className="space-y-6">
-      <SectionHeader title={aboutValuesData.title} align="center" />
+      <div className="flex flex-col items-center text-center gap-4">
+        <div className="flex flex-col items-center gap-3">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            {aboutValuesData.title}
+          </h2>
+        </div>
+      </div>
       <div className="grid gap-4 md:grid-cols-2">
         {aboutValuesData.values.map((value) => (
           <Item

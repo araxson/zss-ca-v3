@@ -31,13 +31,16 @@ import {
 } from '@/components/ui/empty'
 import { Users } from 'lucide-react'
 import { ROUTES } from '@/lib/constants/routes'
+import { ClientPagination } from '@/components/shared/pagination'
 import type { ClientProfile } from '../api/queries'
 
 interface ClientsTableProps {
   clients: ClientProfile[]
 }
 
-export function ClientsTable({ clients }: ClientsTableProps) {
+const ITEMS_PER_PAGE = 10
+
+export function ClientsTable({ clients }: ClientsTableProps): React.JSX.Element {
   if (clients.length === 0) {
     return (
       <Empty className="border border-dashed">
@@ -60,21 +63,26 @@ export function ClientsTable({ clients }: ClientsTableProps) {
   }
 
   return (
-    <ScrollArea className="rounded-md border">
-      <Table className="min-w-[620px] md:min-w-[720px]">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Company</TableHead>
-            <TableHead>Subscription</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Joined</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {clients.map((client) => {
+    <ClientPagination items={clients} itemsPerPage={ITEMS_PER_PAGE}>
+      {(paginatedClients) => (
+        <ScrollArea className="rounded-md border">
+          <Table className="min-w-[620px] md:min-w-[720px]">
+            <caption className="sr-only">
+              List of client accounts with subscription details and contact information
+            </caption>
+            <TableHeader>
+              <TableRow>
+                <TableHead scope="col">Name</TableHead>
+                <TableHead scope="col">Email</TableHead>
+                <TableHead scope="col">Company</TableHead>
+                <TableHead scope="col">Subscription</TableHead>
+                <TableHead scope="col">Status</TableHead>
+                <TableHead scope="col">Joined</TableHead>
+                <TableHead scope="col" className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedClients.map((client) => {
             const joinedDate = new Date(client.created_at)
 
             return (
@@ -159,9 +167,11 @@ export function ClientsTable({ clients }: ClientsTableProps) {
               </TableRow>
             )
           })}
-        </TableBody>
-      </Table>
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      )}
+    </ClientPagination>
   )
 }

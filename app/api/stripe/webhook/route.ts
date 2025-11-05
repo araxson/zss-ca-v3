@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyWebhookSignature } from '@/lib/stripe/webhooks'
 import {
+  verifyWebhookSignature,
   handleCheckoutCompleted,
   handleSubscriptionUpdate,
   handleSubscriptionDeleted,
   handlePaymentSucceeded,
   handlePaymentFailed,
-} from '@/lib/stripe/webhook-handlers'
+} from '@/lib/stripe'
 import Stripe from 'stripe'
+
+// ✅ Next.js 15+: Route handlers are not cached by default
+// Explicitly set dynamic for clarity on POST endpoints (webhooks must never cache)
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,9 +45,14 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ received: true })
-  } catch (error) {
-    const err = error as Error
-    console.error('Webhook error:', err.message)
-    return NextResponse.json({ error: err.message }, { status: 400 })
+  } catch (error: unknown) {
+    // Type guard for Error instances
+    if (error instanceof Error) {
+      console.error('Webhook error:', error.message, error.stack)
+    } else {
+      console.error('Webhook error:', String(error))
+    }
+    // Don't expose internal error details to Stripe
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 400 })
   }
 }

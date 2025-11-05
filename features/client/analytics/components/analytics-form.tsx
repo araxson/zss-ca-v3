@@ -25,7 +25,7 @@ type AnalyticsFormProps = {
   }>
 }
 
-export function AnalyticsForm({ sites }: AnalyticsFormProps) {
+export function AnalyticsForm({ sites }: AnalyticsFormProps): React.JSX.Element {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,15 +42,15 @@ export function AnalyticsForm({ sites }: AnalyticsFormProps) {
     },
   })
 
-  async function onSubmit(data: CreateAnalyticsInput) {
+  async function onSubmit(data: CreateAnalyticsInput): Promise<void> {
     setError(null)
     setIsSubmitting(true)
 
     try {
       const result = await createAnalyticsAction(data)
 
-      if (result.error) {
-        setError(result.error)
+      if ('error' in result) {
+        setError(result.error ?? 'An error occurred')
         setIsSubmitting(false)
         return
       }

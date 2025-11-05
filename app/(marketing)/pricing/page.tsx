@@ -1,7 +1,12 @@
+import { Suspense } from 'react'
 import { PricingPage, pricingPageMetadata } from '@/features/marketing/pricing'
 
 export const metadata = pricingPageMetadata
 
+// Force static generation for marketing page (Next.js 15+)
+export const dynamic = 'force-static'
+export const revalidate = 86400 // Revalidate daily
+
 export default function Page() {
-  return <PricingPage />
+  return <Suspense fallback={null}><PricingPage /></Suspense>
 }

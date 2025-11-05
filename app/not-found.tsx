@@ -1,3 +1,3 @@
-import { NotFoundPage } from '@/features/shared/error-boundaries'
+import { NotFoundPage } from '@/components/error-boundaries'
 
 export default NotFoundPage

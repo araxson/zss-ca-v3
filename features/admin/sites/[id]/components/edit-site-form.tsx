@@ -1,18 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
-import { Form } from '@/components/ui/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { updateSiteSchema, type UpdateSiteInput } from '../api/schema'
 import { updateSiteAction } from '../api/mutations'
-import { EditSiteStatusFields } from './edit-site-status-fields'
-import { EditSiteDeploymentFields } from './edit-site-deployment-fields'
+import { EditSiteStatusFieldsNative } from './edit-site-status-fields-native'
+import { EditSiteDeploymentFieldsNative } from './edit-site-deployment-fields-native'
+import { EditSiteSubmitButton } from './edit-site-submit-button'
 import type { Database } from '@/lib/types/database.types'
+import { AlertCircle } from 'lucide-react'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
 
@@ -21,38 +18,60 @@ interface EditSiteFormProps {
   siteId: string
 }
 
-export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
+export function EditSiteForm({ site, siteId }: EditSiteFormProps): React.JSX.Element {
   const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
-  const form = useForm<UpdateSiteInput>({
-    resolver: zodResolver(updateSiteSchema),
-    defaultValues: {
-      site_name: site.site_name,
-      status: site.status,
-      deployment_url: site.deployment_url || '',
-      custom_domain: site.custom_domain || '',
-      deployment_notes: site.deployment_notes || '',
-    },
-  })
+  const formRef = useRef<HTMLFormElement>(null)
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
 
-  async function onSubmit(data: UpdateSiteInput) {
-    setError(null)
-    const result = await updateSiteAction(siteId, data)
+  const [state, formAction, isPending] = useActionState<
+    { error: string; fieldErrors?: Record<string, string[]> } | { error: null } | null,
+    FormData
+  >(updateSiteAction, null)
 
-    if (result.error) {
-      setError(result.error)
-      return
+  // Focus management: Move focus to error summary when errors occur
+  useEffect(() => {
+    if (state?.error && errorSummaryRef.current) {
+      errorSummaryRef.current.focus()
     }
+  }, [state?.error])
 
-    router.refresh()
-  }
+  // Refresh on successful update
+  useEffect(() => {
+    if (state && 'error' in state && state.error === null) {
+      router.refresh()
+    }
+  }, [state, router])
 
   return (
     <div className="space-y-6">
-      {error && (
-        <Alert variant="destructive" aria-live="assertive">
+      {/* Screen reader announcement for form status */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {isPending && 'Form is submitting, please wait'}
+        {!isPending && state && 'error' in state && state.error === null && 'Changes saved successfully'}
+      </div>
+
+      {/* Error Summary - WCAG 2.1 Requirement */}
+      {state?.error && (
+        <Alert
+          ref={errorSummaryRef}
+          variant="destructive"
+          aria-live="assertive"
+          tabIndex={-1}
+        >
+          <AlertCircle className="size-4" aria-hidden="true" />
           <AlertTitle>Unable to save site</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>
+            {state.error}
+            {state.fieldErrors && Object.keys(state.fieldErrors).length > 0 && (
+              <ul className="mt-2 list-disc pl-5">
+                {Object.entries(state.fieldErrors).map(([field, errors]) => (
+                  <li key={field}>
+                    <strong>{field}:</strong> {errors[0]}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </AlertDescription>
         </Alert>
       )}
 
@@ -62,25 +81,38 @@ export function EditSiteForm({ site, siteId }: EditSiteFormProps) {
             <h2 className="text-lg font-semibold">Edit Site</h2>
             <p className="text-sm text-muted-foreground">Update site status and deployment information</p>
           </div>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <EditSiteStatusFields form={form} siteName={site.site_name} currentStatus={site.status} />
-              <EditSiteDeploymentFields form={form} />
-              <div className="flex gap-2">
-                <Button type="submit" disabled={form.formState.isSubmitting}>
-                  {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.back()}
-                  disabled={form.formState.isSubmitting}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </Form>
+
+          <form ref={formRef} action={formAction} className="space-y-6" aria-busy={isPending}>
+            {/* Hidden field for site_id */}
+            <input type="hidden" name="site_id" value={siteId} />
+
+            <EditSiteStatusFieldsNative
+              siteName={site.site_name}
+              currentStatus={site.status}
+              errors={state && 'fieldErrors' in state ? state.fieldErrors : undefined}
+              isPending={isPending}
+            />
+
+            <EditSiteDeploymentFieldsNative
+              deploymentUrl={site.deployment_url}
+              customDomain={site.custom_domain}
+              deploymentNotes={site.deployment_notes}
+              errors={state && 'fieldErrors' in state ? state.fieldErrors : undefined}
+              isPending={isPending}
+            />
+
+            <div className="flex gap-2">
+              <EditSiteSubmitButton />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+                disabled={isPending}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

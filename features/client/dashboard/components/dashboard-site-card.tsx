@@ -25,7 +25,7 @@ interface DashboardSiteCardProps {
   site: ClientSite
 }
 
-export function DashboardSiteCard({ site }: DashboardSiteCardProps) {
+export function DashboardSiteCard({ site }: DashboardSiteCardProps): React.JSX.Element {
   const statusLabel = getSiteStatusLabel(site.status)
   const progress = getSiteStatusProgress(site.status)
   const destination = site.custom_domain ?? site.deployment_url ?? '#'
@@ -54,7 +54,7 @@ export function DashboardSiteCard({ site }: DashboardSiteCardProps) {
               {statusLabel}
             </Badge>
           </HoverCardTrigger>
-          <HoverCardContent className="w-64 space-y-2">
+          <HoverCardContent className="w-full sm:w-64 space-y-2">
             <p className="text-sm font-medium">{statusLabel}</p>
             <p className="text-sm text-muted-foreground">
               {site.status === 'pending' &&

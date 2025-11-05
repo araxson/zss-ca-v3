@@ -1,3 +1,3 @@
-import { ClientNotFound } from '@/features/client/error-boundaries'
+import { ClientNotFound } from '@/components/error-boundaries'
 
 export default ClientNotFound

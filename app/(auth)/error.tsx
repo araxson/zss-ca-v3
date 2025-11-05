@@ -1,5 +1,5 @@
 'use client'
 
-import { AuthErrorBoundary } from '@/features/shared/components'
+import { AuthErrorBoundary } from '@/components/error-boundaries'
 
 export default AuthErrorBoundary

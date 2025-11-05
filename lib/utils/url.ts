@@ -21,6 +21,9 @@ export function normalizeUrl(url: string): string {
 /**
  * Validate domain pattern (without protocol)
  * Accepts: example.com, www.example.com, subdomain.example.com, example.co.uk
+ *
+ * @param domain - The domain string to validate
+ * @returns True if the domain is valid, false otherwise
  */
 function isValidDomain(domain: string): boolean {
   if (!domain) return false
@@ -41,6 +44,7 @@ function isValidDomain(domain: string): boolean {
  */
 export const optionalUrlSchema = z
   .string()
+  .default('')
   .transform((val) => {
     // Allow empty strings
     if (!val || val === '') return ''
@@ -65,8 +69,6 @@ export const optionalUrlSchema = z
     if (val === '') return ''
     return normalizeUrl(val)
   })
-  .optional()
-  .or(z.literal(''))
 
 /**
  * Zod schema for required URLs that accepts domains with or without protocol

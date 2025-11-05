@@ -11,7 +11,7 @@ type AnalyticsFormMetricsFieldsProps = {
   control: Control<CreateAnalyticsInput>
 }
 
-export function AnalyticsFormMetricsFields({ control }: AnalyticsFormMetricsFieldsProps) {
+export function AnalyticsFormMetricsFields({ control }: AnalyticsFormMetricsFieldsProps): React.JSX.Element {
   return (
     <FieldSet className="space-y-4">
       <FieldLegend>Performance metrics</FieldLegend>

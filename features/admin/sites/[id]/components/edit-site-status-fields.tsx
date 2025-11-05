@@ -28,7 +28,7 @@ interface EditSiteStatusFieldsProps {
   currentStatus: string
 }
 
-export function EditSiteStatusFields({ form, siteName, currentStatus }: EditSiteStatusFieldsProps) {
+export function EditSiteStatusFields({ form, siteName, currentStatus }: EditSiteStatusFieldsProps): React.JSX.Element {
   return (
     <FieldSet className="space-y-4">
       <FieldLegend>Project status</FieldLegend>

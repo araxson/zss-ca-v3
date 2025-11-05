@@ -1,3 +1,5 @@
+import 'server-only'
+
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
@@ -11,21 +13,24 @@ export async function CreateSitePageFeature() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect(ROUTES.LOGIN)
 
-  const { data: profile } = await supabase.from('profile').select('role').eq('id', user.id).single()
+  // ✅ Parallel data fetching to avoid waterfall
+  const [profileResult, clientsResult, plansResult] = await Promise.all([
+    supabase.from('profile').select('role').eq('id', user.id).single(),
+    supabase.from('profile').select('id, contact_name, contact_email, company_name').eq('role', 'client').is('deleted_at', null).order('contact_name', { ascending: true, nullsFirst: false }),
+    supabase.from('plan').select('*').eq('is_active', true).order('sort_order', { ascending: true }),
+  ])
+
+  const { data: profile } = profileResult
   if (profile?.role !== 'admin') redirect(ROUTES.CLIENT_DASHBOARD)
 
-  const { data: clients } = await supabase.from('profile').select('id, contact_name, contact_email, company_name').eq('role', 'client').is('deleted_at', null).order('contact_name', { ascending: true, nullsFirst: false })
-  const { data: plans } = await supabase.from('plan').select('*').eq('is_active', true).order('sort_order', { ascending: true })
+  const { data: clients } = clientsResult
+  const { data: plans } = plansResult
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-2">
-          <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">Create New Site</h1>
-          <p className="text-muted-foreground">Set up a new website project for a client</p>
-        </div>
+      <div className="flex justify-end">
         <Button asChild variant="ghost" size="icon">
-          <Link href="/admin/sites" aria-label="Back to sites">
+          <Link href={ROUTES.ADMIN_SITES} aria-label="Back to sites">
             <ArrowLeft className="size-4" aria-hidden="true" />
           </Link>
         </Button>

@@ -1,6 +1,7 @@
 'use client'
 
 import { MapPin } from 'lucide-react'
+import type { UseFormReturn } from 'react-hook-form'
 
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -11,12 +12,13 @@ import {
 } from '@/components/ui/input-group'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
+import type { UpdateProfileInput } from '../api/schema'
+
 interface ProfileAddressFieldsProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any
+  form: UseFormReturn<UpdateProfileInput>
 }
 
-export function ProfileAddressFields({ form }: ProfileAddressFieldsProps) {
+export function ProfileAddressFields({ form }: ProfileAddressFieldsProps): React.JSX.Element {
   return (
     <FieldSet className="space-y-4">
       <FieldLegend>Business address</FieldLegend>

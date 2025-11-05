@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 
 config({ path: resolve(process.cwd(), '.env.local') });
 
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+const STRIPE_SECRET_KEY = process.env['STRIPE_SECRET_KEY'];
 
 if (!STRIPE_SECRET_KEY) {
   console.error('Error: STRIPE_SECRET_KEY not found in environment variables');

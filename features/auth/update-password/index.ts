@@ -1,9 +1,7 @@
 // Components
 export {
   UpdatePasswordForm,
-  UpdatePasswordPageFeature,
-  UpdatePasswordPasswordField,
-  UpdatePasswordConfirmField
+  UpdatePasswordPageFeature
 } from './components'
 
 // API

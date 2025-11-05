@@ -17,9 +17,8 @@ import {
 } from '@/components/ui/empty'
 import { Globe } from 'lucide-react'
 import { ItemGroup } from '@/components/ui/item'
-import { SectionHeader } from '@/features/shared/components'
 
-export async function SitesListFeature() {
+export async function SitesListFeature(): Promise<React.JSX.Element> {
   const supabase = await createClient()
   const {
     data: { user },
@@ -33,11 +32,6 @@ export async function SitesListFeature() {
 
   return (
     <div className="space-y-6">
-      <SectionHeader
-        title="My Sites"
-        description="View and manage your website deployments"
-        align="start"
-      />
       {sites.length === 0 ? (
         <Empty className="border border-dashed">
           <EmptyHeader>

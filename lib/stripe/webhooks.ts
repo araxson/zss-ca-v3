@@ -12,7 +12,7 @@ import type Stripe from 'stripe'
 export async function verifyWebhookSignature(
   body: string
 ): Promise<Stripe.Event> {
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+  const webhookSecret = process.env['STRIPE_WEBHOOK_SECRET']
 
   if (!webhookSecret) {
     throw new Error('Stripe webhook secret is not configured')

@@ -1,0 +1,10 @@
+import { PageHeaderSkeleton, TableSkeleton } from '@/components/layout/shared'
+
+export default function Loading() {
+  return (
+    <div className="space-y-6">
+      <PageHeaderSkeleton />
+      <TableSkeleton rows={5} />
+    </div>
+  )
+}

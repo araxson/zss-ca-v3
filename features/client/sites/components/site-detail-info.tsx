@@ -27,7 +27,7 @@ interface SiteDetailInfoProps {
   plan: Pick<Plan, 'id' | 'name' | 'slug' | 'page_limit' | 'revision_limit'> | null
 }
 
-export function SiteDetailInfo({ status, plan }: SiteDetailInfoProps) {
+export function SiteDetailInfo({ status, plan }: SiteDetailInfoProps): React.JSX.Element {
   return (
     <Item variant="outline" className="flex flex-col">
       <ItemHeader className="flex-col items-start gap-1">

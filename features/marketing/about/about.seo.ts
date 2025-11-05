@@ -14,7 +14,22 @@ export const aboutPageMetadata: Metadata = {
       'Learn how Zenith Strategic Solutions partners with Canadian businesses to launch and maintain high-performing websites.',
     url: `${siteConfig.url}/about`,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `About ${siteConfig.name}`,
+      },
+    ],
     locale: 'en_CA',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `About ${siteConfig.name}`,
+    description:
+      'Learn how Zenith Strategic Solutions partners with Canadian businesses to launch and maintain high-performing websites.',
+    images: [siteConfig.ogImage],
   },
 }

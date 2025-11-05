@@ -71,10 +71,10 @@ export function Testimonials() {
                           </Avatar>
                         </ItemMedia>
                         <div className="flex flex-col gap-1">
-                          <CardTitle className="text-base font-semibold" id={`${testimonial.id}-title`}>
+                          <CardTitle id={`${testimonial.id}-title`}>
                             {testimonial.name}
                           </CardTitle>
-                          <CardDescription className="text-sm text-muted-foreground">
+                          <CardDescription>
                             {testimonial.role}, {testimonial.company}
                           </CardDescription>
                         </div>

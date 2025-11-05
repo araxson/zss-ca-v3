@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 
 config({ path: resolve(process.cwd(), '.env.local') });
 
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
+const STRIPE_SECRET_KEY = process.env['STRIPE_SECRET_KEY'];
 
 if (!STRIPE_SECRET_KEY) {
   console.error('Error: STRIPE_SECRET_KEY not found in environment variables');
@@ -104,7 +104,7 @@ async function verifyIntegration() {
         errors++;
       } else {
         const price = prices.data[0];
-        const amount = price.unit_amount ? (price.unit_amount / 100).toFixed(2) : '0.00';
+        const amount = price?.unit_amount ? (price.unit_amount / 100).toFixed(2) : '0.00';
         console.log(`   ✅ ${key}: $${amount} CAD (lookup: ${lookupKey})`);
       }
     } catch (error: unknown) {

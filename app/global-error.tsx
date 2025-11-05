@@ -1,6 +1,6 @@
 'use client'
 
-import { GlobalErrorBoundary } from '@/features/shared/error-boundaries'
+import { GlobalErrorBoundary } from '@/components/error-boundaries'
 
 export default function GlobalError(props: Parameters<typeof GlobalErrorBoundary>[0]) {
   return (

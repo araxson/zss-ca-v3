@@ -13,7 +13,7 @@ interface EditSiteDeploymentFieldsProps {
   form: UseFormReturn<UpdateSiteInput>
 }
 
-export function EditSiteDeploymentFields({ form }: EditSiteDeploymentFieldsProps) {
+export function EditSiteDeploymentFields({ form }: EditSiteDeploymentFieldsProps): React.JSX.Element {
   return (
     <>
       <FieldSet className="space-y-4">

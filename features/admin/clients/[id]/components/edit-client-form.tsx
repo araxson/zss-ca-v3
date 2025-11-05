@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { User, Building2, Phone } from 'lucide-react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
@@ -13,7 +14,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   FieldDescription,
   FieldGroup,
@@ -38,9 +38,9 @@ interface EditClientFormProps {
   client: Profile
 }
 
-export function EditClientForm({ client }: EditClientFormProps) {
+export function EditClientForm({ client }: EditClientFormProps): React.JSX.Element {
   const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
+  const [updateResult, setUpdateResult] = useState<{ error: string | null; success: boolean } | null>(null)
   const form = useForm<UpdateClientProfileInput>({
     resolver: zodResolver(updateClientProfileSchema),
     defaultValues: {
@@ -51,26 +51,41 @@ export function EditClientForm({ client }: EditClientFormProps) {
     },
   })
 
-  async function onSubmit(data: UpdateClientProfileInput) {
-    setError(null)
+  // Toast feedback on result change
+  useEffect(() => {
+    if (!updateResult) return
+
+    if (updateResult.error) {
+      toast.error('Failed to update client', {
+        description: updateResult.error,
+      })
+    } else if (updateResult.success) {
+      toast.success('Client updated', {
+        description: 'Client information has been updated successfully.',
+      })
+    }
+  }, [updateResult])
+
+  async function onSubmit(data: UpdateClientProfileInput): Promise<void> {
+    setUpdateResult(null)
     const result = await updateClientProfileAction(data)
 
-    if (result.error) {
-      setError(result.error)
+    if ('error' in result) {
+      setUpdateResult({ error: result.error ?? 'An error occurred', success: false })
       return
     }
 
+    setUpdateResult({ error: null, success: true })
     router.refresh()
   }
 
   return (
     <div className="space-y-6">
-      {error && (
-        <Alert variant="destructive" aria-live="assertive">
-          <AlertTitle>Unable to update client</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+      {/* Screen reader announcement for form status */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {form.formState.isSubmitting && 'Form is submitting, please wait'}
+        {!form.formState.isSubmitting && updateResult?.success && 'Client updated successfully'}
+      </div>
 
       <Item variant="outline">
         <ItemContent className="basis-full">

@@ -1,5 +1,3 @@
-'use client'
-
 import { Mail } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'

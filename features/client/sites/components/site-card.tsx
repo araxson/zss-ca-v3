@@ -10,14 +10,6 @@ import {
   ItemHeader,
   ItemTitle,
 } from '@/components/ui/item'
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldTitle,
-} from '@/components/ui/field'
 import { ExternalLink, LifeBuoy } from 'lucide-react'
 import { ROUTES } from '@/lib/constants/routes'
 import type { Database } from '@/lib/types/database.types'
@@ -35,7 +27,7 @@ interface SiteCardProps {
   site: SiteWithPlan
 }
 
-export function SiteCard({ site }: SiteCardProps) {
+export function SiteCard({ site }: SiteCardProps): React.JSX.Element {
   const planSummary = site.plan
     ? `${site.plan.name} • ${site.plan.page_limit ?? 'Unlimited'} pages`
     : 'No plan assigned'
@@ -52,43 +44,43 @@ export function SiteCard({ site }: SiteCardProps) {
       </ItemHeader>
 
       <ItemContent>
-        <FieldGroup
+        <div
           aria-label="Site timeline"
-          className="!grid gap-4 sm:grid-cols-2"
+          className="grid gap-4 sm:grid-cols-2"
         >
-          <Field className="rounded-md border border-dashed border-border/60 bg-muted/60 p-4">
-            <FieldLabel>Status</FieldLabel>
-            <FieldContent>
-              <FieldTitle>{formatStatus(site.status)}</FieldTitle>
-              <FieldDescription>Current project phase</FieldDescription>
-            </FieldContent>
-          </Field>
-          <Field className="rounded-md border border-dashed border-border/60 bg-muted/60 p-4">
-            <FieldLabel>Created</FieldLabel>
-            <FieldContent>
-              <FieldTitle>{formatDate(site.created_at)}</FieldTitle>
-              <FieldDescription>Project kickoff date</FieldDescription>
-            </FieldContent>
-          </Field>
+          <Item variant="muted" size="sm">
+            <ItemContent>
+              <ItemTitle className="text-sm font-medium">Status</ItemTitle>
+              <ItemDescription className="text-base font-semibold">{formatStatus(site.status)}</ItemDescription>
+              <ItemDescription className="text-xs text-muted-foreground">Current project phase</ItemDescription>
+            </ItemContent>
+          </Item>
+          <Item variant="muted" size="sm">
+            <ItemContent>
+              <ItemTitle className="text-sm font-medium">Created</ItemTitle>
+              <ItemDescription className="text-base font-semibold">{formatDate(site.created_at)}</ItemDescription>
+              <ItemDescription className="text-xs text-muted-foreground">Project kickoff date</ItemDescription>
+            </ItemContent>
+          </Item>
           {site.deployed_at ? (
-            <Field className="rounded-md border border-dashed border-border/60 bg-muted/60 p-4">
-              <FieldLabel>Deployed</FieldLabel>
-              <FieldContent>
-                <FieldTitle>{formatDate(site.deployed_at)}</FieldTitle>
-                <FieldDescription>Initial go-live</FieldDescription>
-              </FieldContent>
-            </Field>
+            <Item variant="muted" size="sm">
+              <ItemContent>
+                <ItemTitle className="text-sm font-medium">Deployed</ItemTitle>
+                <ItemDescription className="text-base font-semibold">{formatDate(site.deployed_at)}</ItemDescription>
+                <ItemDescription className="text-xs text-muted-foreground">Initial go-live</ItemDescription>
+              </ItemContent>
+            </Item>
           ) : null}
           {site.last_revision_at ? (
-            <Field className="rounded-md border border-dashed border-border/60 bg-muted/60 p-4">
-              <FieldLabel>Last Revision</FieldLabel>
-              <FieldContent>
-                <FieldTitle>{formatDate(site.last_revision_at)}</FieldTitle>
-                <FieldDescription>Most recent update</FieldDescription>
-              </FieldContent>
-            </Field>
+            <Item variant="muted" size="sm">
+              <ItemContent>
+                <ItemTitle className="text-sm font-medium">Last Revision</ItemTitle>
+                <ItemDescription className="text-base font-semibold">{formatDate(site.last_revision_at)}</ItemDescription>
+                <ItemDescription className="text-xs text-muted-foreground">Most recent update</ItemDescription>
+              </ItemContent>
+            </Item>
           ) : null}
-        </FieldGroup>
+        </div>
       </ItemContent>
 
       {site.deployment_url ? (

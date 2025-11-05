@@ -1,8 +1,7 @@
 // Components
 export {
   ResetPasswordForm,
-  ResetPasswordPageFeature,
-  ResetPasswordEmailField
+  ResetPasswordPageFeature
 } from './components'
 
 // API

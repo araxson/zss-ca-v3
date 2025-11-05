@@ -21,7 +21,7 @@ interface DashboardTicketsTableProps {
   tickets: SupportTicket[]
 }
 
-export function DashboardTicketsTable({ tickets }: DashboardTicketsTableProps) {
+export function DashboardTicketsTable({ tickets }: DashboardTicketsTableProps): React.JSX.Element {
   return (
     <ScrollArea className="rounded-md border" aria-label="Support tickets table">
       <Table>

@@ -1,14 +1,14 @@
 'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { TicketList } from '@/features/shared/support/components/ticket-list'
-import type { TicketWithProfile } from '@/features/shared/support/api/queries'
+import { TicketList } from '@/features/admin/support/components/ticket-list'
+import type { TicketWithProfile } from '@/features/admin/support/api/queries'
 
 interface SupportTabsProps {
   tickets: TicketWithProfile[]
 }
 
-export function SupportTabs({ tickets }: SupportTabsProps) {
+export function SupportTabs({ tickets }: SupportTabsProps): React.JSX.Element {
   const openTickets = tickets.filter((t) => t.status === 'open')
   const inProgressTickets = tickets.filter((t) => t.status === 'in_progress')
   const resolvedTickets = tickets.filter((t) => t.status === 'resolved')

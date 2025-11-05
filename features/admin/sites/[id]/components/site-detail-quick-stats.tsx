@@ -15,7 +15,7 @@ interface QuickStatsProps {
   clientName: string
   planName: string | null
   status: string
-  getStatusVariant: (status: string) => 'default' | 'secondary' | 'outline'
+  getStatusVariant: (status: string) => 'default' | 'secondary' | 'outline' | 'destructive'
   formatStatus: (status: string) => string
 }
 
@@ -37,38 +37,44 @@ export function SiteDetailQuickStats({
         </ItemMedia>
         <ItemContent>
           <ItemDescription>Site Age</ItemDescription>
-          <ItemTitle className="text-xl">{daysSinceCreated} days</ItemTitle>
+          <ItemTitle>
+            <span className="text-xl">{daysSinceCreated} days</span>
+          </ItemTitle>
         </ItemContent>
       </Item>
 
       <Item variant="outline">
         <ItemMedia>
-          <div className="flex size-10 items-center justify-center rounded-lg bg-blue-500/10">
-            <User className="size-5 text-blue-600" aria-hidden="true" />
+          <div className="flex size-10 items-center justify-center rounded-lg bg-blue-500/10 dark:bg-blue-500/20">
+            <User className="size-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
           </div>
         </ItemMedia>
-        <ItemContent>
+        <ItemContent className="min-w-0">
           <ItemDescription>Client</ItemDescription>
-          <ItemTitle className="truncate text-base">{clientName}</ItemTitle>
+          <ItemTitle>
+            <span className="truncate text-base">{clientName}</span>
+          </ItemTitle>
         </ItemContent>
       </Item>
 
       <Item variant="outline">
         <ItemMedia>
-          <div className="flex size-10 items-center justify-center rounded-lg bg-purple-500/10">
-            <Package className="size-5 text-purple-600" aria-hidden="true" />
+          <div className="flex size-10 items-center justify-center rounded-lg bg-purple-500/10 dark:bg-purple-500/20">
+            <Package className="size-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
           </div>
         </ItemMedia>
-        <ItemContent>
+        <ItemContent className="min-w-0">
           <ItemDescription>Plan</ItemDescription>
-          <ItemTitle className="truncate text-base">{planName || 'No plan'}</ItemTitle>
+          <ItemTitle>
+            <span className="truncate text-base">{planName || 'No plan'}</span>
+          </ItemTitle>
         </ItemContent>
       </Item>
 
       <Item variant="outline">
         <ItemMedia>
-          <div className="flex size-10 items-center justify-center rounded-lg bg-green-500/10">
-            <Globe className="size-5 text-green-600" aria-hidden="true" />
+          <div className="flex size-10 items-center justify-center rounded-lg bg-green-500/10 dark:bg-green-500/20">
+            <Globe className="size-5 text-green-600 dark:text-green-400" aria-hidden="true" />
           </div>
         </ItemMedia>
         <ItemContent>

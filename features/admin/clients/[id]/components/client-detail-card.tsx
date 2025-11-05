@@ -22,7 +22,7 @@ interface ClientDetailCardProps {
   client: ClientProfile
 }
 
-export function ClientDetailCard({ client }: ClientDetailCardProps) {
+export function ClientDetailCard({ client }: ClientDetailCardProps): React.JSX.Element {
   const joinedDate = new Date(client.created_at)
   const subscription = client.subscription
   const joinedRelative = formatDistanceToNow(joinedDate, { addSuffix: true })

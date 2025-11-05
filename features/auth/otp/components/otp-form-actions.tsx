@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { Spinner } from '@/components/ui/spinner'
+import { AuthSubmitButton } from '@/features/auth/components/auth-submit-button'
 
 interface OTPFormActionsProps {
-  isLoading: boolean
   isResending: boolean
   canResend: boolean
   resendTimer: number
@@ -13,7 +14,6 @@ interface OTPFormActionsProps {
 }
 
 export function OTPFormActions({
-  isLoading,
   isResending,
   canResend,
   resendTimer,
@@ -23,15 +23,9 @@ export function OTPFormActions({
 
   return (
     <div className="space-y-4">
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? <Spinner className="mr-2" /> : null}
-        {isLoading ? 'Verifying...' : 'Verify Code'}
-      </Button>
+      <AuthSubmitButton label="Verify code" loadingLabel="Verifying code" />
 
-      <div
-        className="flex justify-center gap-0 [&>*:not(:first-child)]:-ml-px"
-        role="group"
-      >
+      <ButtonGroup className="mx-auto">
         {onResend ? (
           <Button
             type="button"
@@ -40,14 +34,20 @@ export function OTPFormActions({
             disabled={!canResend || isResending}
             className="text-sm"
           >
-            {isResending ? <Spinner className="mr-2" /> : null}
-            {isResending ? 'Resending...' : 'Resend Code'}
+            {isResending ? (
+              <span className="inline-flex items-center gap-2">
+                <Spinner className="size-3.5" aria-hidden="true" />
+                <span aria-hidden="true">Resending...</span>
+              </span>
+            ) : (
+              'Resend Code'
+            )}
           </Button>
         ) : null}
         <Button type="button" variant="link" onClick={() => router.back()} className="text-sm">
           Go Back
         </Button>
-      </div>
+      </ButtonGroup>
 
       {onResend && !canResend ? (
         <p className="text-center text-sm text-muted-foreground">

@@ -1,16 +1,20 @@
 import { Item } from '@/components/ui/item'
-import { SectionHeader } from '@/features/shared/components'
 import { siteConfig } from '@/lib/config/site.config'
 import { termsPageData } from './terms-page.data'
 
 export function TermsPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-16 md:py-24">
-      <SectionHeader
-        title="Terms of Service"
-        description={`Last updated: ${termsPageData.lastUpdated}`}
-        align="start"
-      />
+      <div className="flex flex-col items-start text-left gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-start gap-3">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Terms of Service
+          </h2>
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl">
+            Last updated: {termsPageData.lastUpdated}
+          </p>
+        </div>
+      </div>
 
       <div className="prose prose-neutral dark:prose-invert mt-12 max-w-none">
         {termsPageData.sections.map((section, idx) => (

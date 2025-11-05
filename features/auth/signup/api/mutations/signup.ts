@@ -1,37 +1,71 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import type { SignupInput } from '../schema'
-import { sendOTPForEmailConfirmation } from '@/lib/auth'
+import { signupSchema } from '../schema'
+import { sendOTPForEmailConfirmation } from '@/lib/auth/otp-helpers'
+import { ROUTES } from '@/lib/constants/routes'
 
-export async function signupAction(data: SignupInput) {
+type SignupState = {
+  error?: string | null
+  fieldErrors?: Record<string, string[]>
+  success?: boolean
+  message?: string
+}
+
+export async function signupAction(prevState: SignupState | null, formData: FormData): Promise<SignupState | never> {
+  // Validate input with Zod
+  const result = signupSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+    confirmPassword: formData.get('confirmPassword'),
+    companyName: formData.get('companyName'),
+  })
+
+  if (!result.success) {
+    return {
+      error: 'Validation failed',
+      fieldErrors: result.error.flatten().fieldErrors
+    }
+  }
+
   const supabase = await createClient()
 
   // First, sign up the user
   const { data: authData, error: signupError } = await supabase.auth.signUp({
-    email: data.email,
-    password: data.password,
+    email: result.data.email,
+    password: result.data.password,
     options: {
       data: {
-        company_name: data.companyName,
+        company_name: result.data.companyName,
       },
     },
   })
 
   if (signupError) {
-    return { error: signupError.message }
+    console.error('Signup error:', signupError)
+    if (signupError.message?.toLowerCase().includes('registered')) {
+      return { error: 'An account with this email already exists. Please sign in or reset your password.' }
+    }
+
+    return { error: 'Failed to create account. Please try again.' }
   }
 
   // Generate and send OTP for email confirmation
   if (authData.user) {
-    const otpError = await sendOTPForEmailConfirmation(data.email, authData.user.id)
+    const otpError = await sendOTPForEmailConfirmation(result.data.email, authData.user.id)
     if (otpError) {
-      return { error: otpError }
+      return { error: 'Account created but failed to send verification code. Please request a new code.' }
     }
   }
 
-  return {
-    success: true,
-    message: 'Check your email for verification code',
-  }
+  // Get plan parameter from form if present
+  const planId = formData.get('planId') as string | null
+  const otpUrl = `${ROUTES.VERIFY_OTP}?email=${encodeURIComponent(result.data.email)}&type=email_confirmation${planId ? `&plan=${planId}` : ''}`
+
+  // Clear cache before redirect
+  revalidatePath('/', 'layout')
+
+  redirect(otpUrl)
 }

@@ -1,11 +1,7 @@
 // Components
 export {
   SignupForm,
-  SignupPageFeature,
-  SignupEmailField,
-  SignupPasswordField,
-  SignupConfirmPasswordField,
-  SignupCompanyField
+  SignupPageFeature
 } from './components'
 
 // API

@@ -1,0 +1,19 @@
+/**
+ * Shared Layout Components
+ *
+ * Components shared across multiple portals and contexts.
+ */
+
+export { UserMenu } from './user-menu'
+export { getDisplayName, getDisplayEmail, getInitials } from './user-menu-helpers'
+export {
+  PageHeaderSkeleton,
+  StatCardsSkeleton,
+  CardGridSkeleton,
+  TableSkeleton,
+  ChartLayoutSkeleton,
+  FormSkeleton,
+  AuthPageSkeleton,
+  DashboardOverviewSkeleton,
+  ListPageSkeleton,
+} from './loading-skeletons'

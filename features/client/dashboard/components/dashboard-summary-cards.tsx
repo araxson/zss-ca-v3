@@ -12,7 +12,6 @@ import {
   ItemHeader,
   ItemMedia,
   ItemTitle,
-  ItemGroup,
 } from '@/components/ui/item'
 import {
   Tooltip,
@@ -45,10 +44,7 @@ export function DashboardSummaryCards({
   const liveRate = sitesCount > 0 ? Math.round((activeSitesCount / Math.max(sitesCount, 1)) * 100) : 0
   const hasSubscription = Boolean(subscription)
   return (
-    <ItemGroup
-      aria-label="Account summary"
-      className="gap-4 md:grid md:grid-cols-2 lg:grid-cols-3"
-    >
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3" role="list" aria-label="Account summary">
       <Item variant="outline" role="listitem">
         <ItemMedia variant="icon">
           <CreditCard aria-hidden="true" />
@@ -177,6 +173,6 @@ export function DashboardSummaryCards({
           </Button>
         </ItemFooter>
       </Item>
-    </ItemGroup>
+    </div>
   )
 }

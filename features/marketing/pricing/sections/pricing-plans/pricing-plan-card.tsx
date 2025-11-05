@@ -1,11 +1,12 @@
 'use client'
 
-import { Check } from 'lucide-react'
+import { Check, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Item, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemTitle } from '@/components/ui/item'
-import { CheckoutButton } from '@/features/shared/subscription'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { CheckoutButton } from '@/features/admin/subscription'
 import { siteConfig } from '@/lib/config/site.config'
 import { pricingPlansData } from './pricing-plans.data'
 import { getPlanFeatures, getMonthlyRate, YEARLY_DISCOUNT } from './utils/pricing-plans'
@@ -56,10 +57,51 @@ export function PricingPlanCard({
               </p>
             ) : null}
             {monthlyRate > 0 ? (
-              <p className="text-sm text-muted-foreground">
-                {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'} •{' '}
-                {plan.revision_limit ? `${plan.revision_limit} revisions/mo` : 'Unlimited revisions'}
-              </p>
+              <TooltipProvider>
+                <p className="text-sm text-muted-foreground flex items-center gap-2 flex-wrap">
+                  <span className="flex items-center gap-1">
+                    {plan.page_limit ? `${plan.page_limit} pages` : 'Unlimited pages'}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          className="inline-flex"
+                          aria-label="What counts as a page?"
+                        >
+                          <Info className="size-3 text-muted-foreground" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-xs">
+                        <p className="text-xs">
+                          Each unique URL path counts as one page. Blog posts, landing pages,
+                          and service pages all count separately.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </span>
+                  •
+                  <span className="flex items-center gap-1">
+                    {plan.revision_limit ? `${plan.revision_limit} revisions/mo` : 'Unlimited revisions'}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          className="inline-flex"
+                          aria-label="What are revisions?"
+                        >
+                          <Info className="size-3 text-muted-foreground" />
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" className="max-w-xs">
+                        <p className="text-xs">
+                          Revisions are changes to existing pages. Each request to update content,
+                          images, or layout counts as one revision.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </span>
+                </p>
+              </TooltipProvider>
             ) : null}
           </div>
         </div>

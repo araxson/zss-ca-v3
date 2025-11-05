@@ -56,7 +56,26 @@ export function truncate(text: string, length: number): string {
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes'
   const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'] as const
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+  const size = sizes[i]
+  if (!size) return `${bytes} Bytes`
+  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + size
+}
+
+/**
+ * Format a breadcrumb segment to a readable label
+ * Handles special cases like UUIDs and kebab-case strings
+ */
+export function formatBreadcrumbLabel(segment: string): string {
+  // Handle special cases: UUIDs should show as "Details"
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}/.test(segment)) {
+    return 'Details'
+  }
+
+  // Convert kebab-case to Title Case
+  return segment
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
 }

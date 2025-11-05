@@ -15,7 +15,7 @@ interface AnalyticsSummaryCardsProps {
   days: number
 }
 
-export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsProps) {
+export function AnalyticsSummaryCards({ summary, days }: AnalyticsSummaryCardsProps): React.JSX.Element {
   const metrics = [
     {
       title: 'Total Page Views',

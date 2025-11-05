@@ -20,7 +20,7 @@ type AnalyticsFormSelectionFieldsProps = {
   }>
 }
 
-export function AnalyticsFormSelectionFields({ control, sites }: AnalyticsFormSelectionFieldsProps) {
+export function AnalyticsFormSelectionFields({ control, sites }: AnalyticsFormSelectionFieldsProps): React.JSX.Element {
   return (
     <FieldSet className="space-y-4">
       <FieldLegend>Site selection</FieldLegend>

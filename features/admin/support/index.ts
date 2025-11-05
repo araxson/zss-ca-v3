@@ -1,4 +1,6 @@
-// Support - Public API
-export { AdminSupportFeature } from './admin-support-feature'
-export * from './api'
 export * from './components'
+export { AdminSupportFeature } from './admin-support-feature'
+export * from './api/mutations'
+export * from './api/schema'
+export * from './utils'
+export type { TicketWithProfile, TicketWithReplies } from './api/queries'

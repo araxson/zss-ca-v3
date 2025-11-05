@@ -1,4 +1,2 @@
-// Admin Dashboard - Public API
+export * from './components'
 export { AdminDashboardFeature } from './admin-dashboard-feature'
-export { AdminOverview } from './components/admin-overview'
-export * from './api'

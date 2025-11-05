@@ -16,7 +16,7 @@ export function revalidatePaths(routes: string[]): void {
 export const REVALIDATE_GROUPS = {
   SUPPORT: ['/client/support', '/admin/support'] as string[],
   SITES: ['/client/sites', '/admin/sites'] as string[],
-  DASHBOARD: ['/client/dashboard', '/admin/dashboard'] as string[],
+  DASHBOARD: ['/client', '/admin'] as string[],
   NOTIFICATIONS: ['/client/notifications', '/admin/notifications'] as string[],
   PROFILE: ['/client/profile', '/admin/profile'] as string[],
   ANALYTICS: ['/client/analytics', '/admin/analytics'] as string[],

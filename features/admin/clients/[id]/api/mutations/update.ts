@@ -1,10 +1,21 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { updateTag } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import type { UpdateClientProfileInput } from '../schema'
+import { updateClientProfileSchema } from '../schema'
 
-export async function updateClientProfileAction(data: UpdateClientProfileInput) {
+export async function updateClientProfileAction(data: unknown): Promise<{ error: string; fieldErrors?: Record<string, string[]> } | { error: null }> {
+  // 1. Validate input with Zod
+  const result = updateClientProfileSchema.safeParse(data)
+
+  if (!result.success) {
+    return {
+      error: 'Validation failed',
+      fieldErrors: result.error.flatten().fieldErrors
+    }
+  }
+
+  // 2. Create authenticated Supabase client
   const supabase = await createClient()
   const {
     data: { user },
@@ -14,7 +25,7 @@ export async function updateClientProfileAction(data: UpdateClientProfileInput) 
     return { error: 'Unauthorized' }
   }
 
-  // Verify admin role
+  // 3. Verify admin role
   const { data: profile } = await supabase
     .from('profile')
     .select('role')
@@ -25,23 +36,26 @@ export async function updateClientProfileAction(data: UpdateClientProfileInput) 
     return { error: 'Only admins can update client profiles' }
   }
 
+  // 4. Build updates object from validated data
   const updates: Record<string, unknown> = {}
-  if (data.fullName !== undefined) updates.contact_name = data.fullName
-  if (data.company !== undefined) updates.company_name = data.company
-  if (data.phone !== undefined) updates.contact_phone = data.phone
+  if (result.data.fullName !== undefined) updates['contact_name'] = result.data.fullName
+  if (result.data.company !== undefined) updates['company_name'] = result.data.company
+  if (result.data.phone !== undefined) updates['contact_phone'] = result.data.phone
 
+  // 5. Perform database mutation
   const { error } = await supabase
-
     .from('profile')
     .update(updates)
-    .eq('id', data.profileId)
+    .eq('id', result.data.profileId)
 
   if (error) {
-    return { error: error.message }
+    console.error('Profile update error:', error)
+    return { error: 'Failed to update client profile' }
   }
 
-  revalidatePath('/admin/clients', 'page')
-  revalidatePath(`/admin/clients/${data.profileId}`, 'page')
+  // 6. Invalidate cache with updateTag for immediate consistency
+  updateTag('clients')
+  updateTag(`client:${result.data.profileId}`)
 
-  return { success: true }
+  return { error: null }
 }

@@ -1,15 +1,18 @@
 import { Suspense } from 'react'
-import { TicketDetailFeature } from '@/features/shared/support/components/ticket-detail-feature'
+import type { Metadata } from 'next'
+import { TicketDetailFeature } from '@/features/client/support/components'
 
-interface PageProps {
-  params: Promise<{ id: string }>
+export const dynamic = 'force-dynamic'
+export const metadata: Metadata = {
+  title: 'Support Ticket',
+  description: 'View your support ticket details and updates',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
 
-export default async function TicketDetailPage({ params }: PageProps) {
+export default async function TicketDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  return (
-    <Suspense fallback={null}>
-      <TicketDetailFeature id={id} />
-    </Suspense>
-  )
+  return <Suspense fallback={null}><TicketDetailFeature id={id} /></Suspense>
 }

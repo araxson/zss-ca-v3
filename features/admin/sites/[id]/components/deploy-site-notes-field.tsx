@@ -10,7 +10,7 @@ interface DeploySiteNotesFieldProps {
   control: Control<DeploySiteInput>
 }
 
-export function DeploySiteNotesField({ control }: DeploySiteNotesFieldProps) {
+export function DeploySiteNotesField({ control }: DeploySiteNotesFieldProps): React.JSX.Element {
   return (
     <FormField
       control={control}

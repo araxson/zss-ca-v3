@@ -1,5 +1,5 @@
 'use client'
 
-import { AdminErrorBoundary } from '@/features/admin/error-boundaries'
+import { AdminErrorBoundary } from '@/components/error-boundaries'
 
 export default AdminErrorBoundary

@@ -1,14 +1,19 @@
 'use client'
 
 import { format } from 'date-fns'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from '@/components/ui/chart'
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  Legend
 } from 'recharts'
 import {
   Empty,
@@ -22,7 +27,7 @@ interface AnalyticsChartProps {
   analytics: SiteAnalytics[]
 }
 
-export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
+export function AnalyticsChart({ analytics }: AnalyticsChartProps): React.JSX.Element {
   const chartData = analytics.map((item) => ({
     date: format(new Date(item.metric_date), 'MMM d'),
     pageViews: item.page_views,
@@ -61,43 +66,44 @@ export function AnalyticsChart({ analytics }: AnalyticsChartProps) {
         config={{
           pageViews: {
             label: 'Page Views',
-            color: 'hsl(var(--chart-1))',
+            color: 'var(--chart-1)',
           },
           visitors: {
             label: 'Unique Visitors',
-            color: 'hsl(var(--chart-2))',
+            color: 'var(--chart-2)',
           },
           conversions: {
             label: 'Conversions',
-            color: 'hsl(var(--chart-3))',
+            color: 'var(--chart-3)',
           },
         }}
         className="min-h-[350px]"
       >
         <BarChart
+          accessibilityLayer
           data={chartData}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
           <XAxis dataKey="date" />
           <YAxis />
-          <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'hsl(var(--muted))' }} />
-          <Legend />
+          <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'var(--muted)' }} />
+          <ChartLegend content={<ChartLegendContent />} />
           <Bar
             dataKey="pageViews"
-            fill="hsl(var(--chart-1))"
+            fill="var(--chart-1)"
             radius={[4, 4, 0, 0]}
             maxBarSize={40}
           />
           <Bar
             dataKey="visitors"
-            fill="hsl(var(--chart-2))"
+            fill="var(--chart-2)"
             radius={[4, 4, 0, 0]}
             maxBarSize={40}
           />
           <Bar
             dataKey="conversions"
-            fill="hsl(var(--chart-3))"
+            fill="var(--chart-3)"
             radius={[4, 4, 0, 0]}
             maxBarSize={40}
           />

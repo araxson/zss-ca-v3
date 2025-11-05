@@ -1,6 +1,7 @@
 'use client'
 
 import { Mail, Phone, User } from 'lucide-react'
+import type { UseFormReturn } from 'react-hook-form'
 
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import {
@@ -10,12 +11,13 @@ import {
 } from '@/components/ui/input-group'
 import { FieldGroup, FieldLegend, FieldSet } from '@/components/ui/field'
 import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
+import type { UpdateProfileInput } from '../api/schema'
+
 interface ProfileContactFieldsProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: any
+  form: UseFormReturn<UpdateProfileInput>
 }
 
-export function ProfileContactFields({ form }: ProfileContactFieldsProps) {
+export function ProfileContactFields({ form }: ProfileContactFieldsProps): React.JSX.Element {
   return (
     <FieldSet className="space-y-4">
       <FieldLegend>Contact details</FieldLegend>

@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { cache } from 'react'
 import { createClient, requireAuth, requireAdminRole } from '@/lib/supabase'
 import type { Database } from '@/lib/types/database.types'
 
@@ -11,7 +12,8 @@ export type ClientProfile = Profile & {
   subscription: (Subscription & { plan: Plan }) | null
 }
 
-export async function getClientById(clientId: string): Promise<ClientProfile | null> {
+// ✅ Next.js 15+: Use React cache() for request deduplication within same render
+export const getClientById = cache(async (clientId: string): Promise<ClientProfile | null> => {
   const supabase = await createClient()
   const user = await requireAuth(supabase)
   await requireAdminRole(supabase, user.id)
@@ -20,10 +22,32 @@ export async function getClientById(clientId: string): Promise<ClientProfile | n
     .from('profile')
     .select(
       `
-      *,
+      id,
+      contact_name,
+      contact_email,
+      contact_phone,
+      company_name,
+      address_line1,
+      address_line2,
+      city,
+      province,
+      postal_code,
+      country,
+      stripe_customer_id,
+      role,
+      created_at,
+      updated_at,
       subscription:subscription!subscription_profile_fk(
-        *,
-        plan!subscription_plan_fk(*)
+        id,
+        profile_id,
+        plan_id,
+        stripe_subscription_id,
+        status,
+        current_period_start,
+        current_period_end,
+        cancel_at_period_end,
+        created_at,
+        plan!subscription_plan_fk(id, name, slug, page_limit, revision_limit)
       )
     `
     )
@@ -50,4 +74,4 @@ export async function getClientById(clientId: string): Promise<ClientProfile | n
     ...clientWithSubscriptions,
     subscription: activeSubscription ? (activeSubscription as Subscription & { plan: Plan }) : null,
   }
-}
+})

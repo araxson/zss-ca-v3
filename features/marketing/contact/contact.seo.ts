@@ -14,7 +14,22 @@ export const contactPageMetadata: Metadata = {
       'Talk with our Canadian web experts about your next website project and ongoing subscription support.',
     url: `${siteConfig.url}/contact`,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `Contact ${siteConfig.name}`,
+      },
+    ],
     locale: 'en_CA',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `Contact ${siteConfig.name}`,
+    description:
+      'Talk with our Canadian web experts about your next website project and ongoing subscription support.',
+    images: [siteConfig.ogImage],
   },
 }

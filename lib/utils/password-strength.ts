@@ -5,6 +5,7 @@ export interface PasswordStrengthResult {
   score: number
   feedback: string
   color: string
+  label: string
 }
 
 export function calculatePasswordStrength(password: string): PasswordStrengthResult {
@@ -14,6 +15,7 @@ export function calculatePasswordStrength(password: string): PasswordStrengthRes
       score: 0,
       feedback: 'Enter a password',
       color: 'text-muted-foreground',
+      label: 'Too weak',
     }
   }
 
@@ -37,6 +39,7 @@ export function calculatePasswordStrength(password: string): PasswordStrengthRes
       score,
       feedback: 'Weak password',
       color: 'text-destructive',
+      label: 'Weak',
     }
   } else if (score <= 4) {
     return {
@@ -44,6 +47,7 @@ export function calculatePasswordStrength(password: string): PasswordStrengthRes
       score,
       feedback: 'Fair password',
       color: 'text-muted-foreground',
+      label: 'Fair',
     }
   } else if (score <= 5) {
     return {
@@ -51,6 +55,7 @@ export function calculatePasswordStrength(password: string): PasswordStrengthRes
       score,
       feedback: 'Good password',
       color: 'text-foreground',
+      label: 'Good',
     }
   } else {
     return {
@@ -58,6 +63,7 @@ export function calculatePasswordStrength(password: string): PasswordStrengthRes
       score,
       feedback: 'Strong password',
       color: 'text-primary',
+      label: 'Strong',
     }
   }
 }

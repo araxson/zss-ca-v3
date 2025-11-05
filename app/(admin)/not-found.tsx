@@ -1,3 +1,3 @@
-import { AdminNotFound } from '@/features/admin/error-boundaries'
+import { AdminNotFound } from '@/components/error-boundaries'
 
 export default AdminNotFound

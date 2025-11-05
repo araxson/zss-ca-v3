@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { cache } from 'react'
 import { createClient, requireAuth, requireAdminRole } from '@/lib/supabase'
 import { EMPTY_ANALYTICS_SUMMARY } from '@/lib/constants'
 import type { Database } from '@/lib/types/database.types'
@@ -15,10 +16,11 @@ export interface AnalyticsSummary {
   averageConversions: number
 }
 
-export async function getSiteAnalytics(
+// ✅ Next.js 15+: Use React cache() for request deduplication within same render
+export const getSiteAnalytics = cache(async (
   siteId: string,
   days = 30
-): Promise<SiteAnalytics[]> {
+): Promise<SiteAnalytics[]> => {
   const supabase = await createClient()
   await requireAuth(supabase)
 
@@ -27,7 +29,17 @@ export async function getSiteAnalytics(
 
   const { data, error } = await supabase
     .from('site_analytics')
-    .select('*')
+    .select(`
+      id,
+      client_site_id,
+      metric_date,
+      page_views,
+      unique_visitors,
+      conversions,
+      metadata,
+      created_at,
+      updated_at
+    `)
     .eq('client_site_id', siteId)
     .gte('metric_date', startDate.toISOString().split('T')[0])
     .order('metric_date', { ascending: true })
@@ -38,12 +50,13 @@ export async function getSiteAnalytics(
   }
 
   return data || []
-}
+})
 
-export async function getAnalyticsSummary(
+// ✅ Next.js 15+: Use React cache() for request deduplication within same render
+export const getAnalyticsSummary = cache(async (
   siteId: string,
   days = 30
-): Promise<AnalyticsSummary> {
+): Promise<AnalyticsSummary> => {
   const analytics = await getSiteAnalytics(siteId, days)
 
   if (analytics.length === 0) {
@@ -67,12 +80,13 @@ export async function getAnalyticsSummary(
     averageUniqueVisitors: Math.round(totals.uniqueVisitors / analytics.length),
     averageConversions: Math.round(totals.conversions / analytics.length),
   }
-}
+})
 
-export async function getProfileAnalyticsSummary(
+// ✅ Next.js 15+: Use React cache() for request deduplication within same render
+export const getProfileAnalyticsSummary = cache(async (
   profileId: string,
   days = 30
-): Promise<AnalyticsSummary> {
+): Promise<AnalyticsSummary> => {
   const supabase = await createClient()
   await requireAuth(supabase)
 
@@ -92,9 +106,20 @@ export async function getProfileAnalyticsSummary(
 
   const siteIds = sites.map((site) => site.id)
 
+  // ✅ Next.js 15+: Query analytics (no waterfall needed here as we need sites first)
   const { data: analytics, error } = await supabase
     .from('site_analytics')
-    .select('*')
+    .select(`
+      id,
+      client_site_id,
+      metric_date,
+      page_views,
+      unique_visitors,
+      conversions,
+      metadata,
+      created_at,
+      updated_at
+    `)
     .in('client_site_id', siteIds)
     .gte('metric_date', startDate.toISOString().split('T')[0])
 
@@ -119,7 +144,7 @@ export async function getProfileAnalyticsSummary(
     averageUniqueVisitors: Math.round(totals.uniqueVisitors / analytics.length),
     averageConversions: Math.round(totals.conversions / analytics.length),
   }
-}
+})
 
 export type SiteWithAnalytics = SiteAnalytics & {
   client_site: {
@@ -132,7 +157,8 @@ export type SiteWithAnalytics = SiteAnalytics & {
   }
 }
 
-export async function listAnalytics(limit = 100): Promise<SiteWithAnalytics[]> {
+// ✅ Next.js 15+: Use React cache() for request deduplication within same render
+export const listAnalytics = cache(async (limit = 100): Promise<SiteWithAnalytics[]> => {
   const supabase = await createClient()
   const user = await requireAuth(supabase)
   await requireAdminRole(supabase, user.id)
@@ -141,7 +167,15 @@ export async function listAnalytics(limit = 100): Promise<SiteWithAnalytics[]> {
     .from('site_analytics')
     .select(
       `
-      *,
+      id,
+      client_site_id,
+      metric_date,
+      page_views,
+      unique_visitors,
+      conversions,
+      bounce_rate,
+      avg_session_duration,
+      created_at,
       client_site:client_site_id(
         id,
         site_name,
@@ -158,4 +192,4 @@ export async function listAnalytics(limit = 100): Promise<SiteWithAnalytics[]> {
   }
 
   return (data as unknown as SiteWithAnalytics[]) || []
-}
+})

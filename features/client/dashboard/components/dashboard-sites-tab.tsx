@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -10,7 +10,6 @@ import {
   EmptyHeader,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { ItemGroup } from '@/components/ui/item'
 import { ROUTES } from '@/lib/constants/routes'
 import type { Database } from '@/lib/types/database.types'
 import { getSiteStatusLabel } from '@/features/shared/utils'
@@ -39,47 +38,39 @@ export function DashboardSitesTab({
 }: DashboardSitesTabProps) {
   const [query, setQuery] = useState('')
 
-  const filteredSites = useMemo(() => {
-    const term = query.trim().toLowerCase()
-    if (!term) return sites
+  // React Compiler automatically memoizes this simple filtering
+  const term = query.trim().toLowerCase()
+  const filteredSites = !term
+    ? sites
+    : sites.filter((site) => {
+        const values = [
+          site.site_name,
+          site.custom_domain,
+          site.deployment_url,
+          getSiteStatusLabel(site.status),
+        ]
 
-    return sites.filter((site) => {
-      const values = [
-        site.site_name,
-        site.custom_domain,
-        site.deployment_url,
-        getSiteStatusLabel(site.status),
-      ]
+        return values.some((value) => value?.toLowerCase().includes(term))
+      })
 
-      return values.some((value) => value?.toLowerCase().includes(term))
-    })
-  }, [sites, query])
+  // React Compiler automatically memoizes constant values
+  const inProgressStatuses = new Set(['pending', 'in_production', 'awaiting_client_content', 'ready_for_review'])
 
-  const inProgressStatuses = useMemo(
-    () => new Set(['pending', 'in_production', 'awaiting_client_content', 'ready_for_review']),
-    [],
-  )
+  // React Compiler automatically memoizes these simple operations
+  const filteredActiveSitesCount = filteredSites.filter((site) => site.status === 'live').length
+  const filteredSitesInProgressCount = filteredSites.filter((site) => inProgressStatuses.has(site.status)).length
 
-  const filteredActiveSitesCount = useMemo(
-    () => filteredSites.filter((site) => site.status === 'live').length,
-    [filteredSites],
-  )
-  const filteredSitesInProgressCount = useMemo(
-    () => filteredSites.filter((site) => inProgressStatuses.has(site.status)).length,
-    [filteredSites, inProgressStatuses],
-  )
+  const filteredChartData = !filteredSites.length
+    ? []
+    : (() => {
+        const counts = filteredSites.reduce<Record<string, number>>((acc, site) => {
+          const label = getSiteStatusLabel(site.status)
+          acc[label] = (acc[label] ?? 0) + 1
+          return acc
+        }, {})
 
-  const filteredChartData = useMemo(() => {
-    if (!filteredSites.length) return []
-
-    const counts = filteredSites.reduce<Record<string, number>>((acc, site) => {
-      const label = getSiteStatusLabel(site.status)
-      acc[label] = (acc[label] ?? 0) + 1
-      return acc
-    }, {})
-
-    return Object.entries(counts).map(([name, count]) => ({ name, count }))
-  }, [filteredSites])
+        return Object.entries(counts).map(([name, count]) => ({ name, count }))
+      })()
 
   if (sites.length === 0) {
     return (
@@ -105,11 +96,12 @@ export function DashboardSitesTab({
         query={query}
         onQueryChange={setQuery}
         resultsCount={filteredSites.length}
+        sites={filteredSites.slice(0, 8)}
       />
 
       {filteredSites.length > 0 ? (
         <>
-          <ItemGroup className="!grid gap-4 md:grid-cols-2" aria-label="Website insights">
+          <div className="grid gap-4 md:grid-cols-2" role="list" aria-label="Website insights">
             <DashboardSitesChart
               chartData={query ? filteredChartData : siteStatusChartData}
             />
@@ -118,7 +110,7 @@ export function DashboardSitesTab({
               activeSitesCount={query ? filteredActiveSitesCount : activeSitesCount}
               sitesInProgressCount={query ? filteredSitesInProgressCount : sitesInProgressCount}
             />
-          </ItemGroup>
+          </div>
 
           <SitesList sites={filteredSites} />
         </>

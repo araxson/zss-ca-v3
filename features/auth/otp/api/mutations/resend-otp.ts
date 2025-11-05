@@ -1,12 +1,23 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { sendOTPForPasswordReset, sendOTPForEmailConfirmation } from '@/lib/auth'
+import { sendOTPForPasswordReset, sendOTPForEmailConfirmation } from '@/lib/auth/otp-helpers'
+import { resendOTPSchema } from '../schema'
 
 export async function resendOTPAction(data: {
   email: string
   type: 'password_reset' | 'email_confirmation' | 'two_factor'
-}) {
+}): Promise<{ error: string; fieldErrors?: Record<string, string[]> } | { error: null }> {
+  // Validate input with Zod
+  const result = resendOTPSchema.safeParse(data)
+
+  if (!result.success) {
+    return {
+      error: 'Validation failed',
+      fieldErrors: result.error.flatten().fieldErrors
+    }
+  }
+
   const supabase = await createClient()
 
   // Get profile
@@ -17,7 +28,8 @@ export async function resendOTPAction(data: {
     .single()
 
   if (!profile) {
-    return { error: 'Email not found' }
+    // Don't reveal if email doesn't exist (prevent account enumeration)
+    return { error: null }
   }
 
   // Send new OTP based on type
@@ -38,5 +50,5 @@ export async function resendOTPAction(data: {
     return { error }
   }
 
-  return { success: true }
+  return { error: null }
 }

@@ -1,7 +1,9 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import {
   Empty,
   EmptyContent,
@@ -11,6 +13,7 @@ import {
 } from '@/components/ui/empty'
 import {
   Item,
+  ItemActions,
   ItemContent,
   ItemDescription,
   ItemHeader,
@@ -18,6 +21,8 @@ import {
 } from '@/components/ui/item'
 import { ClientSearchField } from './client-search-field'
 import { RecentClientsTable } from './recent-clients-table'
+import { ROUTES } from '@/lib/constants/routes'
+import { MoreHorizontal } from 'lucide-react'
 
 interface AdminRecentClientsProps {
   clients: Array<{
@@ -29,24 +34,24 @@ interface AdminRecentClientsProps {
   }>
 }
 
-export function AdminRecentClients({ clients }: AdminRecentClientsProps) {
+export function AdminRecentClients({ clients }: AdminRecentClientsProps): React.JSX.Element {
   const [query, setQuery] = useState('')
-  const filteredClients = useMemo(() => {
-    const term = query.trim().toLowerCase()
-    if (!term) return clients
 
-    return clients.filter((client) => {
-      const values = [
-        client.contact_name,
-        client.contact_email,
-        client.company_name,
-      ]
+  // React Compiler automatically memoizes this simple filtering
+  const term = query.trim().toLowerCase()
+  const filteredClients = !term
+    ? clients
+    : clients.filter((client) => {
+        const values = [
+          client.contact_name,
+          client.contact_email,
+          client.company_name,
+        ]
 
-      return values.some((value) =>
-        value?.toLowerCase().includes(term),
-      )
-    })
-  }, [clients, query])
+        return values.some((value) =>
+          value?.toLowerCase().includes(term),
+        )
+      })
 
   const hasClients = clients.length > 0
   const hasResults = filteredClients.length > 0
@@ -59,16 +64,14 @@ export function AdminRecentClients({ clients }: AdminRecentClientsProps) {
           <ItemDescription>Latest registered client accounts</ItemDescription>
         </ItemHeader>
         <ItemContent className="basis-full">
-          <div className="p-6">
-            <Empty>
-              <EmptyHeader>
-                <EmptyTitle>No clients yet</EmptyTitle>
-                <EmptyDescription>
-                  Client accounts will appear here once registered
-                </EmptyDescription>
-              </EmptyHeader>
-            </Empty>
-          </div>
+          <Empty className="py-8">
+            <EmptyHeader>
+              <EmptyTitle>No clients yet</EmptyTitle>
+              <EmptyDescription>
+                Client accounts will appear here once registered
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
         </ItemContent>
       </Item>
     )
@@ -80,36 +83,59 @@ export function AdminRecentClients({ clients }: AdminRecentClientsProps) {
         <ItemTitle>Recent Clients</ItemTitle>
         <ItemDescription>Latest registered client accounts</ItemDescription>
       </ItemHeader>
-      <ItemContent className="basis-full">
-        <div className="space-y-4 p-6">
-          <ClientSearchField
-            query={query}
-            onQueryChange={setQuery}
-            resultsCount={filteredClients.length}
-          />
-        </div>
+      <ItemContent className="basis-full space-y-4">
+        <ClientSearchField
+          query={query}
+          onQueryChange={setQuery}
+          resultsCount={filteredClients.length}
+        />
       </ItemContent>
+      <ItemActions>
+        <div className="flex gap-2" role="group" aria-label="Client management actions">
+          <Button asChild size="sm">
+            <Link href={ROUTES.ADMIN_CLIENTS}>Manage Clients</Link>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <MoreHorizontal className="size-4" aria-hidden="true" />
+                <span className="sr-only">Open client actions menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem asChild>
+                <Link href={`${ROUTES.ADMIN_CLIENTS}?filter=new`}>View new clients</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`${ROUTES.ADMIN_CLIENTS}?filter=inactive`}>Filter inactive</Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href={`${ROUTES.ADMIN_CLIENTS}?export=csv`}>Export CSV</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </ItemActions>
       {hasResults ? (
         <ItemContent className="basis-full">
           <RecentClientsTable clients={filteredClients} />
         </ItemContent>
       ) : (
         <ItemContent className="basis-full">
-          <div className="p-6">
-            <Empty aria-live="polite">
-              <EmptyHeader>
-                <EmptyTitle>No matching clients</EmptyTitle>
-                <EmptyDescription>
-                  Try adjusting your search terms or clearing the filter
-                </EmptyDescription>
-              </EmptyHeader>
-              <EmptyContent>
-                <Button type="button" variant="outline" onClick={() => setQuery('')}>
-                  Clear filter
-                </Button>
-              </EmptyContent>
-            </Empty>
-          </div>
+          <Empty className="py-8" aria-live="polite">
+            <EmptyHeader>
+              <EmptyTitle>No matching clients</EmptyTitle>
+              <EmptyDescription>
+                Try adjusting your search terms or clearing the filter
+              </EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent>
+              <Button type="button" variant="outline" onClick={() => setQuery('')}>
+                Clear filter
+              </Button>
+            </EmptyContent>
+          </Empty>
         </ItemContent>
       )}
     </Item>

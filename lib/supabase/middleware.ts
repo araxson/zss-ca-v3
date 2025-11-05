@@ -5,31 +5,31 @@ import type { Database } from '@/lib/types/database.types'
 /**
  * Update Supabase session in middleware
  *
- * This function handles ONLY session token refresh for Supabase auth.
- * Per Supabase SSR documentation, this is MANDATORY for proper session management.
+ * This function handles session token refresh and basic route protection.
+ * Per Supabase SSR documentation, session refresh is MANDATORY.
  *
  * What this does:
  * - Creates a Supabase client with cookie management
  * - Calls getUser() to trigger automatic token refresh if expired
+ * - Redirects unauthenticated users away from protected routes
+ * - Redirects authenticated users away from auth pages
  * - Updates response cookies with refreshed tokens
  *
  * What this does NOT do:
- * - Authorization checks (role verification, permissions)
- * - Database queries
- * - Route protection logic
- *
- * All authorization MUST happen in Server Components or Route Handlers!
+ * - Role-based authorization (handled in layouts/pages)
+ * - Complex database queries
+ * - Business logic
  *
  * @see https://supabase.com/docs/guides/auth/server-side/creating-a-client
  */
-export async function updateSession(request: NextRequest) {
+export async function updateSession(request: NextRequest): Promise<NextResponse> {
   let supabaseResponse = NextResponse.next({
     request,
   })
 
   const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env['NEXT_PUBLIC_SUPABASE_URL']!,
+    process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!,
     {
       cookies: {
         getAll() {
@@ -50,9 +50,38 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // IMPORTANT: This triggers automatic token refresh if the session is expired
-  // Supabase will automatically update cookies via the setAll callback above
-  await supabase.auth.getUser()
+  // CRITICAL: Do NOT run code here - causes random logouts
+  // This triggers automatic token refresh if the session is expired
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  // Define protected routes
+  const protectedRoutes = ['/admin', '/client']
+  const authRoutes = ['/login', '/signup', '/reset-password', '/verify-otp', '/update-password']
+  const pathname = request.nextUrl.pathname
+
+  // Check if current path is protected
+  const isProtectedRoute = protectedRoutes.some((route) => pathname.startsWith(route))
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route))
+
+  // Redirect unauthenticated users away from protected routes
+  if (isProtectedRoute && !user) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/login'
+    url.searchParams.set('redirect', pathname)
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users away from auth pages to prevent confusion
+  if (isAuthRoute && user && pathname !== '/verify-otp') {
+    const url = request.nextUrl.clone()
+    // Get redirect from query params or default to client dashboard
+    const redirectTo = request.nextUrl.searchParams.get('redirect') || '/client'
+    url.pathname = redirectTo
+    url.search = '' // Clear query params
+    return NextResponse.redirect(url)
+  }
 
   return supabaseResponse
 }

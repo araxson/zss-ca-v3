@@ -9,18 +9,22 @@ import {
   EmptyHeader,
   EmptyMedia,
 } from '@/components/ui/empty'
-import { SectionHeader } from '@/features/shared/components'
 import { serviceCtaData } from './service-cta.data'
 
 export function ServiceCta() {
   return (
     <Item asChild className="block border-none rounded-none p-0 gap-0 text-base">
       <section className="space-y-6">
-        <SectionHeader
-          title={serviceCtaData.heading}
-          description={serviceCtaData.description}
-          align="center"
-        />
+        <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center gap-3">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              {serviceCtaData.heading}
+            </h2>
+            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl text-balance">
+              {serviceCtaData.description}
+            </p>
+          </div>
+        </div>
         <Empty className="border border-dashed border-primary/40 bg-primary/5">
           <EmptyHeader>
             <EmptyMedia variant="icon" aria-hidden="true">

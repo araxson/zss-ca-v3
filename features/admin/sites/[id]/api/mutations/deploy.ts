@@ -1,11 +1,30 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { sendSiteDeployedEmail } from '@/lib/email/send'
-import type { DeploySiteInput } from '../schema'
+import { deploySiteSchema } from '../schema'
 
-export async function deploySiteAction(siteId: string, data: DeploySiteInput) {
+export async function deploySiteAction(
+  prevState: { error: string; fieldErrors?: Record<string, string[]> } | { error: null } | null,
+  formData: FormData
+): Promise<{ error: string; fieldErrors?: Record<string, string[]> } | { error: null }> {
+  // Extract site_id from hidden field
+  const siteId = formData.get('site_id') as string
+
+  // 1. Validate input with Zod
+  const result = deploySiteSchema.safeParse({
+    deployment_url: formData.get('deployment_url'),
+    deployment_notes: formData.get('deployment_notes'),
+  })
+
+  if (!result.success) {
+    return {
+      error: 'Validation failed',
+      fieldErrors: result.error.flatten().fieldErrors
+    }
+  }
+
   const supabase = await createClient()
   const {
     data: { user },
@@ -36,18 +55,18 @@ export async function deploySiteAction(siteId: string, data: DeploySiteInput) {
   const now = new Date().toISOString()
 
   const { error } = await supabase
-    
     .from('client_site')
     .update({
-      deployment_url: data.deployment_url,
-      deployment_notes: data.deployment_notes || null,
+      deployment_url: result.data.deployment_url,
+      deployment_notes: result.data.deployment_notes || null,
       deployed_at: now,
       status: 'live',
     })
     .eq('id', siteId)
 
   if (error) {
-    return { error: error.message }
+    console.error('Site deployment error:', error)
+    return { error: 'Failed to deploy site' }
   }
 
   // Send site deployed email
@@ -63,14 +82,21 @@ export async function deploySiteAction(siteId: string, data: DeploySiteInput) {
         siteOwner.contact_email,
         siteOwner.contact_name,
         site.site_name,
-        data.deployment_url
+        result.data.deployment_url
       )
     }
   }
 
+  // ✅ Next.js 15.1+: Use updateTag() for immediate read-your-writes consistency
+  updateTag('sites')
+  updateTag(`site:${siteId}`)
+  if (site) {
+    updateTag(`sites:${site.profile_id}`)
+  }
+
   revalidatePath('/admin/sites', 'page')
   revalidatePath(`/admin/sites/${siteId}`, 'page')
-  revalidatePath('/client/dashboard', 'page')
+  revalidatePath('/client', 'page')
 
-  return { success: true }
+  return { error: null }
 }

@@ -7,18 +7,22 @@ import {
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
-import { SectionHeader } from '@/features/shared/components'
 import { serviceOfferingsData } from './service-offerings.data'
 
 export function ServiceOfferings() {
   return (
     <Item asChild className="block border-none rounded-none p-0 gap-0 text-base">
       <section className="space-y-8">
-        <SectionHeader
-          title={serviceOfferingsData.heading}
-          description="We own the full lifecycle so you have one partner for everything web."
-          align="center"
-        />
+        <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center gap-3">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              {serviceOfferingsData.heading}
+            </h2>
+            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl text-balance">
+              We own the full lifecycle so you have one partner for everything web.
+            </p>
+          </div>
+        </div>
         <div className="grid gap-4 md:grid-cols-3">
           {serviceOfferingsData.cards.map((card) => (
             <Item

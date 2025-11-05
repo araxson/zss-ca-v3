@@ -30,7 +30,6 @@ import {
   ItemTitle,
 } from '@/components/ui/item'
 import { Kbd, KbdGroup } from '@/components/ui/kbd'
-import { SectionHeader } from '@/features/shared/components'
 import { Bell, CreditCard, Globe, LifeBuoy } from 'lucide-react'
 
 type Profile = Database['public']['Tables']['profile']['Row'] | null
@@ -40,14 +39,19 @@ interface DashboardAccountTabProps {
   onNavigate: (path: string) => void
 }
 
-export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTabProps) {
+export function DashboardAccountTab({ profile, onNavigate }: DashboardAccountTabProps): React.JSX.Element {
   return (
     <ItemGroup>
-      <SectionHeader
-        title="Account overview"
-        description="Review your profile and jump to frequently used tools."
-        align="start"
-      />
+      <div className="flex flex-col items-start text-left gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-start gap-3">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Account overview
+          </h2>
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl">
+            Review your profile and jump to frequently used tools.
+          </p>
+        </div>
+      </div>
       <Item variant="outline">
         <ItemHeader>
           <ItemTitle>Account Information</ItemTitle>

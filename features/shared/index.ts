@@ -1,8 +1,8 @@
-// Shared Features - Public API
-export * from './audit-log'
+// Shared components used across multiple portals
 export * from './components'
+
+// Shared hooks used across multiple portals
 export * from './hooks'
-export * from './notifications'
-export * from './subscription'
-export * from './support'
+
+// Shared utilities used across multiple portals
 export * from './utils'

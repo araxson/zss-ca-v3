@@ -8,14 +8,19 @@ import {
   ItemHeader,
   ItemSeparator,
 } from '@/components/ui/item'
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from '@/components/ui/chart'
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  Legend
 } from 'recharts'
 
 interface GrowthTrendChartProps {
@@ -23,7 +28,7 @@ interface GrowthTrendChartProps {
   activeSubscriptions: number
 }
 
-export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTrendChartProps) {
+export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTrendChartProps): React.JSX.Element {
   const trendData = [
     { month: 'May', clients: Math.max(0, totalClients - 25), subscriptions: Math.max(0, activeSubscriptions - 20) },
     { month: 'Jun', clients: Math.max(0, totalClients - 20), subscriptions: Math.max(0, activeSubscriptions - 16) },
@@ -47,33 +52,34 @@ export function GrowthTrendChart({ totalClients, activeSubscriptions }: GrowthTr
           config={{
             clients: {
               label: 'Clients',
-              color: 'hsl(var(--chart-1))',
+              color: 'var(--chart-1)',
             },
             subscriptions: {
               label: 'Subscriptions',
-              color: 'hsl(var(--chart-2))',
+              color: 'var(--chart-2)',
             },
           }}
           className="min-h-[300px]"
         >
           <BarChart
+            accessibilityLayer
             data={trendData}
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis dataKey="month" />
             <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'hsl(var(--muted))' }} />
-            <Legend />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'var(--muted)' }} />
+            <ChartLegend content={<ChartLegendContent />} />
             <Bar
               dataKey="clients"
-              fill="hsl(var(--chart-1))"
+              fill="var(--chart-1)"
               radius={[4, 4, 0, 0]}
               maxBarSize={60}
             />
             <Bar
               dataKey="subscriptions"
-              fill="hsl(var(--chart-2))"
+              fill="var(--chart-2)"
               radius={[4, 4, 0, 0]}
               maxBarSize={60}
             />

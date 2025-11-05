@@ -1,10 +1,21 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
+import { updateTag } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import type { DeleteClientInput } from '../schema'
+import { deleteClientSchema } from '../schema'
 
-export async function deleteClientAction(data: DeleteClientInput) {
+export async function deleteClientAction(data: unknown): Promise<{ error: string; fieldErrors?: Record<string, string[]> } | { error: null }> {
+  // 1. Validate input with Zod
+  const result = deleteClientSchema.safeParse(data)
+
+  if (!result.success) {
+    return {
+      error: 'Validation failed',
+      fieldErrors: result.error.flatten().fieldErrors
+    }
+  }
+
+  // 2. Create authenticated Supabase client
   const supabase = await createClient()
   const {
     data: { user },
@@ -14,7 +25,7 @@ export async function deleteClientAction(data: DeleteClientInput) {
     return { error: 'Unauthorized' }
   }
 
-  // Verify admin role
+  // 3. Verify admin role
   const { data: profile } = await supabase
     .from('profile')
     .select('role')
@@ -25,18 +36,20 @@ export async function deleteClientAction(data: DeleteClientInput) {
     return { error: 'Only admins can delete client profiles' }
   }
 
-  // Soft delete by setting deleted_at
+  // 4. Perform soft delete by setting deleted_at
   const { error } = await supabase
-
     .from('profile')
     .update({ deleted_at: new Date().toISOString() })
-    .eq('id', data.profileId)
+    .eq('id', result.data.profileId)
 
   if (error) {
-    return { error: error.message }
+    console.error('Delete client error:', error)
+    return { error: 'Failed to delete client profile' }
   }
 
-  revalidatePath('/admin/clients', 'page')
+  // 5. Invalidate cache with updateTag for immediate consistency
+  updateTag('clients')
+  updateTag(`client:${result.data.profileId}`)
 
-  return { success: true }
+  return { error: null }
 }

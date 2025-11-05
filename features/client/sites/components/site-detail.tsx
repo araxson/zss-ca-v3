@@ -1,8 +1,8 @@
-import { SectionHeader } from '@/features/shared/components'
 import type { Database } from '@/lib/types/database.types'
+import { Badge } from '@/components/ui/badge'
 import { SiteDetailOverview } from './site-detail-overview'
 import { SiteDetailInfo } from './site-detail-info'
-import { formatStatus } from '@/features/shared/utils'
+import { formatStatus, getStatusVariant } from '@/features/shared/utils'
 
 type ClientSite = Database['public']['Tables']['client_site']['Row']
 type Plan = Database['public']['Tables']['plan']['Row']
@@ -15,16 +15,22 @@ interface SiteDetailProps {
   site: SiteWithPlan
 }
 
-export function SiteDetail({ site }: SiteDetailProps) {
+export function SiteDetail({ site }: SiteDetailProps): React.JSX.Element {
   return (
     <div className="space-y-6">
-      <SectionHeader
-        title={site.site_name}
-        description="Your website details and status"
-        align="start"
-        kicker={formatStatus(site.status)}
-        kickerVariant="badge"
-      />
+      <div className="flex flex-col items-start text-left gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-start gap-3">
+          <Badge variant={getStatusVariant(site.status)} className="uppercase tracking-wide">
+            {formatStatus(site.status)}
+          </Badge>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            {site.site_name}
+          </h2>
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl">
+            Your website details and status
+          </p>
+        </div>
+      </div>
       <SiteDetailOverview
         status={site.status}
         plan={site.plan}

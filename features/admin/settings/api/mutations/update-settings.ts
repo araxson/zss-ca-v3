@@ -1,22 +1,26 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
-export async function updateSettingsAction(data: Record<string, unknown>) {
+export async function updateSettingsAction(_data: Record<string, unknown>): Promise<{ error: string } | { error: null }> {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Unauthorized')
+    return { error: 'Unauthorized' }
   }
 
   // TODO: Implement settings update logic
   // Example: Update system configurations
 
-  revalidatePath('/admin/settings')
+  // ✅ Next.js 15.1+: Use updateTag() for immediate read-your-writes consistency
+  updateTag('settings')
+  updateTag(`settings:${user.id}`)
 
-  return { success: true }
+  revalidatePath('/admin/settings', 'page')
+
+  return { error: null }
 }

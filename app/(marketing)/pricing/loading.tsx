@@ -1,0 +1,20 @@
+import { Skeleton } from '@/components/ui/skeleton'
+
+export default function PricingLoading() {
+  return (
+    <div className="space-y-12">
+      <section className="container space-y-6 py-12">
+        <Skeleton className="mx-auto h-12 w-2/3" />
+        <Skeleton className="mx-auto h-6 w-3/4" />
+      </section>
+
+      <section className="container py-12">
+        <div className="grid gap-8 md:grid-cols-3">
+          <Skeleton className="h-[500px] w-full" />
+          <Skeleton className="h-[500px] w-full" />
+          <Skeleton className="h-[500px] w-full" />
+        </div>
+      </section>
+    </div>
+  )
+}

@@ -5,14 +5,6 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import {
   Empty,
   EmptyContent,
   EmptyDescription,
@@ -30,7 +22,7 @@ interface ClientDetailViewProps {
   client: ClientProfile | null
 }
 
-export function ClientDetailView({ client }: ClientDetailViewProps) {
+export function ClientDetailView({ client }: ClientDetailViewProps): React.JSX.Element {
   if (!client) {
     return (
       <Empty className="border border-dashed py-12">
@@ -54,36 +46,16 @@ export function ClientDetailView({ client }: ClientDetailViewProps) {
 
   return (
     <div className="space-y-6">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href={ROUTES.ADMIN_DASHBOARD}>Dashboard</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href={ROUTES.ADMIN_CLIENTS}>Clients</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{client.contact_name || 'Client'}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="flex items-start justify-between gap-4 rounded-lg border p-6">
-        <div className="flex items-start gap-4">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
           <Avatar className="size-12">
             <AvatarFallback>
               {(client.contact_name || client.contact_email || 'C').slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           <div className="space-y-1">
-            <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">{client.contact_name || 'Client Details'}</h1>
-            <p className="text-muted-foreground">
+            <h2 className="text-xl font-semibold">{client.contact_name || 'Unnamed Client'}</h2>
+            <p className="text-sm text-muted-foreground">
               {client.contact_email ? (
                 <a
                   href={`mailto:${client.contact_email}`}

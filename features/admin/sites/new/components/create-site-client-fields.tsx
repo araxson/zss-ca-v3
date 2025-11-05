@@ -8,6 +8,7 @@ import { FormFieldLayout } from '@/features/shared/components/form-field-layout'
 import { Users } from 'lucide-react'
 import type { Database } from '@/lib/types/database.types'
 import type { UseFormReturn } from 'react-hook-form'
+import type { CreateSiteInput } from '../api/schema'
 
 type Client = {
   id: string
@@ -19,13 +20,12 @@ type Client = {
 type Plan = Database['public']['Tables']['plan']['Row']
 
 interface CreateSiteClientFieldsProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<any>
+  form: UseFormReturn<CreateSiteInput>
   clients: Client[]
   plans: Plan[]
 }
 
-export function CreateSiteClientFields({ form, clients, plans }: CreateSiteClientFieldsProps) {
+export function CreateSiteClientFields({ form, clients, plans }: CreateSiteClientFieldsProps): React.JSX.Element {
   return (
     <FieldSet className="space-y-4">
       <FieldLegend>Client assignment</FieldLegend>
@@ -78,7 +78,7 @@ export function CreateSiteClientFields({ form, clients, plans }: CreateSiteClien
                 label="Plan (Optional)"
                 description="The service plan for this website (leave empty if not assigned yet)"
               >
-                <Select value={field.value} onValueChange={field.onChange}>
+                <Select value={field.value ?? undefined} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select a plan (optional)" />

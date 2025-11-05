@@ -1,5 +1,5 @@
 'use client'
 
-import { MarketingErrorBoundary } from '@/features/shared/error-boundaries'
+import { MarketingErrorBoundary } from '@/components/error-boundaries'
 
 export default MarketingErrorBoundary

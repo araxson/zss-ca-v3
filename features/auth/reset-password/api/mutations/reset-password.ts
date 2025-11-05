@@ -1,36 +1,53 @@
 'use server'
 
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import type { ResetPasswordInput } from '../schema'
-import { sendOTPForPasswordReset } from '@/lib/auth'
+import { resetPasswordSchema } from '../schema'
+import { sendOTPForPasswordReset } from '@/lib/auth/otp-helpers'
+import { ROUTES } from '@/lib/constants/routes'
 
-export async function resetPasswordAction(data: ResetPasswordInput) {
-  const supabase = await createClient()
+type ResetPasswordState = {
+  error?: string | null
+  fieldErrors?: Record<string, string[]>
+  success?: boolean
+  message?: string
+}
 
-  // Check if user exists
-  const { data: profile } = await supabase
-    .from('profile')
-    .select('id, contact_email')
-    .eq('contact_email', data.email)
-    .single()
+export async function resetPasswordAction(prevState: ResetPasswordState | null, formData: FormData): Promise<ResetPasswordState | never> {
+  // Validate input with Zod
+  const email = formData.get('email') as string
+  const result = resetPasswordSchema.safeParse({ email })
 
-  if (!profile) {
-    // Don't reveal if user doesn't exist
+  if (!result.success) {
     return {
-      success: true,
-      message: 'If your email is registered, you will receive a verification code',
+      error: 'Validation failed',
+      fieldErrors: result.error.flatten().fieldErrors
     }
   }
 
-  // Generate and send OTP
-  const error = await sendOTPForPasswordReset(data.email, profile.id)
+  const supabase = await createClient()
 
-  if (error) {
-    return { error: 'Failed to send verification code. Please try again.' }
+  // Check if user exists (silently - don't reveal if account exists)
+  const { data: profile } = await supabase
+    .from('profile')
+    .select('id, contact_email')
+    .eq('contact_email', result.data.email)
+    .single()
+
+  // Always proceed to OTP page regardless of whether user exists
+  // This prevents account enumeration attacks
+  if (profile) {
+    // Only send OTP if user actually exists
+    const error = await sendOTPForPasswordReset(result.data.email, profile.id)
+
+    if (error) {
+      console.error('OTP send error:', error)
+      // Still redirect - don't reveal failure
+    }
   }
 
-  return {
-    success: true,
-    message: 'Check your email for verification code',
-  }
+  // Always redirect with same message - don't reveal if account exists
+  revalidatePath('/', 'layout')
+  redirect(`${ROUTES.VERIFY_OTP}?email=${encodeURIComponent(email)}&type=password_reset`)
 }

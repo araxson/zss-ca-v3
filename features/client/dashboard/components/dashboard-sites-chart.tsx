@@ -20,7 +20,7 @@ interface DashboardSitesChartProps {
   chartData: Array<{ name: string; count: number }>
 }
 
-export function DashboardSitesChart({ chartData }: DashboardSitesChartProps) {
+export function DashboardSitesChart({ chartData }: DashboardSitesChartProps): React.JSX.Element {
   if (chartData.length === 0) {
     return (
       <Item variant="outline">
@@ -51,12 +51,13 @@ export function DashboardSitesChart({ chartData }: DashboardSitesChartProps) {
           config={{
             count: {
               label: 'Sites',
-              color: 'hsl(var(--chart-1))',
+              color: 'var(--chart-1)',
             },
           }}
           className="min-h-[280px]"
         >
           <BarChart
+            accessibilityLayer
             data={chartData}
             layout="vertical"
             margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
@@ -64,10 +65,10 @@ export function DashboardSitesChart({ chartData }: DashboardSitesChartProps) {
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis type="number" />
             <YAxis dataKey="name" type="category" width={100} />
-            <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'hsl(var(--muted))' }} />
+            <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: 'var(--muted)' }} />
             <Bar
               dataKey="count"
-              fill="hsl(var(--chart-1))"
+              fill="var(--chart-1)"
               radius={[0, 4, 4, 0]}
               maxBarSize={40}
             />

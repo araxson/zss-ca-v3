@@ -5,18 +5,22 @@ import {
   ItemDescription,
   ItemTitle,
 } from '@/components/ui/item'
-import { SectionHeader } from '@/features/shared/components'
 import { serviceProcessData } from './service-process.data'
 
 export function ServiceProcess() {
   return (
     <Item asChild className="block border-none rounded-none p-0 gap-0 text-base">
       <section className="space-y-8">
-        <SectionHeader
-          title={serviceProcessData.heading}
-          description={serviceProcessData.subheading}
-          align="center"
-        />
+        <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center gap-3">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              {serviceProcessData.heading}
+            </h2>
+            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl text-balance">
+              {serviceProcessData.subheading}
+            </p>
+          </div>
+        </div>
         <div className="grid gap-4 md:grid-cols-3">
           {serviceProcessData.phases.map((phase) => (
             <Item

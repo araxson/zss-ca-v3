@@ -1,3 +1,3 @@
-import { MarketingNotFound } from '@/features/shared/error-boundaries'
+import { MarketingNotFound } from '@/components/error-boundaries'
 
 export default MarketingNotFound

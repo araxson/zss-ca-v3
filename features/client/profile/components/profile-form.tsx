@@ -1,22 +1,15 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-
+import { useActionState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
-import { Form } from '@/components/ui/form'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { updateProfileAction } from '../api/mutations'
-import { updateProfileSchema, type UpdateProfileInput } from '../api/schema'
 import type { Database } from '@/lib/types/database.types'
-import { ProfileContactFields } from './profile-contact-fields'
-import { ProfileCompanyFields } from './profile-company-fields'
-import { ProfileAddressFields } from './profile-address-fields'
-import { ProfilePreferencesFields } from './profile-preferences-fields'
-import { AlertCircle, CheckCircle2 } from 'lucide-react'
+import { toast } from 'sonner'
+import { SubmitButton } from './profile-form-submit-button'
+import { ProfileContactFieldsNative } from './profile-contact-fields-native'
+import { ProfileCompanyFieldsNative } from './profile-company-fields-native'
+import { ProfileAddressFieldsNative } from './profile-address-fields-native'
+import { ProfilePreferencesFieldsNative } from './profile-preferences-fields-native'
 
 type Profile = Database['public']['Tables']['profile']['Row']
 
@@ -24,82 +17,63 @@ interface ProfileFormProps {
   profile: Profile
 }
 
-export function ProfileForm({ profile }: ProfileFormProps) {
-  const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-
-  const form = useForm({
-    resolver: zodResolver(updateProfileSchema),
-    defaultValues: {
-      contact_name: profile.contact_name || '',
-      contact_email: profile.contact_email || '',
-      contact_phone: profile.contact_phone || '',
-      company_name: profile.company_name || '',
-      company_website: profile.company_website || '',
-      address_line1: profile.address_line1 || '',
-      address_line2: profile.address_line2 || '',
-      city: profile.city || '',
-      region: profile.region || '',
-      postal_code: profile.postal_code || '',
-      country: profile.country || '',
-      marketing_opt_in: profile.marketing_opt_in ?? false,
-    },
+export function ProfileForm({ profile }: ProfileFormProps): React.JSX.Element {
+  const [state, formAction, isPending] = useActionState(updateProfileAction, {
+    error: null,
   })
 
-  async function onSubmit(data: UpdateProfileInput) {
-    setError(null)
-    setSuccess(null)
-
-    const result = await updateProfileAction(data)
-
-    if (result.error) {
-      setError(result.error)
-      return
+  // Show toast notifications based on form state
+  useEffect(() => {
+    if (!isPending && state) {
+      if (state.error) {
+        toast.error('Profile update failed', {
+          description: state.error,
+        })
+      } else {
+        toast.success('Profile updated', {
+          description: 'Your profile has been updated successfully',
+        })
+      }
     }
-
-    setSuccess('Profile updated successfully')
-    router.refresh()
-  }
+  }, [state, isPending])
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {error && (
-          <Alert variant="destructive" aria-live="assertive">
-            <AlertCircle className="size-4" aria-hidden="true" />
-            <AlertTitle>Profile update failed</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+    <div>
+      {/* Screen reader announcement for form status */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {isPending && 'Form is submitting, please wait'}
+        {!isPending && !state?.error && state && 'Profile updated successfully'}
+      </div>
 
-        {success && (
-          <Alert>
-            <CheckCircle2 className="size-4" aria-hidden="true" />
-            <AlertTitle>Profile updated</AlertTitle>
-            <AlertDescription>{success}</AlertDescription>
-          </Alert>
-        )}
-
-        <ProfileContactFields form={form} />
-        <ProfileCompanyFields form={form} />
-        <ProfileAddressFields form={form} />
-        <ProfilePreferencesFields form={form} />
+      <form action={formAction} className="space-y-6">
+        <ProfileContactFieldsNative
+          profile={profile}
+          errors={state && 'fieldErrors' in state ? state.fieldErrors : undefined}
+          isPending={isPending}
+        />
+        <ProfileCompanyFieldsNative
+          profile={profile}
+          errors={state && 'fieldErrors' in state ? state.fieldErrors : undefined}
+          isPending={isPending}
+        />
+        <ProfileAddressFieldsNative
+          profile={profile}
+          errors={state && 'fieldErrors' in state ? state.fieldErrors : undefined}
+          isPending={isPending}
+        />
+        <ProfilePreferencesFieldsNative
+          profile={profile}
+          errors={state && 'fieldErrors' in state ? state.fieldErrors : undefined}
+          isPending={isPending}
+        />
 
         <div className="flex gap-2">
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? <Spinner /> : 'Save Changes'}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={form.formState.isSubmitting}
-            onClick={() => form.reset()}
-          >
+          <SubmitButton />
+          <Button type="reset" variant="outline" disabled={isPending}>
             Reset
           </Button>
         </div>
       </form>
-    </Form>
+    </div>
   )
 }

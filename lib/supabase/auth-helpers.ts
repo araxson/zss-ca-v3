@@ -1,7 +1,9 @@
 import 'server-only'
 
+import { redirect } from 'next/navigation'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/lib/types/database.types'
+import { ROUTES } from '@/lib/constants/routes'
 
 type Profile = Database['public']['Tables']['profile']['Row']
 
@@ -25,33 +27,36 @@ export async function verifyAdminRole(
 }
 
 /**
- * Require admin role or throw error
+ * Require admin role or redirect to client dashboard
  * @param supabase - Supabase client instance
  * @param userId - User ID to check
- * @throws Error if user is not admin
+ * @throws Never returns if user is not admin (redirects instead)
  */
 export async function requireAdminRole(
   supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<void> {
   if (!(await verifyAdminRole(supabase, userId))) {
-    throw new Error('Admin access required')
+    // ✅ Redirect non-admin users to client dashboard instead of throwing
+    redirect(ROUTES.CLIENT_DASHBOARD)
   }
 }
 
 /**
- * Get authenticated user or throw error
+ * Get authenticated user or redirect to login
  * @param supabase - Supabase client instance
  * @returns User object
- * @throws Error if not authenticated
+ * @throws Never returns if not authenticated (redirects instead)
  */
-export async function requireAuth(supabase: SupabaseClient<Database>) {
+export async function requireAuth(supabase: SupabaseClient<Database>): Promise<{ id: string; email?: string }> {
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('Unauthorized')
+    // ✅ CRITICAL: Use redirect() instead of throw for proper Next.js navigation
+    // This is the correct pattern for Server Components and layouts
+    redirect(ROUTES.LOGIN)
   }
 
   return user

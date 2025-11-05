@@ -15,6 +15,8 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemFooter,
+  ItemHeader,
   ItemMedia,
   ItemTitle,
 } from '@/components/ui/item'
@@ -29,7 +31,7 @@ interface AdminOverviewStatsProps {
   }
 }
 
-export function AdminOverviewStats({ stats }: AdminOverviewStatsProps) {
+export function AdminOverviewStats({ stats }: AdminOverviewStatsProps): React.JSX.Element {
   const subscriptionRate = stats.totalClients > 0
     ? (stats.activeSubscriptions / stats.totalClients) * 100
     : 0
@@ -39,111 +41,140 @@ export function AdminOverviewStats({ stats }: AdminOverviewStatsProps) {
     : 0
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      <Item variant="outline" aria-label="Total clients metric">
-        <ItemMedia variant="icon">
-          <Users aria-hidden="true" />
-        </ItemMedia>
-        <ItemContent>
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-2">
-              <div className="space-y-1">
-                <ItemTitle>Total Clients</ItemTitle>
-                <ItemDescription>
-                  {stats.activeSubscriptions} active subscriptions
-                </ItemDescription>
-              </div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Badge variant="secondary">{stats.totalClients}</Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Registered client accounts</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <div className="space-y-2">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4" role="list" aria-label="Platform statistics">
+      <TooltipProvider>
+        <Item variant="outline" role="listitem" aria-label="Total clients metric">
+          <ItemMedia variant="icon">
+            <Users aria-hidden="true" />
+          </ItemMedia>
+          <ItemHeader>
+            <ItemTitle>Total Clients</ItemTitle>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary">{stats.totalClients}</Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Registered client accounts</p>
+              </TooltipContent>
+            </Tooltip>
+          </ItemHeader>
+          <ItemContent>
+            <ItemDescription>
+              {stats.activeSubscriptions} active subscriptions
+            </ItemDescription>
+            <div className="mt-3 space-y-2">
               <Progress value={subscriptionRate} aria-label="Subscription rate" />
               <ItemDescription>
-                {subscriptionRate.toFixed(1)}% subscription rate
+                <span className="text-xs">{subscriptionRate.toFixed(1)}% subscription rate</span>
               </ItemDescription>
             </div>
-          </div>
-        </ItemContent>
-      </Item>
-
-      <Item variant="outline" aria-label="Active subscriptions metric">
-        <ItemMedia variant="icon">
-          <CreditCard aria-hidden="true" />
-        </ItemMedia>
-        <ItemContent>
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-2">
-              <div className="space-y-1">
-                <ItemTitle>Active Subscriptions</ItemTitle>
-                <ItemDescription>Paying clients</ItemDescription>
-              </div>
-              <Badge variant="default">{stats.activeSubscriptions}</Badge>
-            </div>
-            <Button asChild variant="link" size="sm" className="h-auto p-0">
-              <Link href={ROUTES.ADMIN_CLIENTS}>View all clients</Link>
+          </ItemContent>
+          <ItemFooter>
+            <Button asChild variant="link" size="sm">
+              <Link href={ROUTES.ADMIN_CLIENTS}>View all</Link>
             </Button>
-          </div>
-        </ItemContent>
-      </Item>
+          </ItemFooter>
+        </Item>
 
-      <Item variant="outline" aria-label="Live sites metric">
-        <ItemMedia variant="icon">
-          <Globe aria-hidden="true" />
-        </ItemMedia>
-        <ItemContent>
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-2">
-              <div className="space-y-1">
-                <ItemTitle>Live Sites</ItemTitle>
-                <ItemDescription>Deployed websites</ItemDescription>
-              </div>
-              <Badge variant="default">{stats.liveSites}</Badge>
-            </div>
-            <div className="space-y-2">
+        <Item variant="outline" role="listitem" aria-label="Active subscriptions metric">
+          <ItemMedia variant="icon">
+            <CreditCard aria-hidden="true" />
+          </ItemMedia>
+          <ItemHeader>
+            <ItemTitle>Active Subscriptions</ItemTitle>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="default">{stats.activeSubscriptions}</Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Paying client subscriptions</p>
+              </TooltipContent>
+            </Tooltip>
+          </ItemHeader>
+          <ItemContent>
+            <ItemDescription>
+              Paying clients with active plans
+            </ItemDescription>
+          </ItemContent>
+          <ItemFooter>
+            <Button asChild variant="link" size="sm">
+              <Link href={ROUTES.ADMIN_CLIENTS}>Manage subscriptions</Link>
+            </Button>
+          </ItemFooter>
+        </Item>
+
+        <Item variant="outline" role="listitem" aria-label="Live sites metric">
+          <ItemMedia variant="icon">
+            <Globe aria-hidden="true" />
+          </ItemMedia>
+          <ItemHeader>
+            <ItemTitle>Live Sites</ItemTitle>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="default">{stats.liveSites}</Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Deployed websites</p>
+              </TooltipContent>
+            </Tooltip>
+          </ItemHeader>
+          <ItemContent>
+            <ItemDescription>
+              Active website deployments
+            </ItemDescription>
+            <div className="mt-3 space-y-2">
               <Progress value={liveRate} aria-label="Deployment rate" />
               <ItemDescription>
-                {liveRate.toFixed(1)}% deployment rate
+                <span className="text-xs">{liveRate.toFixed(1)}% deployment rate</span>
               </ItemDescription>
             </div>
-          </div>
-        </ItemContent>
-      </Item>
+          </ItemContent>
+          <ItemFooter>
+            <Button asChild variant="link" size="sm">
+              <Link href={ROUTES.ADMIN_SITES}>View all</Link>
+            </Button>
+          </ItemFooter>
+        </Item>
 
-      <Item variant="outline" aria-label="Open tickets metric">
-        <ItemMedia variant="icon">
-          <TicketCheck aria-hidden="true" />
-        </ItemMedia>
-        <ItemContent>
-          <div className="space-y-3">
-            <div className="flex items-start justify-between gap-2">
-              <div className="space-y-1">
-                <ItemTitle>Open Tickets</ItemTitle>
-                <ItemDescription>Needs attention</ItemDescription>
-              </div>
-              <Badge variant={stats.openTickets > 0 ? 'destructive' : 'secondary'}>
-                {stats.openTickets > 0 ? stats.openTickets : 0}
-              </Badge>
-            </div>
+        <Item variant="outline" role="listitem" aria-label="Open tickets metric">
+          <ItemMedia variant="icon">
+            <TicketCheck aria-hidden="true" />
+          </ItemMedia>
+          <ItemHeader>
+            <ItemTitle>Open Tickets</ItemTitle>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant={stats.openTickets > 0 ? 'destructive' : 'secondary'}>
+                  {stats.openTickets}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {stats.openTickets > 0
+                    ? 'Tickets requiring attention'
+                    : 'No open tickets'}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </ItemHeader>
+          <ItemContent>
+            <ItemDescription>
+              {stats.openTickets > 0 ? 'Needs attention' : 'All clear'}
+            </ItemDescription>
+          </ItemContent>
+          <ItemFooter>
             <Button
               asChild
-              variant={stats.openTickets > 0 ? 'default' : 'outline'}
+              variant="link"
               size="sm"
             >
               <Link href={ROUTES.ADMIN_SUPPORT}>
-                {stats.openTickets > 0 ? 'View Tickets' : 'All Tickets'}
+                {stats.openTickets > 0 ? 'View tickets' : 'View all'}
               </Link>
             </Button>
-          </div>
-        </ItemContent>
-      </Item>
+          </ItemFooter>
+        </Item>
+      </TooltipProvider>
     </div>
   )
 }

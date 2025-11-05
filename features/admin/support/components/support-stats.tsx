@@ -17,13 +17,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import type { TicketWithProfile } from '@/features/shared/support/api/queries'
+import type { TicketWithProfile } from '@/features/admin/support/api/queries'
 
 interface SupportStatsProps {
   tickets: TicketWithProfile[]
 }
 
-export function SupportStats({ tickets }: SupportStatsProps) {
+export function SupportStats({ tickets }: SupportStatsProps): React.JSX.Element {
   const openTickets = tickets.filter((t) => t.status === 'open')
   const inProgressTickets = tickets.filter((t) => t.status === 'in_progress')
   const resolvedTickets = tickets.filter((t) => t.status === 'resolved')
@@ -94,7 +94,7 @@ export function SupportStats({ tickets }: SupportStatsProps) {
           <Card key={stat.key} className="@container/card">
             <CardHeader>
               <CardDescription>{stat.label}</CardDescription>
-              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              <CardTitle>
                 {stat.value}
               </CardTitle>
               <CardAction>

@@ -1,17 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Spinner } from '@/components/ui/spinner'
-import { Form } from '@/components/ui/form'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { createSiteSchema, type CreateSiteInput } from '../api/schema'
 import { createSiteAction } from '../api/mutations'
-import { CreateSiteClientFields } from './create-site-client-fields'
-import { CreateSiteDetailFields } from './create-site-detail-fields'
+import { CreateSiteClientFieldsNative } from './create-site-client-fields-native'
+import { CreateSiteDetailFieldsNative } from './create-site-detail-fields-native'
+import { SubmitButton } from './create-site-form-submit-button'
 import type { Database } from '@/lib/types/database.types'
 import { ROUTES } from '@/lib/constants/routes'
 
@@ -29,63 +26,96 @@ interface CreateSiteFormProps {
   plans: Plan[]
 }
 
-export function CreateSiteForm({ clients, plans }: CreateSiteFormProps) {
+export function CreateSiteForm({ clients, plans }: CreateSiteFormProps): React.JSX.Element {
   const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
-  const form = useForm({
-    resolver: zodResolver(createSiteSchema),
-    defaultValues: {
-      profile_id: '',
-      site_name: '',
-      plan_id: '',
-      subscription_id: '',
-      design_brief: {} as Record<string, unknown>,
-    },
-  })
+  const [state, formAction, isPending] = useActionState<
+    { error: string; fieldErrors?: Record<string, string[]> } | { error: null; data: { id: string } } | null,
+    FormData
+  >(createSiteAction, null)
+  const fieldErrors = state && 'fieldErrors' in state ? state.fieldErrors : undefined
+  const errorMessage = state && 'error' in state ? state.error : null
+  const errorSummaryRef = useRef<HTMLDivElement>(null)
 
-  async function onSubmit(data: CreateSiteInput) {
-    setError(null)
-    const result = await createSiteAction(data)
-
-    if (result.error) {
-      setError(result.error)
-      return
+  // Toast feedback and redirect on state change
+  useEffect(() => {
+    if (!isPending && state) {
+      if (state.error) {
+        toast.error('Failed to create site', {
+          description: state.error,
+        })
+      } else if ('data' in state && state.data) {
+        toast.success('Site created', {
+          description: 'The website project has been created successfully.',
+        })
+        router.push(ROUTES.ADMIN_SITES)
+        router.refresh()
+      }
     }
+    return undefined
+  }, [state, isPending, router])
 
-    form.reset()
-    router.push(ROUTES.ADMIN_SITES)
-    router.refresh()
-  }
+  useEffect(() => {
+    if (errorMessage && errorSummaryRef.current) {
+      errorSummaryRef.current.focus()
+    }
+  }, [errorMessage])
 
   return (
     <div className="space-y-6">
-      {error && (
-        <Alert variant="destructive" aria-live="assertive">
-          <AlertTitle>Unable to create site</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+      {/* Screen reader announcement for form status */}
+      <div role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+        {isPending && 'Form is submitting, please wait'}
+        {!isPending && state && 'data' in state && 'Site created successfully'}
+      </div>
 
       <div className="rounded-lg border p-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <CreateSiteClientFields form={form} clients={clients} plans={plans} />
-            <CreateSiteDetailFields form={form} />
-            <div className="flex gap-2">
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? <Spinner /> : 'Create Site'}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={form.formState.isSubmitting}
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </Form>
+        {errorMessage && (
+          <Alert
+            ref={errorSummaryRef}
+            variant="destructive"
+            aria-live="assertive"
+            tabIndex={-1}
+            className="mb-6"
+          >
+            <AlertTitle>Unable to create site</AlertTitle>
+            <AlertDescription>
+              {errorMessage}
+              {fieldErrors && Object.keys(fieldErrors).length > 0 && (
+                <ul className="mt-2 list-disc pl-5">
+                  {Object.entries(fieldErrors).map(([field, errors]) => (
+                    <li key={field}>
+                      <strong>{field}:</strong> {errors[0]}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        <form action={formAction} className="space-y-6" aria-busy={isPending}>
+          <CreateSiteClientFieldsNative
+            clients={clients}
+            plans={plans}
+            errors={fieldErrors}
+            isPending={isPending}
+          />
+          <CreateSiteDetailFieldsNative
+            errors={fieldErrors}
+            isPending={isPending}
+          />
+          <div className="flex gap-2">
+            <SubmitButton />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => router.back()}
+              disabled={isPending}
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   )

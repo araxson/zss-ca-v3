@@ -12,7 +12,7 @@ interface SitesListProps {
   sites: ClientSite[]
 }
 
-export function SitesList({ sites }: SitesListProps) {
+export function SitesList({ sites }: SitesListProps): React.JSX.Element {
   return (
     <ScrollArea aria-label="Client sites list">
       <ItemGroup>

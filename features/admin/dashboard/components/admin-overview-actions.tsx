@@ -6,7 +6,16 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { AdminQuickActionsGrid } from './admin-quick-actions-grid'
 import { AdminCommandSearch } from './admin-command-search'
 
-export function AdminOverviewActions() {
+interface AdminOverviewActionsProps {
+  stats: {
+    totalClients: number
+    activeSubscriptions: number
+    liveSites: number
+    openTickets: number
+  }
+}
+
+export function AdminOverviewActions({ stats }: AdminOverviewActionsProps): React.JSX.Element {
   return (
     <TooltipProvider>
       <div className="space-y-6">
@@ -25,7 +34,7 @@ export function AdminOverviewActions() {
           </ItemContent>
           <ItemSeparator />
           <ItemContent>
-            <AdminQuickActionsGrid />
+            <AdminQuickActionsGrid stats={stats} />
           </ItemContent>
         </Item>
 

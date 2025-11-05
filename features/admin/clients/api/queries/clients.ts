@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { cache } from 'react'
 import { createClient, requireAuth, requireAdminRole } from '@/lib/supabase'
 import type { Database } from '@/lib/types/database.types'
 
@@ -11,7 +12,9 @@ export type ClientProfile = Profile & {
   subscription: (Subscription & { plan: Plan }) | null
 }
 
-export async function listClients(): Promise<ClientProfile[]> {
+// ✅ Next.js 15+: Use React cache() for request deduplication within same render
+// Page uses dynamic = 'force-dynamic' for real-time admin data
+export const listClients = cache(async (): Promise<ClientProfile[]> => {
   const supabase = await createClient()
   const user = await requireAuth(supabase)
   await requireAdminRole(supabase, user.id)
@@ -20,10 +23,20 @@ export async function listClients(): Promise<ClientProfile[]> {
     .from('profile')
     .select(
       `
-      *,
+      id,
+      contact_name,
+      contact_email,
+      contact_phone,
+      company_name,
+      stripe_customer_id,
+      role,
+      created_at,
       subscription:subscription!subscription_profile_fk(
-        *,
-        plan!subscription_plan_fk(*)
+        id,
+        status,
+        current_period_start,
+        current_period_end,
+        plan!subscription_plan_fk(id, name, slug)
       )
     `
     )
@@ -50,4 +63,4 @@ export async function listClients(): Promise<ClientProfile[]> {
       }
     ) || []
   )
-}
+})

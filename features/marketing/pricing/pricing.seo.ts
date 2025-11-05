@@ -14,7 +14,22 @@ export const pricingPageMetadata: Metadata = {
       'Transparent web design subscriptions with ongoing support for Canadian small businesses.',
     url: `${siteConfig.url}/pricing`,
     siteName: siteConfig.name,
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: `Pricing | ${siteConfig.name}`,
+      },
+    ],
     locale: 'en_CA',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `Pricing | ${siteConfig.name}`,
+    description:
+      'Transparent web design subscriptions with ongoing support for Canadian small businesses.',
+    images: [siteConfig.ogImage],
   },
 }

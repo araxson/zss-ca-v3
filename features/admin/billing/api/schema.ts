@@ -1,7 +1,8 @@
 import { z } from 'zod'
+import { PAYMENT_METHOD_TYPES } from '@/lib/constants/schema-enums'
 
 export const paymentMethodSchema = z.object({
-  type: z.enum(['card', 'bank_account']),
+  type: z.enum(PAYMENT_METHOD_TYPES),
   isDefault: z.boolean().optional(),
 })
 

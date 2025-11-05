@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Item } from '@/components/ui/item'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { SectionHeader } from '@/features/shared/components'
 import { contactLocationIcon, contactOverviewData } from './contact-overview.data'
 
 export function ContactOverview() {
@@ -11,11 +10,16 @@ export function ContactOverview() {
   return (
     <Item asChild className="block border-none rounded-none p-0 gap-0 text-base">
       <section className="space-y-10">
-        <SectionHeader
-          title={contactOverviewData.heading}
-          description={contactOverviewData.subheading}
-          align="center"
-        />
+        <div className="flex flex-col items-center text-center gap-4">
+          <div className="flex flex-col items-center gap-3">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              {contactOverviewData.heading}
+            </h1>
+            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl text-balance">
+              {contactOverviewData.subheading}
+            </p>
+          </div>
+        </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
